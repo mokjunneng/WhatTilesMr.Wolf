@@ -8,9 +8,9 @@ using UnityEngine;
 //[ExecuteInEditMode]
 public class HexMap : MonoBehaviour {
 
-    public GameObject selectedUnit;
+    public GameObject player;
 
-    private GameObject player;
+    private Player playerData;
 
     Node[,] graph;
 
@@ -18,16 +18,21 @@ public class HexMap : MonoBehaviour {
 
     public Material[] HexMaterials;
 
-    //public Player player;
+    private Color red = new Color(1F, 0.1911765F, 0.1911765F);
+    private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
     int mapHeight = 10;
     int mapWidth = 10;
 
     // Use this for initialization
     void Start () {
+        playerData = player.GetComponentInChildren<Player>();
         GenerateMap();
-        GeneratePathFindingGraph();
-        Instantiate(selectedUnit, new Vector3(0, 0, 0), Quaternion.identity, this.transform);
+
+        print("tiles that belong to player: " + playerData.tiles.Count);
+        //GeneratePathFindingGraph();
+        //Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity, this.transform);
+       
 	}
 
     private void GenerateMap() 
@@ -50,21 +55,33 @@ public class HexMap : MonoBehaviour {
                 ct.tilePos = h.Position();
                 ct.tileCol = column;
                 ct.tileRow = row;
-                ct.player = selectedUnit.GetComponentInChildren<Player>();
+                ct.player = player.GetComponentInChildren<Player>();
                 
+                //randomize tile color 
                 MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
                 mr.material = HexMaterials[UnityEngine.Random.Range(0, HexMaterials.Length)];
+
+                //update player data
+                if(mr.material.color == red)
+                {
+                    playerData.tiles.Add(hexGO);
+                }
+
+                //assign each tiles to have a trigger event
+
             }
         }
 
         //StaticBatchingUtility.Combine(this.gameObject);
     }
 
+
+    //Temporarily not including in game
     public void GenerateShortestPathTo (Vector3 pos, int col, int row)
     {
         Debug.Log("Finding path..");
         //clear old path of player unit
-        selectedUnit.GetComponentInChildren<Player>().currentPath = null;
+        player.GetComponentInChildren<Player>().currentPath = null;
 
 
         Dictionary<Node, float> dist = new Dictionary<Node, float>();
@@ -73,8 +90,8 @@ public class HexMap : MonoBehaviour {
         List<Node> unvisitedNodes = new List<Node>();
 
         Node source = graph[
-        selectedUnit.GetComponentInChildren<Player>().getTileCol(),
-        selectedUnit.GetComponentInChildren<Player>().getTileRow()];
+        player.GetComponentInChildren<Player>().getTileCol(),
+        player.GetComponentInChildren<Player>().getTileRow()];
 
         Node target = graph[col, row];
 
@@ -142,8 +159,8 @@ public class HexMap : MonoBehaviour {
         }
 
         //update selected unit position
-        selectedUnit.GetComponentInChildren<Player>().setTileCol(col);
-        selectedUnit.GetComponentInChildren<Player>().setTileRow(row);
+        player.GetComponentInChildren<Player>().setTileCol(col);
+        player.GetComponentInChildren<Player>().setTileRow(row);
 
 
         //get shortest path
@@ -160,7 +177,7 @@ public class HexMap : MonoBehaviour {
         currentPath.Reverse();
 
         Debug.Log("path finding complete");
-        selectedUnit.GetComponentInChildren<Player>().currentPath = currentPath;
+        player.GetComponentInChildren<Player>().currentPath = currentPath;
     }
     
     

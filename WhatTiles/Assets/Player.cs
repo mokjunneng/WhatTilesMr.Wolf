@@ -31,6 +31,9 @@ public class Player : MonoBehaviour {
 
     public List<HexMap.Node> currentPath = null;
 
+    //Store tiles that belongs to player
+    public List<GameObject> tiles;
+
 	// Use this for initialization
 	void Start () {
         
@@ -59,42 +62,42 @@ public class Player : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         
-        if( currentPath != null)
-        {
-            int currNode = 0;
+        //if( currentPath != null)
+        //{
+        //    int currNode = 0;
 
-            while( currNode < currentPath.Count - 1)
-            {
-                Vector3 start = currentPath[currNode].position;
-                Vector3 end = currentPath[currNode + 1].position;
+        //    while( currNode < currentPath.Count - 1)
+        //    {
+        //        Vector3 start = currentPath[currNode].position;
+        //        Vector3 end = currentPath[currNode + 1].position;
 
-                Debug.DrawLine(start, end);
+        //        Debug.DrawLine(start, end);
 
-                currNode++;
-            }
-        }
+        //        currNode++;
+        //    }
+        //}
 
-        if (!moving)
-        {
-            movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        //if (!moving)
+        //{
+        //    movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-            if (!allowDiagonals)
-            {
-                if (Mathf.Abs(movementInput.x) > Mathf.Abs(movementInput.y))
-                {
-                    movementInput.y = 0;
-                }
-                else
-                {
-                    movementInput.x = 0;
-                }
-            }
+        //    if (!allowDiagonals)
+        //    {
+        //        if (Mathf.Abs(movementInput.x) > Mathf.Abs(movementInput.y))
+        //        {
+        //            movementInput.y = 0;
+        //        }
+        //        else
+        //        {
+        //            movementInput.x = 0;
+        //        }
+        //    }
 
-            if (movementInput != Vector2.zero)
-            {
-                StartCoroutine(move(transform));
-            }
-        }
+        //    if (movementInput != Vector2.zero)
+        //    {
+        //        StartCoroutine(move(transform));
+        //    }
+        //}
     }
 
     private IEnumerator move(Transform transform)
@@ -144,39 +147,47 @@ public class Player : MonoBehaviour {
 
     }
 
-    public void moveOneTile(int col, int row) 
+    public void clickMove(Vector3 finalPosition)
     {
-        
-        float distance = (Mathf.Abs(this.tileCol - col) + Mathf.Abs(this.tileCol + this.tileRow - col - row) + Mathf.Abs(this.tileRow - row)) / 2f;
-
-        if (distance <= 2)
-        {
-            this.StartCoroutine(move2(this.transform, col, row));
-        }
-    }
-
-    private IEnumerator move2(Transform transform, int col, int row)
-    {
-        moving = true;
         startPosition = transform.position;
-        t = 0;
 
-        Hex h = new Hex(col, row);
-
-        endPosition = h.Position();
-
-        factor = 1f;
-
-        while (t < 1f)
-        {
-            t += Time.deltaTime * (movementSpeed / Vector3.Distance(startPosition, endPosition)) * factor;
-            transform.position = Vector3.Lerp(startPosition, endPosition, t);
-            yield return null;
-        }
-
-        moving = false;
-        yield return 0;
+        transform.Translate(endPosition * Time.deltaTime);
+       
     }
+
+    //public void moveOneTile(int col, int row) 
+    //{
+        
+    //    float distance = (Mathf.Abs(this.tileCol - col) + Mathf.Abs(this.tileCol + this.tileRow - col - row) + Mathf.Abs(this.tileRow - row)) / 2f;
+
+    //    if (distance <= 2)
+    //    {
+    //        this.StartCoroutine(move2(this.transform, col, row));
+    //    }
+    //}
+
+    //private IEnumerator move2(Transform transform, int col, int row)
+    //{
+    //    moving = true;
+    //    startPosition = transform.position;
+    //    t = 0;
+
+    //    Hex h = new Hex(col, row);
+
+    //    endPosition = h.Position();
+
+    //    factor = 1f;
+
+    //    while (t < 1f)
+    //    {
+    //        t += Time.deltaTime * (movementSpeed / Vector3.Distance(startPosition, endPosition)) * factor;
+    //        transform.position = Vector3.Lerp(startPosition, endPosition, t);
+    //        yield return null;
+    //    }
+
+    //    moving = false;
+    //    yield return 0;
+    //}
 
     
 }
