@@ -58,7 +58,7 @@ public class HexMap : MonoBehaviour {
                 ct.player = player.GetComponentInChildren<Player>();
                 
                 //randomize tile color 
-                MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
+                MeshRenderer mr = hexGO.transform.GetChild(1).GetComponent<MeshRenderer>();
                 mr.material = HexMaterials[UnityEngine.Random.Range(0, HexMaterials.Length)];
 
                 //update player data
