@@ -50,12 +50,12 @@ public class HexMap : MonoBehaviour {
                 hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
 
                 //Get tile coordinates for mouse logic script
-                ClickableTile ct = hexGO.GetComponentInChildren<ClickableTile>();
-                ct.map = this;
-                ct.tilePos = h.Position();
-                ct.tileCol = column;
-                ct.tileRow = row;
-                ct.player = player.GetComponentInChildren<Player>();
+                //ClickableTile ct = hexGO.GetComponentInChildren<ClickableTile>();
+                //ct.map = this;
+                //ct.tilePos = h.Position();
+                //ct.tileCol = column;
+                //ct.tileRow = row;
+                //ct.player = player.GetComponentInChildren<Player>();
                 
                 //randomize tile color 
                 MeshRenderer mr = hexGO.transform.GetChild(1).GetComponent<MeshRenderer>();

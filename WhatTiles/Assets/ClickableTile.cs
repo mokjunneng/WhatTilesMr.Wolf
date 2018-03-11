@@ -15,7 +15,7 @@ public class ClickableTile : MonoBehaviour {
 
     private void Start()
     {
-        h = new Hex(tileCol, tileRow);
+        //h = new Hex(tileCol, tileRow);
     }
     private void OnMouseUp()
     {

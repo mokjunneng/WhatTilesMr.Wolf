@@ -17,8 +17,8 @@ public class WolfEye : MonoBehaviour {
 
 
     //store the renderers of tiles generated in game
-    private GameObject[] tiles;
-    private Renderer[] tilesRenderers;
+    private List<GameObject> tiles;
+    //private Renderer[] tilesRenderers;
 
     private GameObject player;
 
@@ -32,6 +32,7 @@ public class WolfEye : MonoBehaviour {
         countTimer = Random.Range(3f, 6f);
         facingPlayers = false;
         player = GameObject.FindGameObjectWithTag("Player");
+        tiles = player.GetComponent<Player>().tiles;
     }
 	
 	// Update is called once per frame
@@ -66,19 +67,37 @@ public class WolfEye : MonoBehaviour {
         Renderer lostTile;
         int lostTileCount = 3;
 
-        Player playerData = player.GetComponent<Player>();
-        List<GameObject> tiles = playerData.tiles;
-     
-        //set 3 tiles to opposite colour
-        while (lostTileCount > 0 && tiles.Count > 0)
-        {
-            GameObject tile = tiles[Random.Range(0, playerData.tiles.Count)];
+        //Player playerData = player.GetComponent<Player>();
+        //List<GameObject> tiles = playerData.tiles;
 
-            if ( tile.GetComponentInChildren<Renderer>().material.color == red)
+        //set 3 tiles to opposite colour
+        //while (lostTileCount > 0 && tiles.Count > 0)
+        //{
+        //    GameObject tile = tiles[Random.Range(0, tiles.Count - 1)];
+
+        //    if ( tile.GetComponentInChildren<Renderer>().material.color == red)
+        //    {
+        //        tile.GetComponentInChildren<Renderer>().material.color = blue;
+        //        tiles.Remove(tile);
+        //        lostTileCount -= 1;
+        //        Debug.Log("minusing tile count");
+        //    }
+        //}
+        Debug.Log(tiles.Count);
+        for(int i = 0; i < tiles.Count; i++)
+        {
+            if(lostTileCount <= 0)
             {
-                tile.GetComponentInChildren<Renderer>().material.color = blue;
+                Debug.Log("exiting penalty loop");
+                break;
+            }
+            GameObject tile = tiles[Random.Range(0, tiles.Count - 1)];
+            if (tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color == red)
+            {
+                tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = blue;
                 tiles.Remove(tile);
                 lostTileCount -= 1;
+                Debug.Log("minusing tile count");
             }
         }
 

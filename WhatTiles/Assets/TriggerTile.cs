@@ -11,6 +11,7 @@ public class TriggerTile : MonoBehaviour {
     // Use this for initialization
     void Start () {
         player = GameObject.FindGameObjectWithTag("Player");
+       
         //print(tileColor.r + " " + tileColor.g + " " + tileColor.b);
 	}
 	
@@ -27,10 +28,15 @@ public class TriggerTile : MonoBehaviour {
             Debug.Log("Triggerred");
             //tileColor = red;
             gameObject.GetComponent<Renderer>().material.color = red;
-            player.GetComponentInChildren<Player>().tiles.Add(gameObject);
+
+            
+            other.gameObject.GetComponent<Player>().tiles.Add(gameObject.transform.parent.gameObject);
+            //Debug.Log(other.gameObject.GetComponent<Player>().tiles.Count);
+            //player.GetComponent<Player>().tiles.Add(gameObject);
 
         }else if(other.gameObject.tag == "Player blue" && gameObject.GetComponent<Renderer>().material.color == red)
         {
+            Debug.Log("wrong trigger");
             gameObject.GetComponent<Renderer>().material.color = blue;
         }
     }
