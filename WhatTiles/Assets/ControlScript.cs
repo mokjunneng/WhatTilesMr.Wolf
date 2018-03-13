@@ -6,47 +6,203 @@ using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using GooglePlayGames.BasicApi.Multiplayer;
 
-public class ControlScript : MonoBehaviour, RealTimeMultiplayerListener
-{
-    public Transform prefab = null;
+public class ControlScript : MonoBehaviour, RealTimeMultiplayerListener {
+    #region multiplayer initialisation
     public bool authenticate = false;
-    public Transform player = null;
-    
+    public GameObject[] playerColor; 
+    public GameObject opponent;
+
+    private string _myParticipantId;
     float timer = 0f;
+    #endregion
+
+    #region player initialisation
+    private float movementSpeed = 3f;
+
+    private float tileSize = 1.732f;
+
+    private enum Orientation { Horizontal, Vertical };
+
+    private Orientation gridOrientation = Orientation.Horizontal;
+
+    private bool moving = false;
+
+    private bool allowDiagonals = false;
+
+    private Vector2 movementInput;
+
+    private Vector3 startPosition;
+
+    private Vector3 endPosition;
+
+    private float t;
+
+    private float factor;
+
+   // public List<HexMap.Node> currentPath = null;
+
+
+
+    private Vector3 destinationPos;
+    private float destinationDist;
+    private Transform myTransform;
+
+    private float moveSpeed;
+    public bool isMoving;
+
+    #endregion
+
+    void Start()
+    {
+        Authenticate();
+    }
 
     void Update()
     {
-        if (!authenticate)
+        if (authenticate)
         {
-            //player = Instantiate(prefab, new Vector3(0f, 2f, 0f), Quaternion.identity);
-            Authenticate();
-        }
+            #region On Player Touch
+            destinationDist = Vector3.Distance(destinationPos, myTransform.position);
 
-        else
-        {
-            if (player != null)
+            if (destinationDist < .5f)  //prevent shaking behvaior when approaching destination
             {
+                moveSpeed = 0;
+                isMoving = false;
+            }
+            else
+            {
+                moveSpeed = 3;
+                isMoving = true;
+            }
 
+            if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
+            {
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Vector3 targetPoint = ray.GetPoint(hit.distance);
+                    destinationPos = ray.GetPoint(hit.distance);
+                    Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+
+                    myTransform.rotation = targetRotation;
+                }
+            }
+
+            if (destinationDist > .5f)
+            {
+                myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPos, moveSpeed * Time.deltaTime);
+            }
+            #endregion
+
+            if (timer > 0f)
+            {
+                timer -= Time.deltaTime;
+            }
+
+            else
+            {
                 timer = 0.035f;
                 bool reliability = true;
-                string data = "Position:" + player.position.x + ":" + player.position.y + ":" + player.position.z;
+                string data = "Position:" + myTransform.position.x + ":" + myTransform.position.y + ":" + myTransform.position.z;
                 byte[] bytedata = System.Text.ASCIIEncoding.Default.GetBytes(data);
                 PlayGamesPlatform.Instance.RealTime.SendMessageToAll(reliability, bytedata);
-
             }
+
         }
     }
 
-    public void updatePosition(string playerName)
+    void setup()
     {
-        //Todo: updatePosition
-
-        //bool reliability = true;
-        //string data = "Position:" + player.position.x + ":" + player.position.y + ":" + player.position.z;
-        //byte[] bytedata = System.Text.ASCIIEncoding.Default.GetBytes(data);
-        //PlayGamesPlatform.Instance.RealTime.SendMessageToAll(reliability, bytedata);
+        // getParticipantId
+        _myParticipantId = GetMyParticipantId();
+        // getListofParticipant
+        List<Participant> allPlayers = GetAllPlayers();
+        for (int i = 0; i < allPlayers.Count; i++)
+        {
+            string nextParticipantId = allPlayers[i].ParticipantId;
+            Debug.Log("Setting up for " + nextParticipantId);
+            // initialising
+            Vector3 StartPoint = new Vector3(0f, 4f, 0f);
+            if (nextParticipantId == _myParticipantId)
+            {
+                // if is self
+                GameObject self = Instantiate(playerColor[i], StartPoint, Quaternion.identity) as GameObject;
+              
+                myTransform = self.transform;
+                myTransform.position = StartPoint;
+            }
+            else
+            {
+                // init opponent
+               opponent = (Instantiate(playerColor[i], StartPoint, Quaternion.identity) as GameObject);
+         
+            }
+        }
+         authenticate = true;
     }
 
+    #region movement
+    private IEnumerator move(Transform transform)
+    {
+        moving = true;
+        startPosition = transform.position;
+        t = 0;
+
+        if (gridOrientation == Orientation.Horizontal)
+        {
+            if (movementInput.x != 0)
+            {
+                endPosition = new Vector3(
+                startPosition.x + System.Math.Sign(movementInput.x) * tileSize,
+                startPosition.y,
+                startPosition.z);
+            }
+            if (movementInput.y != 0)
+            {
+                endPosition = new Vector3(
+                startPosition.x + (System.Math.Sign(movementInput.x) * tileSize / 2.0f),
+                startPosition.y,
+                startPosition.z + System.Math.Sign(movementInput.y) * tileSize);
+            }
+
+        }
+        else
+        {
+            endPosition = new Vector3(
+                startPosition.x + System.Math.Sign(movementInput.x) * tileSize,
+                startPosition.y + System.Math.Sign(movementInput.y) * 2f,
+                startPosition.z);
+        }
+
+        factor = 1f;
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * (movementSpeed / tileSize) * factor;
+            transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
+            yield return null;
+        }
+
+
+        moving = false;
+        yield return 0;
+
+
+    }
+
+    public void clickMove(Vector3 finalPosition)
+    {
+        startPosition = transform.position;
+        transform.Translate(endPosition * Time.deltaTime);
+
+    }
+
+    #endregion
+
+    #region multiplayer
     void Authenticate()
     {
         PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
@@ -101,14 +257,8 @@ public class ControlScript : MonoBehaviour, RealTimeMultiplayerListener
         {
             //Instantiate your player on the network.
             connected = true;
-
-            player = Instantiate(prefab, new Vector3(0f, 4f, 0f), Quaternion.identity);
-            player.name = PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId;
-
-            bool reliability = true;
-            string data = "Instantiate:0:1:2";
-            byte[] bytedata = System.Text.ASCIIEncoding.Default.GetBytes(data);
-            PlayGamesPlatform.Instance.RealTime.SendMessageToAll(reliability, bytedata);
+            authenticate = true;
+            setup();
         }
 
         else
@@ -140,7 +290,6 @@ public class ControlScript : MonoBehaviour, RealTimeMultiplayerListener
         connected = false;
         authenticate = false;
     }
-
     public void OnRealTimeMessageReceived(bool isReliable, string senderId, byte[] data)
     {
         if (!PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId.Equals(senderId))
@@ -148,21 +297,14 @@ public class ControlScript : MonoBehaviour, RealTimeMultiplayerListener
             string rawdata = System.Text.ASCIIEncoding.Default.GetString(data);
             string[] sliced = rawdata.Split(new string[] { ":" }, System.StringSplitOptions.RemoveEmptyEntries);
 
-            if (sliced[0].Contains("Instantiate"))
+            if (sliced[0].Contains("Position"))
             {
-                Transform naming = Instantiate(prefab, new Vector3(0f, 4f, 0f), Quaternion.identity);
-                naming.name = senderId;
-                naming.GetChild(0).gameObject.SetActive(false);
-            }
+                //Transform target = GameObject.Find(senderId).transform;
 
-            else if (sliced[0].Contains("Position"))
-            {
-                Transform target = GameObject.Find(senderId).transform;
-
-                if (target == null)
-                {
-                    return;
-                }
+                //if (target == null)
+                //{
+                //    return;
+                //}
 
                 Vector3 newpos = new Vector3
                 (
@@ -171,10 +313,23 @@ public class ControlScript : MonoBehaviour, RealTimeMultiplayerListener
                     System.Convert.ToSingle(sliced[3])
                 );
 
-                target.position = newpos;
+                opponent.transform.position = newpos;
             }
         }
     }
+    #endregion
 
+    #endregion
+
+    #region participant information
+    public List<Participant> GetAllPlayers()
+    {
+        return PlayGamesPlatform.Instance.RealTime.GetConnectedParticipants();
+    }
+
+    public string GetMyParticipantId()
+    {
+        return PlayGamesPlatform.Instance.RealTime.GetSelf().ParticipantId;
+    }
     #endregion
 }

@@ -2,39 +2,34 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class MainMenuScript : MonoBehaviour
+public class MainMenuScript : MonoBehaviour, MPLobbyListener
 {
 
     public Texture2D signOutButton;
     public Texture2D[] buttonTextures;
     private float buttonWidth;
     private float buttonHeight;
+    public GUISkin guiSkin;
+    private bool _showLobbyDialog;
+    private string _lobbyMessage;
 
     void OnGUI()
     {
-        for (int i = 0; i < 2; i++)
+        if (!_showLobbyDialog)
         {
             if (GUI.Button(new Rect((float)Screen.width * 0.5f - (buttonWidth / 2),
-                                      (float)Screen.height * (0.6f + (i * 0.2f)) - (buttonHeight / 2),
-                                      buttonWidth,
-                                      buttonHeight), buttonTextures[i]))
+                                (float)Screen.height * (0.6f) - (buttonHeight / 2),
+                                buttonWidth,
+                                buttonHeight), buttonTextures[0]))
             {
-                if (i == 0)
-                {
-                    // Single player mode!
-                    print("Load Game....");
-                    RetainedUserPicksScript.Instance.multiplayerGame = false;
-                    SceneManager.LoadScene("MainScene");
-                }
-                else if (i == 1)
-                {
-                    print("Sign in....");
-                    RetainedUserPicksScript.Instance.multiplayerGame = true;
-                    MultiplayerController.Instance.SignInAndStartMPGame();
-                }
+                _lobbyMessage = "Starting a multi-player game...";
+                _showLobbyDialog = true;
+                MultiplayerController.Instance.lobbyListener = this;
+                MultiplayerController.Instance.SignInAndStartMPGame();
             }
         }
-        if (MultiplayerController.Instance.IsAuthenticated())
+
+        if (MultiplayerController.Instance.IsAuthenticated() && !_showLobbyDialog)
         {
             if (GUI.Button(new Rect(Screen.width - (buttonWidth * 0.75f),
                                     Screen.height - (buttonHeight * 0.75f),
@@ -44,8 +39,24 @@ public class MainMenuScript : MonoBehaviour
                 MultiplayerController.Instance.SignOut();
             }
         }
+
+        if (_showLobbyDialog)
+        {
+            GUI.skin = guiSkin;
+            GUI.Box(new Rect(Screen.width * 0.25f, Screen.height * 0.4f, Screen.width * 0.5f, Screen.height * 0.5f), _lobbyMessage);
+        }
     }
 
+    public void SetLobbyStatusMessage(string message)
+    {
+        _lobbyMessage = message;
+    }
+
+    public void HideLobby()
+    {
+        _lobbyMessage = "";
+        _showLobbyDialog = false;
+    }
 
 
     void Start()
