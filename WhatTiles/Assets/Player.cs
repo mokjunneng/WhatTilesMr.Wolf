@@ -2,8 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GooglePlayGames.BasicApi.Multiplayer;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
     private float movementSpeed = 3f;
 
     private float tileSize = 1.732f;
@@ -31,13 +35,26 @@ public class Player : MonoBehaviour {
 
     public List<HexMap.Node> currentPath = null;
 
+    public ControlScript controlScript;
+
     //Store tiles that belongs to player
     public List<GameObject> tiles;
+    private Vector3 destinationPos;
+    private float destinationDist;
+    private Transform myTransform;
 
-	// Use this for initialization
-	void Start () {
-        
-	}
+    private float moveSpeed;
+    public bool isMoving;
+
+    private Transform playerTransform = null;
+
+
+    void Start()
+    {
+        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        myTransform = playerTransform;
+        destinationPos = myTransform.position;
+    }
 
     public int getTileCol()
     {
@@ -60,45 +77,43 @@ public class Player : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-        
-        //if( currentPath != null)
-        //{
-        //    int currNode = 0;
+    void Update()
+    {
+        destinationDist = Vector3.Distance(destinationPos, myTransform.position);
 
-        //    while( currNode < currentPath.Count - 1)
-        //    {
-        //        Vector3 start = currentPath[currNode].position;
-        //        Vector3 end = currentPath[currNode + 1].position;
+        if (destinationDist < .5f)  //prevent shaking behvaior when approaching destination
+        {
+            moveSpeed = 0;
+            isMoving = false;
+        }
+        else
+        {
+            moveSpeed = 3;
+            isMoving = true;
+        }
 
-        //        Debug.DrawLine(start, end);
+        if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        //        currNode++;
-        //    }
-        //}
+            if (Physics.Raycast(ray, out hit))
+            {
+                Vector3 targetPoint = ray.GetPoint(hit.distance);
+                destinationPos = ray.GetPoint(hit.distance);
+                Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
 
-        //if (!moving)
-        //{
-        //    movementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+                myTransform.rotation = targetRotation;
+            }
+        }
 
-        //    if (!allowDiagonals)
-        //    {
-        //        if (Mathf.Abs(movementInput.x) > Mathf.Abs(movementInput.y))
-        //        {
-        //            movementInput.y = 0;
-        //        }
-        //        else
-        //        {
-        //            movementInput.x = 0;
-        //        }
-        //    }
-
-        //    if (movementInput != Vector2.zero)
-        //    {
-        //        StartCoroutine(move(transform));
-        //    }
-        //}
+        if (destinationDist > .5f)
+        {
+            myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPos, moveSpeed * Time.deltaTime);
+        }
+        controlScript.updatePosition(myTransform.name);
     }
+
 
     private IEnumerator move(Transform transform)
     {
@@ -134,12 +149,14 @@ public class Player : MonoBehaviour {
 
         factor = 1f;
 
-        while ( t < 1f)
+        while (t < 1f)
         {
             t += Time.deltaTime * (movementSpeed / tileSize) * factor;
             transform.position = Vector3.Lerp(startPosition, endPosition, t);
+
             yield return null;
         }
+
 
         moving = false;
         yield return 0;
@@ -150,44 +167,9 @@ public class Player : MonoBehaviour {
     public void clickMove(Vector3 finalPosition)
     {
         startPosition = transform.position;
-
         transform.Translate(endPosition * Time.deltaTime);
-       
+
     }
 
-    //public void moveOneTile(int col, int row) 
-    //{
-        
-    //    float distance = (Mathf.Abs(this.tileCol - col) + Mathf.Abs(this.tileCol + this.tileRow - col - row) + Mathf.Abs(this.tileRow - row)) / 2f;
 
-    //    if (distance <= 2)
-    //    {
-    //        this.StartCoroutine(move2(this.transform, col, row));
-    //    }
-    //}
-
-    //private IEnumerator move2(Transform transform, int col, int row)
-    //{
-    //    moving = true;
-    //    startPosition = transform.position;
-    //    t = 0;
-
-    //    Hex h = new Hex(col, row);
-
-    //    endPosition = h.Position();
-
-    //    factor = 1f;
-
-    //    while (t < 1f)
-    //    {
-    //        t += Time.deltaTime * (movementSpeed / Vector3.Distance(startPosition, endPosition)) * factor;
-    //        transform.position = Vector3.Lerp(startPosition, endPosition, t);
-    //        yield return null;
-    //    }
-
-    //    moving = false;
-    //    yield return 0;
-    //}
-
-    
 }

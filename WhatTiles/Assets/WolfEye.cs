@@ -49,7 +49,7 @@ public class WolfEye : MonoBehaviour {
         }
 
         //if player moving, give penalty
-        if (player.GetComponent<playerMovement>().isMoving && facingPlayers)
+        if (player.GetComponent<Player>().isMoving && facingPlayers)
         {
             if (!handlingPenalty)
             {
