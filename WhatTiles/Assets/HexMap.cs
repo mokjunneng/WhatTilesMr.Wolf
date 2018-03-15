@@ -1,12 +1,12 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 //[ExecuteInEditMode]
-public class HexMap : MonoBehaviour {
+public class HexMap : MonoBehaviour
+{
 
     public GameObject player;
 
@@ -25,26 +25,27 @@ public class HexMap : MonoBehaviour {
     int mapWidth = 10;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         playerData = player.GetComponentInChildren<Player>();
         GenerateMap();
 
         print("tiles that belong to player: " + playerData.tiles.Count);
         //GeneratePathFindingGraph();
         //Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity, this.transform);
-       
-	}
 
-    private void GenerateMap() 
+    }
+
+    private void GenerateMap()
     {
         for (int column = 0; column < mapWidth; column++)
         {
             for (int row = 0; row < mapHeight; row++)
             {
                 Hex h = new Hex(column, row);
-             
+
                 //Instantiate a Hex
-                GameObject hexGO = (GameObject)Instantiate(HexPrefab, h.Position(), Quaternion.identity, this.transform );
+                GameObject hexGO = (GameObject)Instantiate(HexPrefab, h.Position(), Quaternion.identity, this.transform);
 
                 //Tag all the text mesh with the correct tile coordinate
                 hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
@@ -56,13 +57,13 @@ public class HexMap : MonoBehaviour {
                 //ct.tileCol = column;
                 //ct.tileRow = row;
                 //ct.player = player.GetComponentInChildren<Player>();
-                
+
                 //randomize tile color 
                 MeshRenderer mr = hexGO.transform.GetChild(1).GetComponent<MeshRenderer>();
                 mr.material = HexMaterials[UnityEngine.Random.Range(0, HexMaterials.Length)];
 
                 //update player data
-                if(mr.material.color == red)
+                if (mr.material.color == red)
                 {
                     playerData.tiles.Add(hexGO);
                 }
@@ -77,11 +78,11 @@ public class HexMap : MonoBehaviour {
 
 
     //Temporarily not including in game
-    public void GenerateShortestPathTo (Vector3 pos, int col, int row)
+    public void GenerateShortestPathTo(Vector3 pos, int col, int row)
     {
         Debug.Log("Finding path..");
         //clear old path of player unit
-        player.GetComponentInChildren<Player>().currentPath = null;
+       // player.GetComponentInChildren<Player>().currentPath = null;
 
 
         Dictionary<Node, float> dist = new Dictionary<Node, float>();
@@ -99,9 +100,9 @@ public class HexMap : MonoBehaviour {
         parent[source] = null;
 
         //initialize-single-source
-        foreach(Node v in graph)
+        foreach (Node v in graph)
         {
-            if( v != source)
+            if (v != source)
             {
                 dist[v] = Mathf.Infinity;
                 parent[v] = null;
@@ -109,7 +110,7 @@ public class HexMap : MonoBehaviour {
             }
         }
 
-        while(unvisitedNodes.Count > 0)
+        while (unvisitedNodes.Count > 0)
         {
             //TODO: consider some priority queue or some other self-sorting, optimized
             //data structure
@@ -117,9 +118,9 @@ public class HexMap : MonoBehaviour {
             //u is the unvisited node with the shortest distance
             Node u = null;
 
-            foreach(Node node in unvisitedNodes)
+            foreach (Node node in unvisitedNodes)
             {
-                if(u == null || dist[node] < dist[u])
+                if (u == null || dist[node] < dist[u])
                 {
                     u = node;
                     //print(node.position);
@@ -137,11 +138,11 @@ public class HexMap : MonoBehaviour {
 
             unvisitedNodes.Remove(u);
 
-            foreach(Node v in u.neighbours)
+            foreach (Node v in u.neighbours)
             {
                 float alt = dist[u] + u.distanceTo(v);
 
-                if(alt < dist[v])
+                if (alt < dist[v])
                 {
                     dist[v] = alt;
                     parent[v] = u;
@@ -151,7 +152,7 @@ public class HexMap : MonoBehaviour {
         }
 
         //Debug.Log("end of path finding.");
-        if(parent[target] == null)
+        if (parent[target] == null)
         {
             Debug.Log("no viable path found");
             //no route between target and source
@@ -168,7 +169,7 @@ public class HexMap : MonoBehaviour {
 
         Node currentNode = target;
 
-        while(currentNode != null)
+        while (currentNode != null)
         {
             currentPath.Add(currentNode);
             currentNode = parent[currentNode];
@@ -177,10 +178,10 @@ public class HexMap : MonoBehaviour {
         currentPath.Reverse();
 
         Debug.Log("path finding complete");
-        player.GetComponentInChildren<Player>().currentPath = currentPath;
+       // player.GetComponentInChildren<Player>().currentPath = currentPath;
     }
-    
-    
+
+
 
     public class Node
     {
@@ -199,7 +200,7 @@ public class HexMap : MonoBehaviour {
         {
             //return Vector3.Distance(
             //  position, n.position);
-            float distance =  (Mathf.Abs(this.q - n.q) + Mathf.Abs(this.q + this.r - n.q - n.r) + Mathf.Abs(this.r - n.r)) / 2f;
+            float distance = (Mathf.Abs(this.q - n.q) + Mathf.Abs(this.q + this.r - n.q - n.r) + Mathf.Abs(this.r - n.r)) / 2f;
             //print(distance);
             return distance;
         }
@@ -272,7 +273,7 @@ public class HexMap : MonoBehaviour {
                 {
                     graph[column, row].neighbours.Add(graph[column + 1, row]);
                 }
-                    
+
             }
         }
 

@@ -1,16 +1,16 @@
-﻿
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WolfEye : MonoBehaviour {
+public class WolfEye : MonoBehaviour
+{
 
     private float countTimer;
 
     //rotation-related variables  
     public float rotationAmount = 180;
-   
-    
+
+
     //booleans control
     private bool facingPlayers;
     private bool handlingPenalty = false;
@@ -26,21 +26,21 @@ public class WolfEye : MonoBehaviour {
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
     // Use this for initialization
-    void Start () {
-        
-
+    void Start()
+    {
         countTimer = Random.Range(3f, 6f);
         facingPlayers = false;
         player = GameObject.FindGameObjectWithTag("Player");
         tiles = player.GetComponent<Player>().tiles;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         countTimer -= Time.deltaTime;
 
         //rotate the wolf when the randomized timer is up
-        if(countTimer <= 0f)
+        if (countTimer <= 0f)
         {
             StartCoroutine(rotate(rotationAmount));
 
@@ -55,7 +55,7 @@ public class WolfEye : MonoBehaviour {
             {
                 StartCoroutine(givePenaltyToMovingPlayer());
             }
-         
+
         }
 
     }
@@ -84,9 +84,9 @@ public class WolfEye : MonoBehaviour {
         //    }
         //}
         Debug.Log(tiles.Count);
-        for(int i = 0; i < tiles.Count; i++)
+        for (int i = 0; i < tiles.Count; i++)
         {
-            if(lostTileCount <= 0)
+            if (lostTileCount <= 0)
             {
                 Debug.Log("exiting penalty loop");
                 break;
@@ -107,7 +107,7 @@ public class WolfEye : MonoBehaviour {
 
     private IEnumerator rotate(float angle, float duration = 0.3f)
     {
-        
+
         Quaternion from = transform.rotation;
         Quaternion to = transform.rotation;
         to *= Quaternion.Euler(Vector3.up * angle);
@@ -123,11 +123,11 @@ public class WolfEye : MonoBehaviour {
 
         facingPlayers ^= true;
 
-        
+
 
         transform.rotation = to;
         resetTimer();
-     
+
     }
 
     void resetTimer()
