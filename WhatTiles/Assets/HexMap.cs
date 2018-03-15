@@ -24,55 +24,45 @@ public class HexMap : MonoBehaviour {
     int mapHeight = 10;
     int mapWidth = 10;
 
+    public int count = 0;
+
     // Use this for initialization
     void Start () {
         playerData = player.GetComponentInChildren<Player>();
         GenerateMap();
-
-        print("tiles that belong to player: " + playerData.tiles.Count);
-        //GeneratePathFindingGraph();
-        //Instantiate(player, new Vector3(0, 0, 0), Quaternion.identity, this.transform);
-       
 	}
 
     private void GenerateMap() 
     {
+        
         for (int column = 0; column < mapWidth; column++)
         {
             for (int row = 0; row < mapHeight; row++)
             {
                 Hex h = new Hex(column, row);
-             
+
                 //Instantiate a Hex
-                GameObject hexGO = (GameObject)Instantiate(HexPrefab, h.Position(), Quaternion.identity, this.transform );
+                GameObject hexGO = (GameObject)Instantiate(HexPrefab, h.Position(), Quaternion.identity, this.transform);
 
                 //Tag all the text mesh with the correct tile coordinate
                 hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
 
-                //Get tile coordinates for mouse logic script
-                //ClickableTile ct = hexGO.GetComponentInChildren<ClickableTile>();
-                //ct.map = this;
-                //ct.tilePos = h.Position();
-                //ct.tileCol = column;
-                //ct.tileRow = row;
-                //ct.player = player.GetComponentInChildren<Player>();
-                
                 //randomize tile color 
                 MeshRenderer mr = hexGO.transform.GetChild(1).GetComponent<MeshRenderer>();
                 mr.material = HexMaterials[UnityEngine.Random.Range(0, HexMaterials.Length)];
 
                 //update player data
-                if(mr.material.color == red)
+                if (mr.material.color == red)
                 {
                     playerData.tiles.Add(hexGO);
+                    count++;
                 }
 
                 //assign each tiles to have a trigger event
 
             }
         }
-
-        //StaticBatchingUtility.Combine(this.gameObject);
+        print(count==playerData.tiles.Count);
     }
 
 
@@ -179,9 +169,7 @@ public class HexMap : MonoBehaviour {
         Debug.Log("path finding complete");
         player.GetComponentInChildren<Player>().currentPath = currentPath;
     }
-    
-    
-
+   
     public class Node
     {
         public List<Node> neighbours;
@@ -204,9 +192,7 @@ public class HexMap : MonoBehaviour {
             return distance;
         }
     }
-
-
-
+    
     void GeneratePathFindingGraph()
     {
         graph = new Node[mapWidth, mapHeight];

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class playerMovement : MonoBehaviour {
+public class playerMovement : NetworkBehaviour {
 
     private Vector3 destinationPos;
     private float destinationDist;
@@ -19,6 +20,8 @@ public class playerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!isLocalPlayer) { return; }
+
 
         destinationDist = Vector3.Distance(destinationPos, myTransform.position);
 

@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
-public class WolfEye :NetworkBehaviour {
+public class WolfEye :MonoBehaviour {
 
     private float countTimer;
 
@@ -26,46 +25,49 @@ public class WolfEye :NetworkBehaviour {
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
-    public GameObject wolfPrefab;
-
+    private bool init = true;
     // Use this for initialization
-    public override void OnStartLocalPlayer()
-    { 
+    void Start()
+    {
         countTimer = Random.Range(3f, 6f);
         facingPlayers = false;
-        player = GameObject.FindGameObjectWithTag("Player");
-        tiles = player.GetComponent<Player>().tiles;
-        var enemy = (GameObject)Instantiate(wolfPrefab,new Vector3(18.37f, 1.265f, 7.78f), Quaternion.Euler(
-                0.0f,
-                180f,
-                0.0f));
-        NetworkServer.Spawn(enemy);
     }
 
 
 
 	// Update is called once per frame
 	void Update () {
-        if (player != null)
+   
+        if (GameObject.FindGameObjectWithTag("Player") != null)
         {
-            countTimer -= Time.deltaTime;
-
-        //rotate the wolf when the randomized timer is up
-        if(countTimer <= 0f)
-        {
-            StartCoroutine(rotate(rotationAmount));
-
-            //to ignore the countdown timer
-            countTimer = Mathf.Infinity;
-        }
-
-        //if player moving, give penalty
-        
-            if (player.GetComponent<playerMovement>().isMoving && facingPlayers)
+            if (init)
             {
-                if (!handlingPenalty)
+                init = false;
+                player = GameObject.FindGameObjectWithTag("Player");
+                tiles = player.GetComponent<Player>().tiles;
+            }
+
+            else
+            {
+                countTimer -= Time.deltaTime;
+
+                //rotate the wolf when the randomized timer is up
+                if (countTimer <= 0f)
                 {
-                    StartCoroutine(givePenaltyToMovingPlayer());
+                    StartCoroutine(rotate(rotationAmount));
+
+                    //to ignore the countdown timer
+                    countTimer = Mathf.Infinity;
+                }
+
+                //if player moving, give penalty
+
+                if (player.GetComponent<playerMovement>().isMoving && facingPlayers)
+                {
+                    if (!handlingPenalty)
+                    {
+                        StartCoroutine(givePenaltyToMovingPlayer());
+                    }
                 }
             }
         }
@@ -86,7 +88,10 @@ public class WolfEye :NetworkBehaviour {
                 Debug.Log("exiting penalty loop");
                 break;
             }
-            GameObject tile = tiles[Random.Range(0, tiles.Count - 1)];
+
+            int random = Random.Range(0, tiles.Count);
+            print(random);
+            GameObject tile = tiles[random];
             if (tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color == red)
             {
                 tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = blue;

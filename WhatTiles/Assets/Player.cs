@@ -35,7 +35,6 @@ public class Player : NetworkBehaviour
 
     //Store tiles that belongs to player
     public List<GameObject> tiles;
- 
 
     void Start()
     {
@@ -60,6 +59,11 @@ public class Player : NetworkBehaviour
     public void setTileRow(int row)
     {
         this.tileRow = row;
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        GetComponent<MeshRenderer>().material.color = Color.red;
     }
 
     // Update is called once per frame
@@ -125,7 +129,6 @@ public class Player : NetworkBehaviour
     {
         startPosition = transform.position;
         transform.Translate(endPosition * Time.deltaTime);
-
     }
 
 
