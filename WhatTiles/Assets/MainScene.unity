@@ -418,10 +418,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   authenticate: 0
   playerColor:
-  - {fileID: 1842485876580892, guid: 00e1488c4f00280479b9b1617d5ce32f, type: 2}
   - {fileID: 1556454219122138, guid: 5be4ad62ad185a646a63f87f71d671a0, type: 2}
+  - {fileID: 1548041612088332, guid: 82efd5f70ad89104a924a3a35eb03ccf, type: 2}
   opponent: {fileID: 0}
-  tiles: []
   isMoving: 0
 --- !u!114 &1727498045
 MonoBehaviour:
