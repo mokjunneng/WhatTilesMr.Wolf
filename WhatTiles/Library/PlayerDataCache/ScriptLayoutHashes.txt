@@ -15,7 +15,8 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 31aaf521b3ef8699466676591ea0efd4 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 df374c01140c2d578bf70cbd60073d1d UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
 f6de338d01da7f1fbc3834d3ec7f0e7e Assembly-CSharp.dll:.playerMovement
-8045ee723f34513623475273f4e4d21f Assembly-CSharp.dll:.HexMap
+1467f933b03f996d2c23a7d03b23ad57 Assembly-CSharp.dll:.hexSpawner
+b6c25922d9030721dfd85bea21c7984f Assembly-CSharp.dll:.HexMap
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
 49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
@@ -142,11 +143,9 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
-5078dea525828f12b2f70bffb98707cf Assembly-CSharp.dll:.hexMapSpawner
 9de3a22eca9aefadba2d10d5987cefe3 UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 f73dee587d23518bce0e0efb85fef8a1 Assembly-CSharp.dll:.WolfSpawner
-7bb45a17d1139803df91255314accc28 Assembly-CSharp.dll:.Player
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Player
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:GooglePlayGames.OurUtils.PlayGamesHelperObject
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.highlightTiles
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.TriggerTile
-5cbb86efa83927ee54fedda1814e782e Assembly-CSharp.dll:.hexSpawner

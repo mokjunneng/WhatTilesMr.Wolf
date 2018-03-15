@@ -30,7 +30,7 @@ public class TriggerTile : MonoBehaviour {
             gameObject.GetComponent<Renderer>().material.color = red;
 
             
-            other.gameObject.GetComponent<Player>().tiles.Add(gameObject.transform.parent.gameObject);
+            other.gameObject.GetComponent<Player>().setTile(gameObject.transform.parent.gameObject);
             //Debug.Log(other.gameObject.GetComponent<Player>().tiles.Count);
             //player.GetComponent<Player>().tiles.Add(gameObject);
 

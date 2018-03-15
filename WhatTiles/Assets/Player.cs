@@ -31,11 +31,6 @@ public class Player : NetworkBehaviour
     private int tileCol = 0;
     private int tileRow = 0;
 
-    public List<HexMap.Node> currentPath = null;
-
-    //Store tiles that belongs to player
-    public List<GameObject> tiles;
-
     void Start()
     {
        
@@ -61,6 +56,12 @@ public class Player : NetworkBehaviour
         this.tileRow = row;
     }
 
+
+    public void setTile(GameObject tile)
+    {
+        if (!isServer) { GameObject.FindGameObjectWithTag("TileMap").GetComponent<HexMap>().tilesOpponent.Add(tile); }
+        GameObject.FindGameObjectWithTag("TileMap").GetComponent <HexMap>().tilesPlayer.Add(tile);
+    }
     public override void OnStartLocalPlayer()
     {
         GetComponent<MeshRenderer>().material.color = Color.red;

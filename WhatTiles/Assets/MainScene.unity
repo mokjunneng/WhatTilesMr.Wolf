@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 136738012}
   - component: {fileID: 136738010}
   - component: {fileID: 136738011}
+  - component: {fileID: 136738013}
   m_Layer: 0
   m_Name: WolfSpawn
   m_TagString: Untagged
@@ -187,6 +188,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &136738013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 136738009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!1 &371947456
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,54 +274,87 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45.571003, y: 3.2050002, z: -2.594}
---- !u!1001 &676166608
+--- !u!1001 &1376733282
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 114762403304323128, guid: 43f3754ea393cd44881db20213ea7bf0,
+        type: 2}
+      propertyPath: HexMaterials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4127620185919052, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    - target: {fileID: 4590783265853984, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 114915525285419814, guid: 26d5862e877d554439a30a4df53dfe8e,
+    - target: {fileID: 1115637568568532, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
+      propertyPath: m_Name
+      value: HexSpawn
+      objectReference: {fileID: 0}
+    - target: {fileID: 1115637568568532, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 114762403304323128, guid: 43f3754ea393cd44881db20213ea7bf0,
+        type: 2}
+      propertyPath: HexMaterials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fa8e724575b81ab45a9bbcccc0352058, type: 2}
+    - target: {fileID: 114762403304323128, guid: 43f3754ea393cd44881db20213ea7bf0,
+        type: 2}
+      propertyPath: HexMaterials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 37ebe711c109f3f49b601f54c0e2a563, type: 2}
+    - target: {fileID: 114762403304323128, guid: 43f3754ea393cd44881db20213ea7bf0,
+        type: 2}
+      propertyPath: HexPrefab
+      value: 
+      objectReference: {fileID: 1221129000209570, guid: 26d5862e877d554439a30a4df53dfe8e,
+        type: 2}
+    - target: {fileID: 114762403304323128, guid: 43f3754ea393cd44881db20213ea7bf0,
+        type: 2}
+      propertyPath: mapPreFab
+      value: 
+      objectReference: {fileID: 1221129000209570, guid: 26d5862e877d554439a30a4df53dfe8e,
+        type: 2}
+    - target: {fileID: 114529005802961054, guid: 43f3754ea393cd44881db20213ea7bf0,
         type: 2}
       propertyPath: m_ServerOnly
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 114610751560860428, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
-    - {fileID: 114915525285419814, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
-  m_ParentPrefab: {fileID: 100100000, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 43f3754ea393cd44881db20213ea7bf0, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &1597822304
 GameObject:
@@ -534,6 +589,7 @@ MonoBehaviour:
   m_OnlineScene: 
   m_SpawnPrefabs:
   - {fileID: 1073554225971308, guid: 43c1511639e7ea649b40ee2f54894d24, type: 2}
+  - {fileID: 1221129000209570, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:

@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class WolfEye :MonoBehaviour {
+public class WolfEye :NetworkBehaviour {
 
     private float countTimer;
 
@@ -12,20 +13,20 @@ public class WolfEye :MonoBehaviour {
    
     
     //booleans control
-    private bool facingPlayers;
     private bool handlingPenalty = false;
-
-
     //store the renderers of tiles generated in game
     private List<GameObject> tiles;
     //private Renderer[] tilesRenderers;
 
     private GameObject player;
-
+    private GameObject map;
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
     private bool init = true;
+
+    [SyncVar]
+    private bool facingPlayers;
     // Use this for initialization
     void Start()
     {
@@ -37,17 +38,21 @@ public class WolfEye :MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-   
-        if (GameObject.FindGameObjectWithTag("Player") != null)
+
+        if (!isServer)
+            return;
+        
+        else
         {
-            if (init)
+            if (init && GameObject.FindGameObjectWithTag("TileMap")!=null && GameObject.FindGameObjectWithTag("Player") != null)
             {
                 init = false;
+                map = GameObject.FindGameObjectWithTag("TileMap");
                 player = GameObject.FindGameObjectWithTag("Player");
-                tiles = player.GetComponent<Player>().tiles;
+                tiles = map.GetComponent<HexMap>().tilesPlayer;
             }
 
-            else
+            if(!init && GameObject.FindGameObjectWithTag("TileMap") != null && GameObject.FindGameObjectWithTag("Player") != null)
             {
                 countTimer -= Time.deltaTime;
 
@@ -88,13 +93,18 @@ public class WolfEye :MonoBehaviour {
                 Debug.Log("exiting penalty loop");
                 break;
             }
+            GameObject tile = tiles[Random.Range(0, tiles.Count - 1)];
 
-            int random = Random.Range(0, tiles.Count);
-            print(random);
-            GameObject tile = tiles[random];
             if (tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color == red)
             {
                 tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = blue;
+                tiles.Remove(tile);
+                lostTileCount -= 1;
+                Debug.Log("minusing tile count");
+            }
+            if (tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color == blue)
+            {
+                tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = red;
                 tiles.Remove(tile);
                 lostTileCount -= 1;
                 Debug.Log("minusing tile count");
