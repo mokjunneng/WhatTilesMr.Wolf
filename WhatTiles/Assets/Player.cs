@@ -82,11 +82,11 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        //Authenticate();
-        playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
-        myTransform = playerTransform;
-        destinationPos = myTransform.position;
-        authenticate = true;
+        Authenticate();
+        //playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        //myTransform = playerTransform;
+        //destinationPos = myTransform.position;
+        //authenticate = true;
     }
 
 

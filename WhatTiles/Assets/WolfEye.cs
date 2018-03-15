@@ -24,39 +24,47 @@ public class WolfEye : MonoBehaviour
 
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
-
+    bool init = true;
     // Use this for initialization
     void Start()
     {
         countTimer = Random.Range(3f, 6f);
         facingPlayers = false;
-        player = GameObject.FindGameObjectWithTag("Player");
-        tiles = player.GetComponent<Player>().tiles;
     }
 
     // Update is called once per frame
     void Update()
     {
-        countTimer -= Time.deltaTime;
-
-        //rotate the wolf when the randomized timer is up
-        if (countTimer <= 0f)
+        if(init && GameObject.FindGameObjectWithTag("Player").activeInHierarchy)
         {
-            StartCoroutine(rotate(rotationAmount));
-
-            //to ignore the countdown timer
-            countTimer = Mathf.Infinity;
+            player = GameObject.FindGameObjectWithTag("Player");
+            tiles = player.GetComponent<Player>().tiles;
+            init = false;
         }
-
-        //if player moving, give penalty
-        if (player.GetComponent<Player>().isMoving && facingPlayers)
+        if(!init &&GameObject.FindGameObjectWithTag("Player") != null)
         {
-            if (!handlingPenalty)
+            countTimer -= Time.deltaTime;
+
+            //rotate the wolf when the randomized timer is up
+            if (countTimer <= 0f)
             {
-                StartCoroutine(givePenaltyToMovingPlayer());
+                StartCoroutine(rotate(rotationAmount));
+
+                //to ignore the countdown timer
+                countTimer = Mathf.Infinity;
             }
 
+            //if player moving, give penalty
+            if (player.GetComponent<Player>().isMoving && facingPlayers)
+            {
+                if (!handlingPenalty)
+                {
+                    StartCoroutine(givePenaltyToMovingPlayer());
+                }
+
+            }
         }
+        
 
     }
 
