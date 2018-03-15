@@ -21,6 +21,9 @@ public class HexMap : MonoBehaviour
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
+    public int playerCount = 0;
+    public int totalCount = 0;
+
     int mapHeight = 10;
     int mapWidth = 10;
 
@@ -66,8 +69,9 @@ public class HexMap : MonoBehaviour
                 if (mr.material.color == red)
                 {
                     playerData.tiles.Add(hexGO);
+                    playerCount++;
                 }
-
+                totalCount++;
                 //assign each tiles to have a trigger event
 
             }
