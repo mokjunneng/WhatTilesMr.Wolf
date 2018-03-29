@@ -2,60 +2,86 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class WolfEye : MonoBehaviour {
+public class WolfEye :NetworkBehaviour {
 
     private float countTimer;
 
     //rotation-related variables  
     public float rotationAmount = 180;
+	public float shakeIntensity = 0.3f;
    
     
     //booleans control
-    private bool facingPlayers;
     private bool handlingPenalty = false;
-
-
     //store the renderers of tiles generated in game
     private List<GameObject> tiles;
     //private Renderer[] tilesRenderers;
 
     private GameObject player;
-
+    private GameObject map;
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
-    // Use this for initialization
-    void Start () {
-        
+    private bool init = true;
 
+    [SyncVar]
+    private bool facingPlayers;
+    // Use this for initialization
+    void Start()
+    {
         countTimer = Random.Range(3f, 6f);
         facingPlayers = false;
-        player = GameObject.FindGameObjectWithTag("Player");
-        tiles = player.GetComponent<Player>().tiles;
     }
-	
+
+
+
 	// Update is called once per frame
 	void Update () {
-        countTimer -= Time.deltaTime;
 
-        //rotate the wolf when the randomized timer is up
-        if(countTimer <= 0f)
+        if (!isServer)
+            return;
+        
+        else
         {
-            StartCoroutine(rotate(rotationAmount));
-
-            //to ignore the countdown timer
-            countTimer = Mathf.Infinity;
-        }
-
-        //if player moving, give penalty
-        if (player.GetComponent<playerMovement>().isMoving && facingPlayers)
-        {
-            if (!handlingPenalty)
+            if (init && GameObject.FindGameObjectWithTag("TileMap")!=null && GameObject.FindGameObjectWithTag("Player") != null)
             {
-                StartCoroutine(givePenaltyToMovingPlayer());
+                init = false;
+                map = GameObject.FindGameObjectWithTag("TileMap");
+                player = GameObject.FindGameObjectWithTag("Player");
+                tiles = map.GetComponent<HexMap>().tilesPlayer;
             }
-         
+
+            if(!init && GameObject.FindGameObjectWithTag("TileMap") != null && GameObject.FindGameObjectWithTag("Player") != null)
+            {
+                countTimer -= Time.deltaTime;
+
+				if (countTimer <= 0.6f && countTimer > 0f && facingPlayers == false) {
+					Vector3 originpos = transform.position;
+					StartCoroutine (vibrate (transform.position));
+					transform.position = originpos;
+				}
+
+                //rotate the wolf when the randomized timer is up
+                if (countTimer <= 0f)
+                {
+                    StartCoroutine(rotate(rotationAmount));
+
+                    //to ignore the countdown timer
+                    countTimer = Mathf.Infinity;
+                }
+
+                //if player moving, give penalty
+
+                if (player.GetComponent<playerMovement>().isMoving && facingPlayers)
+                {
+                    if (!handlingPenalty)
+                    {
+                        StartCoroutine(givePenaltyToMovingPlayer());
+                    }
+                }
+            }
         }
 
     }
@@ -66,23 +92,6 @@ public class WolfEye : MonoBehaviour {
         Debug.Log("giving penalty");
         Renderer lostTile;
         int lostTileCount = 3;
-
-        //Player playerData = player.GetComponent<Player>();
-        //List<GameObject> tiles = playerData.tiles;
-
-        //set 3 tiles to opposite colour
-        //while (lostTileCount > 0 && tiles.Count > 0)
-        //{
-        //    GameObject tile = tiles[Random.Range(0, tiles.Count - 1)];
-
-        //    if ( tile.GetComponentInChildren<Renderer>().material.color == red)
-        //    {
-        //        tile.GetComponentInChildren<Renderer>().material.color = blue;
-        //        tiles.Remove(tile);
-        //        lostTileCount -= 1;
-        //        Debug.Log("minusing tile count");
-        //    }
-        //}
         Debug.Log(tiles.Count);
         for(int i = 0; i < tiles.Count; i++)
         {
@@ -92,9 +101,17 @@ public class WolfEye : MonoBehaviour {
                 break;
             }
             GameObject tile = tiles[Random.Range(0, tiles.Count - 1)];
+
             if (tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color == red)
             {
                 tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = blue;
+                tiles.Remove(tile);
+                lostTileCount -= 1;
+                Debug.Log("minusing tile count");
+            }
+            if (tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color == blue)
+            {
+                tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = red;
                 tiles.Remove(tile);
                 lostTileCount -= 1;
                 Debug.Log("minusing tile count");
@@ -129,6 +146,15 @@ public class WolfEye : MonoBehaviour {
         resetTimer();
      
     }
+
+	private IEnumerator vibrate(Vector3 originPost){
+		float elapsed = 0f;
+		while (elapsed < 0.6f) {
+			transform.position = originPost + Random.insideUnitSphere * shakeIntensity;
+			elapsed += Time.deltaTime;
+			yield return null;
+		}
+	}
 
     void resetTimer()
     {

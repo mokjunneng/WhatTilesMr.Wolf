@@ -19,6 +19,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4274016000933972}
+  - component: {fileID: 114865484379406258}
+  - component: {fileID: 114107624314887606}
   m_Layer: 0
   m_Name: HexPrefab
   m_TagString: Untagged
@@ -38,7 +40,6 @@ GameObject:
   - component: {fileID: 23319668519835590}
   - component: {fileID: 114473476644113274}
   - component: {fileID: 64697184723974372}
-  - component: {fileID: 65377557743034782}
   m_Layer: 0
   m_Name: HexModel
   m_TagString: Untagged
@@ -193,18 +194,6 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: b71d5799b4591a8429c16eaa4a3bf2ee, type: 3}
---- !u!65 &65377557743034782
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1289085642207004}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.1, z: 0.3}
-  m_Center: {x: 0.15421298, y: -0.03909999, z: -0.8935505}
 --- !u!102 &102208907003847344
 TextMesh:
   serializedVersion: 3
@@ -226,6 +215,27 @@ TextMesh:
   m_Color:
     serializedVersion: 2
     rgba: 4291839666
+--- !u!114 &114107624314887606
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1111970541060916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!114 &114473476644113274
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,3 +247,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efd854bfd0c784644b2fd872857d11aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114865484379406258
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1111970541060916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 56
+    i1: 85
+    i2: 197
+    i3: 161
+    i4: 69
+    i5: 251
+    i6: 148
+    i7: 180
+    i8: 169
+    i9: 63
+    i10: 155
+    i11: 175
+    i12: 29
+    i13: 88
+    i14: 189
+    i15: 56
+  m_ServerOnly: 1
+  m_LocalPlayerAuthority: 0

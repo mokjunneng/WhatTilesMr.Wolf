@@ -27,16 +27,13 @@ public class TriggerTile : MonoBehaviour {
         {
             Debug.Log("Triggerred");
             //tileColor = red;
-			Vector3 tileCentre = gameObject.GetComponent<Renderer>().bounds.center;
-			//Debug.Log (tileCentre);
-			Vector3 playerPosition = other.gameObject.GetComponent<Player>().transform.position;
-			//Debug.Log (playerPosition);
-			if ((Vector3.Distance(playerPosition,tileCentre))<=1f){
-            	gameObject.GetComponent<Renderer>().material.color = red;
-            	other.gameObject.GetComponent<Player>().tiles.Add(gameObject.transform.parent.gameObject);
+            gameObject.GetComponent<Renderer>().material.color = red;
+
+            
+            other.gameObject.GetComponent<Player>().setTile(gameObject.transform.parent.gameObject);
             //Debug.Log(other.gameObject.GetComponent<Player>().tiles.Count);
             //player.GetComponent<Player>().tiles.Add(gameObject);
-			}
+
         }else if(other.gameObject.tag == "Player blue" && gameObject.GetComponent<Renderer>().material.color == red)
         {
             Debug.Log("wrong trigger");
