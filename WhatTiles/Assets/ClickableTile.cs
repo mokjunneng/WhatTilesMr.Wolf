@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ClickableTile : MonoBehaviour {
     
-    public HexMap map;
+    //public HexMap map;
     public Vector3 tilePos;
     public int tileCol;
     public int tileRow;
-    public Player player;
+    //public Player player;
     private Hex h;
 
     

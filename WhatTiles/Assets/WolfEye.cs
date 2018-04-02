@@ -38,7 +38,7 @@ public class WolfEye : MonoBehaviour
         if(init && GameObject.FindGameObjectWithTag("Player").activeInHierarchy)
         {
             player = GameObject.FindGameObjectWithTag("Player");
-            tiles = player.GetComponent<Player>().tiles;
+            //tiles = player.GetComponent<Player>().tiles;
             init = false;
         }
         if(!init &&GameObject.FindGameObjectWithTag("Player") != null)
@@ -55,14 +55,14 @@ public class WolfEye : MonoBehaviour
             }
 
             //if player moving, give penalty
-            if (player.GetComponent<Player>().isMoving && facingPlayers)
-            {
-                if (!handlingPenalty)
-                {
-                    StartCoroutine(givePenaltyToMovingPlayer());
-                }
+            //if (player.GetComponent<Player>().isMoving && facingPlayers)
+            //{
+            //    if (!handlingPenalty)
+            //    {
+            //        StartCoroutine(givePenaltyToMovingPlayer());
+            //    }
 
-            }
+            //}
         }
         
 

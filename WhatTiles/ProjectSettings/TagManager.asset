@@ -7,6 +7,10 @@ TagManager:
   - TileMap
   - Tile
   - Canvas
+  - PlayerRed
+  - PlayerBlue
+  - Timer
+  - TileMaster
   layers:
   - Default
   - TransparentFX
