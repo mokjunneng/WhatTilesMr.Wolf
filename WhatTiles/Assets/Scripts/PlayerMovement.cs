@@ -169,10 +169,7 @@ public class PlayerMovement : NetworkBehaviour {
            
                 tileObject.transform.GetChild(1).GetComponent<MeshRenderer>().material.color = col;
             }
-
-
         }
-
     }
 
 

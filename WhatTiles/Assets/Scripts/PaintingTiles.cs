@@ -51,6 +51,7 @@ public class PaintingTiles : NetworkBehaviour
     [ClientRpc]
     public void RpcPaint(GameObject obj, Color col)
     {
+        print(wolf == null);
         if (col == Color.red)
         {
             if (obj.transform.GetChild(1).GetComponentInChildren<MeshRenderer>().material.color == Color.blue)
@@ -79,11 +80,19 @@ public class PaintingTiles : NetworkBehaviour
     [Command]
     public void CmdPaint(GameObject obj, Color col)
     {
-        tileObject = obj;
-        objNetId = obj.transform.GetComponentInParent<NetworkIdentity>();         // get the object's network ID
-        objNetId.AssignClientAuthority(connectionToClient);     // assign authority to the player who is changing the color
-        RpcPaint(obj.transform.parent.gameObject, col);                                     // use a Client RPC function to "paint" the object on all clients
-        objNetId.RemoveClientAuthority(connectionToClient);     // remove the authority from the player who changed the color
+        if(obj != null)
+        {
+            if (obj.CompareTag("Player"))
+            {
+                return;
+            }
+            tileObject = obj;
+            objNetId = obj.transform.GetComponentInParent<NetworkIdentity>();         // get the object's network ID
+            objNetId.AssignClientAuthority(connectionToClient);     // assign authority to the player who is changing the color
+            RpcPaint(obj.transform.parent.gameObject, col);                                     // use a Client RPC function to "paint" the object on all clients
+            objNetId.RemoveClientAuthority(connectionToClient);     // remove the authority from the player who changed the color
+        }
+       
     }
 }
 
