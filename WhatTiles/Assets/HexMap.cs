@@ -19,18 +19,47 @@ public class HexMap : NetworkBehaviour {
     public bool init = true;
 
     public GameObject HexPrefab;
+    public GameObject HexPrefabBlue;
+    public GameObject HexPrefabRed;
 
     //Store tiles that belongs to player
-    
-    public List<GameObject> tilesPlayer;
-    public List<GameObject> tilesOpponent;
+
+    public List<GameObject> tiles;
+    public List<GameObject> redTiles;
+    public List<GameObject> blueTiles;
 
     // Use this for initialization
-    void Start () { 
+    void Start ()
+    {
+        
+
+        Debug.Log("Server Generating Map");
         GenerateMap();
+        GenerateMapForClient();
+        
 	}
 
+    
+    private void GenerateMapForClient()
+    {
+        foreach(GameObject tile in tiles)
+        {
+            NetworkServer.Spawn(tile);
+        }
+    }
 
+
+
+
+    //[ClientRpc]
+    //private void RpcSpawnMap()
+    //{
+    //    Debug.Log("spawning map for client");
+    //    foreach(GameObject tile in tiles)
+    //    {
+    //        NetworkServer.SpawnWithClientAuthority(tile, connectionToClient);
+    //    }
+    //}
 
     void Update()
     {
@@ -44,32 +73,52 @@ public class HexMap : NetworkBehaviour {
             {
                 Hex h = new Hex(column, row);
 
-                //Instantiate a Hex
-                GameObject hexGO = (GameObject)Instantiate(HexPrefab, h.Position(), Quaternion.identity, this.transform);
+                int color = UnityEngine.Random.Range(0, 2);
+                GameObject hexGO;
 
-                //Tag all the text mesh with the correct tile coordinate
-                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
-
-                //randomize tile color 
-                MeshRenderer mr = hexGO.transform.GetChild(1).GetComponent<MeshRenderer>();
-                mr.material = HexMaterials[UnityEngine.Random.Range(0, HexMaterials.Length)];
-                
-
-                //update player data
-                if (mr.material.color == red)
+                //0: blue, 1: red
+                if(color == 0)
                 {
-                    tilesPlayer.Add(hexGO);
+                    hexGO = (GameObject)Instantiate(HexPrefabBlue, h.Position(), Quaternion.identity, this.transform);
+                    blueTiles.Add(hexGO);
                 }
                 else
                 {
-                    tilesOpponent.Add(hexGO);
+                    hexGO = (GameObject)Instantiate(HexPrefabRed, h.Position(), Quaternion.identity, this.transform);
+                    redTiles.Add(hexGO);
                 }
 
-                NetworkServer.Spawn(hexGO);
+                tiles.Add(hexGO);
+
+                //Instantiate a Hex
+                //GameObject hexGO = (GameObject)Instantiate(HexPrefab, h.Position(), Quaternion.identity, this.transform);
+
+                //Tag all the text mesh with the correct tile coordinate
+                //hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0},{1}", column, row);
+
+                //randomize tile color 
+                //MeshRenderer mr = hexGO.transform.GetChild(1).GetComponent<MeshRenderer>();
+                //mr.material = HexMaterials[UnityEngine.Random.Range(0, HexMaterials.Length)];
+
+
+                //update player data
+                //if (mr.material.color == red)
+                //{
+                //    tilesPlayer.Add(hexGO);
+                //}
+                //else
+                //{
+                //    tilesOpponent.Add(hexGO);
+                //}
+
+
+                //NetworkServer.Spawn(hexGO);
+
                 //assign each tiles to have a trigger event
 
             }
         }
+        Debug.Log("Map data generated");
     }
 
 }

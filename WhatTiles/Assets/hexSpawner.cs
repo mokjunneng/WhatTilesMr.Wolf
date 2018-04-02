@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class hexSpawner : NetworkBehaviour {
 
     public GameObject mapPreFab;
+    private List<GameObject> tiles;
 
     //// Use this for initialization
     //public Material[] HexMaterials;
@@ -32,6 +33,20 @@ public class hexSpawner : NetworkBehaviour {
         //if (!isServer) { return; }
         //GenerateMap();
     }
+
+    //private void Start()
+    //{
+    //    if (isClient)
+    //    {
+    //        CmdGenerateMap();
+    //    }
+    //}
+
+    //[Command]
+    //void CmdGenerateMap()
+    //{
+    //    GameObject.FindGameObjectWithTag("TleMap").GetComponent<HexMap>().
+    //}
 
     //private void GenerateMap()
     //{

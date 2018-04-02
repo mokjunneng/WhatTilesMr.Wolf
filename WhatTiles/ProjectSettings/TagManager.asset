@@ -6,6 +6,7 @@ TagManager:
   tags:
   - TileMap
   - Tile
+  - WolfAI
   layers:
   - Default
   - TransparentFX

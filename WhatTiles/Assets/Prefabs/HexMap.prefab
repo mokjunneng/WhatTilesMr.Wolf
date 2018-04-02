@@ -74,12 +74,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da1b3d18445d134c9b12a1b89b6eeb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  HexPrefab: {fileID: 1111970541060916, guid: 3855c5a145fb94b4a93f9baf1d58bd38, type: 2}
   HexMaterials:
   - {fileID: 2100000, guid: fa8e724575b81ab45a9bbcccc0352058, type: 2}
   - {fileID: 2100000, guid: 37ebe711c109f3f49b601f54c0e2a563, type: 2}
   init: 1
+  HexPrefab: {fileID: 1111970541060916, guid: 3855c5a145fb94b4a93f9baf1d58bd38, type: 2}
+  HexPrefabBlue: {fileID: 1524862807346472, guid: c6f39b0beea99844f8d04145f4e4fd1d,
+    type: 2}
+  HexPrefabRed: {fileID: 1267537075574956, guid: aaf78a6fcbd2a1342893c1662ea3ef60,
+    type: 2}
+  tiles: []
+  redTiles: []
+  blueTiles: []
 --- !u!114 &114535826536288132
 MonoBehaviour:
   m_ObjectHideFlags: 1
