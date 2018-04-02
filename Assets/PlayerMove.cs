@@ -20,6 +20,13 @@ public class PlayerMove : NetworkBehaviour
 
     [SyncVar]
     private float moveSpeed;
+    private float moveSpeedLow = 1.5f;
+    private float moveSpeedHigh = 5f;
+
+    private bool highSpeed;
+    private float highSpeedTimer;
+    private float highSpeedThreshold = 5f;
+
 
     public GameObject myGO;
 
@@ -78,6 +85,11 @@ public class PlayerMove : NetworkBehaviour
 
     }
 
+    public void setHighSpeed()
+    {
+        highSpeed = true;
+    }
+
     void Update()
     {
 
@@ -114,6 +126,17 @@ public class PlayerMove : NetworkBehaviour
         // Keep track of the distance between this gameObject and destinationPosition
         destinationDistance = Vector3.Distance(destinationPosition, myTransform.position);
 
+        if (highSpeed)
+        {
+
+            highSpeedTimer += Time.deltaTime;
+            if (highSpeedTimer > highSpeedThreshold)
+            {
+                highSpeed = false;
+                highSpeedTimer = 0f;
+            }
+        }
+
         if (destinationDistance < .5f)  //prevent shaking behvaior when approaching destination
         {
             moveSpeed = 0;
@@ -121,7 +144,15 @@ public class PlayerMove : NetworkBehaviour
         }
         else
         {
-            moveSpeed = 3;
+            // Reset speed to default
+            if (highSpeed)
+            {
+                moveSpeed = moveSpeedHigh;
+            }
+            else
+            {
+                moveSpeed = moveSpeedLow;
+            }
             isMoving = true;
         }
 
