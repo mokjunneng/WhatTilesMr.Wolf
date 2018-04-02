@@ -259,35 +259,35 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_LocalPosition.x
       value: 10.05
       objectReference: {fileID: 0}
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_LocalPosition.y
       value: -0.52
       objectReference: {fileID: 0}
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_LocalPosition.z
       value: 7.31
       objectReference: {fileID: 0}
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4637085759631740, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
+    - target: {fileID: 4922719474043942, guid: 9da03f9e788835f41aa87f85efeb5576, type: 2}
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
@@ -674,7 +674,7 @@ MonoBehaviour:
   m_PlayerPrefab: {fileID: 1749417244529756, guid: 3142e377749dc694c80ee5e94f7930d0,
     type: 2}
   m_AutoCreatePlayer: 1
-  m_PlayerSpawnMethod: 0
+  m_PlayerSpawnMethod: 1
   m_OfflineScene: 
   m_OnlineScene: 
   m_SpawnPrefabs:
@@ -722,7 +722,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 
+  m_Channels: 0500000000000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1
