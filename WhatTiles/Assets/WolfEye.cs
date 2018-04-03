@@ -134,25 +134,41 @@ public class WolfEye :NetworkBehaviour {
     
     public void CheckIfCanGivePenalty(uint playerNetId)
     {
+
         if (!handlingPenalty)
         {
+            int lostTileCount = 3;
             if (playerNetId == 105)
             {
                 tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
+                
+                for (int i = 0; i < lostTileCount; i++)
+                {
+                    GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
+                    RpcGivePenaltyToMovingPlayer(penaltyTile);
+                    map.GetComponent<HexMap>().redTiles.Remove(penaltyTile);
+                    map.GetComponent<HexMap>().blueTiles.Add(penaltyTile);
+                }
             }
             else if (playerNetId == 106)
             {
                 tilesGettingPenalty = map.GetComponent<HexMap>().blueTiles;
-            }
 
-            int lostTileCount = 3;
-            for (int i = 0; i < lostTileCount; i++)
-            {
-                GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
-                RpcGivePenaltyToMovingPlayer(penaltyTile);
-                tilesGettingPenalty.Remove(penaltyTile);
+                for (int i = 0; i < lostTileCount; i++)
+                {
+                    GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
+                    RpcGivePenaltyToMovingPlayer(penaltyTile);
+                    map.GetComponent<HexMap>().blueTiles.Remove(penaltyTile);
+                    map.GetComponent<HexMap>().redTiles.Add(penaltyTile);
+                }
             }
-            
+            Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
+            Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
+
+
+
+
+
         }
     }
 
@@ -160,6 +176,7 @@ public class WolfEye :NetworkBehaviour {
     private void RpcGivePenaltyToMovingPlayer(GameObject tile)
     {
         handlingPenalty = true;
+        print(tile.name);
         if (tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color == red)
         {
             tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = blue;

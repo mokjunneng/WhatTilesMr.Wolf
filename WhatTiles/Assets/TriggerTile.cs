@@ -21,6 +21,10 @@ public class TriggerTile : NetworkBehaviour {
 	
     private void OnCollisionEnter(Collision other)
     {
+        if (isServer)
+        {
+            return;
+        }
         playerMovement playerScript = other.gameObject.GetComponent<playerMovement>();
         if (playerScript.id == 105)
         {

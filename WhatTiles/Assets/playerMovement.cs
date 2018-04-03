@@ -121,27 +121,40 @@ public class playerMovement : NetworkBehaviour {
     [Command]
     public void CmdUpdateTilesList(GameObject tile, Color color)
     {
+        
+        Debug.Log(tile.name);
+        //NetworkIdentity tileNetId = tile.GetComponentInParent<NetworkIdentity>();
+        //tileNetId.AssignClientAuthority(connectionToClient);
+
+        map = GameObject.FindGameObjectWithTag("TileMap");
 
         List<GameObject> redTiles = map.GetComponent<HexMap>().redTiles;
         List<GameObject> blueTiles = map.GetComponent<HexMap>().blueTiles;
 
         if (color == red)
         {
+
             if (!redTiles.Contains(tile))
             {
-                redTiles.Add(tile);
-                blueTiles.Remove(tile);
+                Debug.Log("updating red ");
+                map.GetComponent<HexMap>().redTiles.Add(tile);
+                map.GetComponent<HexMap>().blueTiles.Remove(tile);
             }
 
         }
         else if (color == blue)
         {
             if (!blueTiles.Contains(tile))
+
             {
-                blueTiles.Add(tile);
-                redTiles.Remove(tile);
+                Debug.Log("updating blue");
+
+                map.GetComponent<HexMap>().blueTiles.Add(tile);
+                map.GetComponent<HexMap>().redTiles.Remove(tile);
             }
         }
+
+        //tileNetId.RemoveClientAuthority(connectionToClient);
 
         Debug.Log("red tiles no: " + redTiles.Count);
         Debug.Log("blue tiles no: " + blueTiles.Count);

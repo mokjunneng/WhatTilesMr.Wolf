@@ -119,6 +119,8 @@ public class HexMap : NetworkBehaviour {
             }
         }
         Debug.Log("Map data generated");
+        Debug.Log("Init Red : " + redTiles.Count);
+        Debug.Log("Init Blue : " + blueTiles.Count);
     }
 
 }
