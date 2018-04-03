@@ -26,6 +26,8 @@ GameObject:
   - component: {fileID: 114583498622139418}
   - component: {fileID: 114041904116797312}
   - component: {fileID: 114986370206835146}
+  - component: {fileID: 20079924518101468}
+  - component: {fileID: 92305540630427008}
   m_Layer: 0
   m_Name: 'Enemy '
   m_TagString: Untagged
@@ -46,6 +48,42 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &20079924518101468
+Camera:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1746440164607602}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 0
+  orthographic size: 5
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
 --- !u!23 &23462847883283644
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -85,6 +123,13 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1746440164607602}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!92 &92305540630427008
+Behaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1746440164607602}
+  m_Enabled: 1
 --- !u!114 &114041904116797312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -97,12 +142,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyOnDeath: 1
-  tileMaterials:
-  - {fileID: 2100000, guid: 7e16fd2e619f0fd48a1c259b5c9c3302, type: 2}
-  - {fileID: 2100000, guid: 8f638013a0cfa4a398f00d05518a0b41, type: 2}
-  - {fileID: 2100000, guid: 204d7750c2052b249ac69c1cf490e0ad, type: 2}
+  playerUIPrefab: {fileID: 0}
   health: 100
-  random: 0
+  color: {r: 0, g: 0, b: 0, a: 0}
+  dead: 0
 --- !u!114 &114583498622139418
 MonoBehaviour:
   m_ObjectHideFlags: 1

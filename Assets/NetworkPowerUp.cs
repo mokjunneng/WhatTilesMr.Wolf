@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class NetworkPowerUp : MonoBehaviour {
+using UnityEngine.Networking;
+public class NetworkPowerUp : NetworkBehaviour {
 
     public GameObject effect;
 

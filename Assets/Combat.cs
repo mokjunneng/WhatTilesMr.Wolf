@@ -6,51 +6,43 @@ using UnityEngine.UI;
 
 public class Combat : NetworkBehaviour {
 
-    public const int maxHealth = 100;
+    public const float maxHealth = 5;
     public bool destroyOnDeath;
 
-    public Material[] tileMaterials;
 
-
-    [SyncVar]
-    public int health = maxHealth;
+    [SerializeField]
+    GameObject playerUIPrefab;
 
     [SyncVar]
-    public int random = 0;
+    public float health = maxHealth;
 
     [SyncVar]
     public Color color;
 
     [SyncVar]
-    public int redCount;
-
-    [SyncVar]
-    public int blueCount;
-
-
-
-    //display score
-    //private GameObject display;
-    //private Text text;
-
-
+    public bool dead;
 
     void Start()
     {
-
-        
-        //display = GameObject.FindGameObjectWithTag("Tile Count");
-        //text = display.GetComponent<Text>();
+  
     }
 
     void Update()
     {
-        //keep track of score
-        //text.text = redCount.ToString();
-
-
-
-
+        if (!isLocalPlayer)
+            return;
+        //hp 
+        if (health > 5 && !dead)
+        {
+            health = 5;
+        }
+        else if (health <= 0 && !dead)
+        {
+            health = 0;
+            print("dead");
+            TakeDamage(0);
+        }
+            
     }
 
     void OnTriggerEnter(Collider other)
@@ -70,45 +62,17 @@ public class Combat : NetworkBehaviour {
                 print(other.gameObject.name);
                 if (gameObject.GetComponent<Renderer>().material.color != Color.red)
                 {
-                    //print(other.gameObject.name + "red count" + redCount);
-                    //print(other.gameObject.name + "blue count" + blueCount);
                     other.gameObject.GetComponent<PaintScript>().CmdPaint(gameObject, Color.red);
-                    //Cmdcountred();
-
-                    
-                    //Ai.GetComponent<AiScript>().addred();
-
-                    //other.GetComponent<Combat>().addRed();
-                    //other.GetComponent<Combat>().TakeDamage(-10);
                 }
-
-
-                //gameObject.GetComponent<Renderer>().material.color = Color.red;
-                //parent.increaseRed(1);
             }
 
 
             else if (other.gameObject.GetComponent<PlayerMove>().id % 2 == 0)
             {
-                //print(other.gameObject.name + "red count" + redCount);
-                //print(other.gameObject.name + "blue count" + blueCount);
                 if (gameObject.GetComponent<Renderer>().material.color != Color.blue)
                 {
                     other.gameObject.GetComponent<PaintScript>().CmdPaint(gameObject, Color.blue);
-                    //Cmdcountblue();
-
-                    //Ai.GetComponent<AiScript>().addblue();
-
-                    //other.GetComponent<Combat>().addBlue();
-
-                    //other.GetComponent<Combat>().TakeDamage(-10);
                 }
-
-
-
-                //gameObject.GetComponent<Renderer>().material.color = Color.blue;
-                //parent.blueTile++;
-
             }
         }
         else
@@ -122,58 +86,21 @@ public class Combat : NetworkBehaviour {
 
     }
 
-
-    public void addBlue() {
-        if (!isServer)
-            return;
-        //print("add blue");
-        blueCount++;
-
-
-        
-    }
-
-    public void subBlue()
+    public void addHP()
     {
-        if (!isServer || blueCount <= 0)
-            return;
-        //print("sub blue");
-        blueCount--;
-
-
-
+        health += Time.deltaTime;
     }
 
 
-    public void addRed(){
-        if (!isServer)
-            return;
-        //print("add red");
-        redCount++;
-    }
-
-    public void subRed()
-    {
-        if (!isServer || redCount <= 0)
-            return;
-        //print("sub red");
-        redCount--;
-    }
-
-
-    public void TakeDamage(int amount)
+    public void TakeDamage(float hpOffset)
     {
         if (!isServer)
             return;
 
-
-        print("look i am here");
-        
-
-
-
-        health -= amount;
         print(health);
+
+
+        health -= Time.deltaTime * hpOffset;
         if (health <= 0)
         {
             if (destroyOnDeath)
@@ -182,23 +109,37 @@ public class Combat : NetworkBehaviour {
             }
             else
             {
-                health = maxHealth;
-
                 // called on the server, will be invoked on the clients
                 RpcRespawn();
+
             }
         }
     }
 
 
     [ClientRpc]
-    void RpcRespawn()
+    private void RpcRespawn()
     {
         if (isLocalPlayer)
         {
-            // move back to zero location
-            transform.position = Vector3.zero;
+            // move back to spawn location
+            StartCoroutine(penaltyWait());
+
+
+            
         }
+    }
+
+    private IEnumerator penaltyWait()
+    {
+        print("penalty time...");
+        dead = true;
+        health = 0;
+        yield return new WaitForSeconds(3f);
+        health = maxHealth;
+        print("exit penalty...");
+        dead = false;
+        yield return new WaitForSeconds(1f);
     }
 
 

@@ -65,6 +65,8 @@ public class PlayerMove : NetworkBehaviour
 
     private bool init;
 
+    private float hpOffset = 2f;
+
     // Use this for initialization
     void Start()
     {
@@ -81,8 +83,6 @@ public class PlayerMove : NetworkBehaviour
         redText = GameObject.FindGameObjectWithTag("Player Red").GetComponent<Text>();
         blueText = GameObject.FindGameObjectWithTag("Player Blue").GetComponent<Text>();
 
-        //Ai = GameObject.FindGameObjectWithTag("GameController");
-
     }
 
     public void setHighSpeed()
@@ -92,15 +92,6 @@ public class PlayerMove : NetworkBehaviour
 
     void Update()
     {
-
-
-        //if (!isLocalPlayer)
-        //    return;
-
-        //var x = Input.GetAxis("Horizontal") * 0.1f;
-        //var z = Input.GetAxis("Vertical") * 0.1f;
-
-        //transform.Translate(x, 0, z);
 
         if (!init)
         {
@@ -126,6 +117,7 @@ public class PlayerMove : NetworkBehaviour
         // Keep track of the distance between this gameObject and destinationPosition
         destinationDistance = Vector3.Distance(destinationPosition, myTransform.position);
 
+        //for power up
         if (highSpeed)
         {
 
@@ -137,59 +129,67 @@ public class PlayerMove : NetworkBehaviour
             }
         }
 
-        if (destinationDistance < .5f)  //prevent shaking behvaior when approaching destination
+        if (!GetComponent<Combat>().dead)
         {
-            moveSpeed = 0;
-            isMoving = false;
-        }
-        else
-        {
-            // Reset speed to default
-            if (highSpeed)
+            if (!isMoving)
             {
-                moveSpeed = moveSpeedHigh;
+                GetComponent<Combat>().TakeDamage(hpOffset);
             }
             else
             {
-                moveSpeed = moveSpeedLow;
+                GetComponent<Combat>().addHP();
             }
-            isMoving = true;
-        }
 
-        //give penalty to players
-        if (!handlingPenalty)
-        {
-            StartCoroutine(givePenaltyToMovingPlayer());
-        }
-
-        // Moves player by click... can be used in mobile devices also
-        if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
-        {
-            playerPlane = new Plane(Vector3.up, myTransform.position);
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float hitdist = 0.0f;
-            if (playerPlane.Raycast(ray, out hitdist))
+            if (destinationDistance < .5f)  //prevent shaking behvaior when approaching destination
             {
-                Vector3 targetPoint = ray.GetPoint(hitdist);
-                destinationPosition = ray.GetPoint(hitdist);
-                //Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
-                myTransform.rotation = Quaternion.Slerp(myTransform.rotation, Quaternion.LookRotation(targetPoint - transform.position), 1000 * Time.deltaTime);
-                //myTransform.rotation = targetRotation;
+                moveSpeed = 0;
+                isMoving = false;
+            }
+            else
+            {
+                // Reset speed to default
+                if (highSpeed)
+                {
+                    moveSpeed = moveSpeedHigh;
+                }
+                else
+                {
+                    moveSpeed = moveSpeedLow;
+                }
+                isMoving = true;
+            }
+
+            //give penalty to players
+            if (!handlingPenalty)
+            {
+                StartCoroutine(givePenaltyToMovingPlayer());
+            }
+
+            // Moves player by click... can be used in mobile devices also
+            if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
+            {
+                playerPlane = new Plane(Vector3.up, myTransform.position);
+                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                float hitdist = 0.0f;
+                if (playerPlane.Raycast(ray, out hitdist))
+                {
+                    Vector3 targetPoint = ray.GetPoint(hitdist);
+                    destinationPosition = ray.GetPoint(hitdist);
+                    //Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+                    myTransform.rotation = Quaternion.Slerp(myTransform.rotation, Quaternion.LookRotation(targetPoint - transform.position), 1000 * Time.deltaTime);
+                    //myTransform.rotation = targetRotation;
+                }
+            }
+
+            // Prevent code from running if not needed
+            if (destinationDistance > .5f)
+            {
+                myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPosition, moveSpeed * Time.deltaTime);
+                //print(destinationDistance + "> .5f");
             }
         }
+  
 
-        // Prevent code from running if not needed
-        if (destinationDistance > .5f)
-        {
-            myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPosition, moveSpeed * Time.deltaTime);
-            //print(destinationDistance + "> .5f");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CmdFire();
-            //DoColor();
-        }
     }
 
     [Command]
@@ -198,7 +198,6 @@ public class PlayerMove : NetworkBehaviour
         tileObject = obj;
         objNetId = obj.GetComponent<NetworkIdentity>();        // get the object's network ID
         objNetId.AssignClientAuthority(connectionToClient);    // assign authority to the player who is changing the color
-        //RpcPenalty(col); 
         RpcPenalty(obj, col); // usse a Client RPC function to "paint" the object on all clients
         objNetId.RemoveClientAuthority(connectionToClient);    // remove the authority from the player who changed the color
     }
@@ -213,11 +212,6 @@ public class PlayerMove : NetworkBehaviour
             {
                 Ai.GetComponent<AiScript>().blue++;
                 Ai.GetComponent<AiScript>().red--;
-                //GetComponent<Combat>().addBlue();
-                //GetComponent<Combat>().subRed();
-
-                //debug
-                GetComponent<Combat>().TakeDamage(10);
 
                 tileObject.GetComponent<Renderer>().material.color = col;
             }
@@ -231,11 +225,6 @@ public class PlayerMove : NetworkBehaviour
 
                 Ai.GetComponent<AiScript>().blue--;
                 Ai.GetComponent<AiScript>().red++;
-                //GetComponent<Combat>().addRed();
-                //GetComponent<Combat>().subBlue();
-
-                //debug
-                GetComponent<Combat>().TakeDamage(10);
 
                 tileObject.GetComponent<Renderer>().material.color = col;
             }
@@ -244,7 +233,6 @@ public class PlayerMove : NetworkBehaviour
         }
             
     }
-
 
     public override void OnStartLocalPlayer()
     {
@@ -279,23 +267,6 @@ public class PlayerMove : NetworkBehaviour
     }
 
 
-    [Command]
-    void CmdFire()
-    {
-        // create the bullet object locally
-        var bullet = (GameObject)Instantiate(
-             bulletPrefab,
-             transform.position - transform.forward,
-             Quaternion.identity);
-
-        bullet.GetComponent<Rigidbody>().velocity = -transform.forward * 4;
-
-        // spawn the bullet on the clients
-        NetworkServer.Spawn(bullet);
-
-        // when the bullet is destroyed on the server it will automaticaly be destroyed on clients
-        Destroy(bullet, 2.0f);
-    }
 
 
 }

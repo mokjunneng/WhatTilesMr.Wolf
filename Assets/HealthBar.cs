@@ -7,7 +7,6 @@ public class HealthBar : MonoBehaviour {
     GUIStyle healthStyle;
     GUIStyle backStyle;
     Combat combat;
-    //TestCubeScript tt;
     
 
     
@@ -15,7 +14,6 @@ public class HealthBar : MonoBehaviour {
     void Awake()
     {
         combat = GetComponent<Combat>();
-        //tt = GetComponent<TestCubeScript>();
         
     }
 
@@ -37,13 +35,12 @@ public class HealthBar : MonoBehaviour {
             // draw health bar background
             GUI.color = Color.grey;
             GUI.backgroundColor = Color.grey;
-            GUI.Box(new Rect(pos.x - 26, Screen.height - pos.y + 20, Combat.maxHealth, 7), ".", backStyle);
+            GUI.Box(new Rect(pos.x - 26, Screen.height - pos.y + 20, Combat.maxHealth * 7 + 7, 7), ".", backStyle);
 
             // draw health bar amount
             GUI.color = Color.green;
             GUI.backgroundColor = Color.green;
-            GUI.Box(new Rect(pos.x - 25, Screen.height - pos.y + 21, combat.health / 2, 5), ".", healthStyle);
-            //GUI.Box(new Rect(pos.x - 25, Screen.height - pos.y + 21, tt.color, 5), ".", healthStyle);
+            GUI.Box(new Rect(pos.x - 26, Screen.height - pos.y + 20, combat.health * 7 + 7, 5), ".", healthStyle);
         }
     }
 
