@@ -10,8 +10,11 @@ public class WolfEye :NetworkBehaviour {
 
     //rotation-related variables  
     public float rotationAmount = 180;
-   
-    
+
+    //vibration-related variables
+    public float shakeIntensity = 0.3f;
+
+
     //booleans control
     private bool handlingPenalty = false;
     private bool facingPlayers; //might be redundant
@@ -38,51 +41,6 @@ public class WolfEye :NetworkBehaviour {
         //map = GameObject.FindGameObjectWithTag("TileMap");
     }
 
-
-
-	// Update is called once per frame
-	//void Update () {
-
- //       if (!isServer)
- //           return;
-        
- //       else
- //       {
- //           if (init && GameObject.FindGameObjectWithTag("TileMap")!=null && GameObject.FindGameObjectWithTag("Player") != null)
- //           {
- //               init = false;
- //               map = GameObject.FindGameObjectWithTag("TileMap");
- //               player = GameObject.FindGameObjectWithTag("Player");
- //               tiles = map.GetComponent<HexMap>().tilesPlayer;
- //           }
-
- //           if(!init && GameObject.FindGameObjectWithTag("TileMap") != null && GameObject.FindGameObjectWithTag("Player") != null)
- //           {
- //               countTimer -= Time.deltaTime;
-
- //               //rotate the wolf when the randomized timer is up
- //               if (countTimer <= 0f)
- //               {
- //                   StartCoroutine(rotate(rotationAmount));
-
- //                   //to ignore the countdown timer
- //                   countTimer = Mathf.Infinity;
- //               }
-
- //               //if player moving, give penalty
-
- //               if (player.GetComponent<playerMovement>().isMoving && facingPlayers)
- //               {
- //                   if (!handlingPenalty)
- //                   {
- //                       StartCoroutine(givePenaltyToMovingPlayer());
- //                   }
- //               }
- //           }
- //       }
-
- //   }
-
     void Update()
     {
         if (!isServer)
@@ -94,8 +52,6 @@ public class WolfEye :NetworkBehaviour {
         {
             init = false;
             map = GameObject.FindGameObjectWithTag("TileMap");
-            //tiles = map.GetComponent<HexMap>().tilesPlayer;
-            
         }
         else if (!init && GameObject.FindGameObjectWithTag("Player") != null)
         {
@@ -103,11 +59,21 @@ public class WolfEye :NetworkBehaviour {
             players = GameObject.FindGameObjectsWithTag("Player");
 
             countTimer -= Time.deltaTime;
+             
+            //get ready to vibrate alert 
+            if (countTimer <= 0.6f && countTimer > 0f && facingPlayers == false)
+            {
+                Vector3 originpos = transform.position;
+                StartCoroutine(vibrate(transform.position));
+                transform.position = originpos;
+            }
 
+            //rotate wolf when timer is up 
             if (countTimer <= 0f)
             {
                 StartCoroutine(rotate(rotationAmount));
 
+                //to ignore countdown timer 
                 countTimer = Mathf.Infinity;
             }
 
@@ -130,8 +96,6 @@ public class WolfEye :NetworkBehaviour {
     }
 
     
-
-    
     public void CheckIfCanGivePenalty(uint playerNetId)
     {
 
@@ -141,7 +105,7 @@ public class WolfEye :NetworkBehaviour {
             if (playerNetId == 105)
             {
                 tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
-                
+                Handheld.Vibrate();
                 for (int i = 0; i < lostTileCount; i++)
                 {
                     GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
@@ -225,6 +189,17 @@ public class WolfEye :NetworkBehaviour {
         transform.rotation = to;
         resetTimer();
      
+    }
+
+    private IEnumerator vibrate(Vector3 originPost)
+    {
+        float elapsed = 0f;
+        while (elapsed < 0.6f)
+        {
+            transform.position = originPost + Random.insideUnitSphere * shakeIntensity;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
     }
 
     void resetTimer()

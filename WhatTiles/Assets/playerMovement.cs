@@ -41,6 +41,11 @@ public class playerMovement : NetworkBehaviour {
 
     }
 
+    public override void OnStartServer()
+    {
+        
+    }
+
     public override void OnStartLocalPlayer()
     {
         WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
