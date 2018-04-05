@@ -30,6 +30,7 @@ __3) Player Movement__
 
 ## Test Plan 
 We have developed 2 different test plan, one for physical testing and another for software testing. They are as followed: <br /> 
+
 **Physical Test** <br />
 The following test was done with one game session per test scenario. During the game scenario, we will look out for only that specific test case to see if it fails and pass. This is repeated for at least 2 times per test scenario.
 1) the player move to the position tapped
