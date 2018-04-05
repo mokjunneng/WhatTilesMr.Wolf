@@ -41,9 +41,10 @@ The following test was done with one game session per test scenario. During the 
 
 **Software Test** <br /> 
 Details of the software testing can be found in the testCases.cs script of our project. The following are test cases done by software testing: 
-1) gameobject generation
-2) random tile generation
-3) correct wolf timing
+1)  gameobject generation
+2)  random tile generation
+3)  correct wolf timing
+4)  player movements with powerups 
 
 ## Work in progress
 **Game**<br />
