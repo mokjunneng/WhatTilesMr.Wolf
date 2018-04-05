@@ -39,6 +39,8 @@ The following test was done with one game session per test scenario. During the 
 4) penalty is handled when the wolf has turned (vibration felt)
 5) wolf vibrates before turning
 6) correct number of tiles deducted from penalised player
+7) Map generated for both players is the same
+8) player movement speed (before and after picking powerup)
 
 **Software Test** <br /> 
 Details of the software testing can be found in the testCases.cs script of our project. The following are test cases done by software testing: 
@@ -46,6 +48,8 @@ Details of the software testing can be found in the testCases.cs script of our p
 2)  random tile generation
 3)  correct wolf timing
 4)  player movements with powerups 
+5)  Count for red tiles and blue tiles increase and decrease correctly when a penalty is assigned
+6)  Count for red tiles and blue tiles increase and decrease correctly when players move over tiles
 
 ## Work in progress
 **Game**<br />
