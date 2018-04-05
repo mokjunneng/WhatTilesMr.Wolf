@@ -21,6 +21,7 @@ __2) Tile Generation__
 * Random Assignment of Tile location for each player
 * Equal Tiles assigned for each player 
 * Correct changing of tiles colour when player passes the centre of the tile 
+* Random Power Up Tiles
 
 __3) Player Movement__
 * Moving to the pressed location 
@@ -40,13 +41,13 @@ __3) Player Movement__
 - [x] PM3 Meeting Review : Vibration alert of penalty for player <br />
 - [ ] Player Model <br />
 - [ ] Lighting <br /> 
-- [ ] Login Scene <br />
-- [ ] End Scene <br />
-- [ ] Bonus Feature: Spells <br />
+- [x] Login Scene <br />
+- [x] End Scene <br />
+- [x] Bonus Feature: Spells <br />
 
 **Project Report**<br />
 - [x] Project Meeting 1 (PM1) Report <br />
 - [x] Project Meeting 2 (PM2) Report <br />
-- [x]  Project Meeting 3 (PM3) Report <br />
+- [x] Project Meeting 3 (PM3) Report <br />
 - [ ] Project Meeting 4 (PM4) Report <br />
 - [ ] Final Report <br />
