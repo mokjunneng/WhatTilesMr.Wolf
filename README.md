@@ -58,7 +58,7 @@ Details of the software testing can be found in the testCases.cs script of our p
 - [x] PM3 Meeting Review : Vibration alert of penalty for player <br />
 - [ ] Player Model <br />
 - [ ] Lighting <br /> 
-- [x] Login Scene <br />
+- [ ] Login Scene <br />
 - [ ] End Scene <br />
 - [x] Bonus Feature: Spells <br />
 
