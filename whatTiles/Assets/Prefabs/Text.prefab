@@ -21,8 +21,6 @@ GameObject:
   - component: {fileID: 224912557490834676}
   - component: {fileID: 222142094032230544}
   - component: {fileID: 114221018787061482}
-  - component: {fileID: 114225545554075086}
-  - component: {fileID: 114418119580785120}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -63,50 +61,6 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: New Text
---- !u!114 &114225545554075086
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1702016268420514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 364bbcd8d2571b642b7263840312878a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneToLoad: EndScene
---- !u!114 &114418119580785120
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1702016268420514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 172
-    i1: 136
-    i2: 140
-    i3: 164
-    i4: 0
-    i5: 243
-    i6: 191
-    i7: 4
-    i8: 185
-    i9: 90
-    i10: 255
-    i11: 164
-    i12: 39
-    i13: 165
-    i14: 104
-    i15: 113
-  m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
 --- !u!222 &222142094032230544
 CanvasRenderer:
   m_ObjectHideFlags: 1

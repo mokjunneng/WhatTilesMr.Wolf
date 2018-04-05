@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 114099979193978970}
   m_Layer: 0
   m_Name: HexPrefabRed
-  m_TagString: Untagged
+  m_TagString: RedTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,17 +146,6 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: b71d5799b4591a8429c16eaa4a3bf2ee, type: 3}
---- !u!114 &114099979193978970
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1267537075574956}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76ce43730b1eb004db63f385634a598d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &65715103156072946
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -169,6 +158,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 0.1, z: 0.3}
   m_Center: {x: 0.15421298, y: -0.03909999, z: -0.8935505}
+--- !u!114 &114099979193978970
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1267537075574956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76ce43730b1eb004db63f385634a598d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114265627171753412
 MonoBehaviour:
   m_ObjectHideFlags: 1

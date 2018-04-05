@@ -7,6 +7,10 @@ TagManager:
   - TileMap
   - Tile
   - WolfAI
+  - NetworkManager
+  - Slider
+  - BlueTile
+  - RedTile
   layers:
   - Default
   - TransparentFX

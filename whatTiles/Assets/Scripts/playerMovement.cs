@@ -154,6 +154,10 @@ public class playerMovement : NetworkBehaviour {
             {
                 handlingPenalty = true;
                 CmdAssignPenalty(id);
+                if (isLocalPlayer)
+                {
+                    //Handheld.Vibrate();
+                }
                 StartCoroutine(penaltyInterval());
             }           
             //Debug.Log("player with id " + id + " checking whether receive penalty");
