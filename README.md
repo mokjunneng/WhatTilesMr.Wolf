@@ -5,7 +5,7 @@ The aim of our game is to occupy the most amount of tiles within the set amount 
 ## Tools used 
 - Unity
 
-## Features of the game: 
+## Features of the game
 The game features can be categorises into the following categories 
 - Wolf AI
 - Tile Generation 
@@ -28,6 +28,23 @@ __3) Player Movement__
 * Do not merge into other player 
 * Vibration alert when player makes a penalty
 
+## Test Plan 
+We have developed 2 different test plan, one for physical testing and another for software testing. They are as followed: <br /> 
+**Physical Test** <br />
+The following test was done with one game session per test scenario. During the game scenario, we will look out for only that specific test case to see if it fails and pass. This is repeated for at least 2 times per test scenario.
+1) the player move to the position tapped
+2) the tiles change only iff player move over the centre of tile 
+3) match making system 
+4) penalty is handled when the wolf has turned (vibration felt)
+5) wolf vibrates before turning
+6) correct number of tiles deducted from penalised player
+
+**Software Test** <br /> 
+Details of the software testing can be found in the testCases.cs script of our project. The following are test cases done by software testing: 
+1) gameobject generation
+2) random tile generation
+3) correct wolf timing
+
 ## Work in progress
 **Game**<br />
 - [x] Sign In (multiplayer) <br />
@@ -42,7 +59,7 @@ __3) Player Movement__
 - [ ] Player Model <br />
 - [ ] Lighting <br /> 
 - [x] Login Scene <br />
-- [x] End Scene <br />
+- [ ] End Scene <br />
 - [x] Bonus Feature: Spells <br />
 
 **Project Report**<br />
