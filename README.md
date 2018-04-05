@@ -8,17 +8,22 @@ The aim of our game is to occupy the most amount of tiles within the set amount 
 ## Work in progress
 **Game**<br />
 - [x] Sign In (multiplayer) <br />
-- [ ] Lobby creation (multiplayer)<br />
-- [ ] Wolf AI <br />
-- [ ] Tiles - Terrain <br />
-- [ ] Character Movement - Tiles<br />
+- [x] Lobby creation (multiplayer) <br />
+- [x] Wolf AI <br />
+- [x] Tiles - Terrain <br />
+- [x] Tiles - Collision area <br />
+- [x] Character Movement - Tiles <br />
 - [ ] Player Model <br />
-- [ ] Game Testing <br />
-
+- [ ] Lighting <br /> 
+- [ ] Login Scene <br />
+- [x] Game Testing <br />
+- [ ] Bonus Feature: Spells <br />
+- [x] PM3 Meeting Review : Vibration alert of wolf <br />
+- [x] PM3 Meeting Review : Vibration alert of penalty for player <br />
 
 **Project Report**<br />
-- [x] Project Meeting 1 Report <br />
-- [x] Project Meeting 2 Report <br />
-- [ ]  Project Meeting 3 Report <br />
-- [ ] Project Meeting 4 Report <br />
+- [x] Project Meeting 1 (PM1) Report <br />
+- [x] Project Meeting 2 (PM2) Report <br />
+- [x]  Project Meeting 3 (PM3) Report <br />
+- [ ] Project Meeting 4 (PM4) Report <br />
 - [ ] Final Report <br />
