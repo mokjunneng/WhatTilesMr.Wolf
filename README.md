@@ -55,7 +55,7 @@ Details of the software testing can be found in the testCases.cs script of our p
 ## Game Reviews
 During the phyiscal testing, we have asked questions to the players and their comments/answers are as followed: 
 
-** After PM3 game construction: ** <br /> 
+**After PM3 game construction: ** <br /> 
 Questions asked were 
 1) What are some difficulties in playing the game?
 > " Maybe can make **wolf vibrate** cause a bit hard to see turning " - Song Shan <br /> 
@@ -91,7 +91,7 @@ Extra Comments made by Mr Yoga after PM3 Meeting
 
 From the questions asked and Mr Yoga's comments, keywords were picked up and implemented before Project Meeting 4 as an improvement to the game
 
-** After PM4 game construction: ** <br />
+**After PM4 game construction: ** <br />
 Questions asked were 
 1) What are some difficulties in playing the game?
 > " **Hard to tell** that I need to tap the centre to **trigger the tile** and **when penalty is given** " - Rachel <br /> 
