@@ -122,14 +122,12 @@ Questions asked were
 > " Add **music** in game abit boring" -  Jeffery <br /> 
 
 Extra Comments made by Mr Yoga after PM4 Meeting
-> Either **increase the collider size** or **add a dot on the tile** as an indictation the collision is there  <br />  
-> **Increase the scale of the UI** as it is hard to see <br />  
-> Add a **further indication** to the user **after tile lost** <br />  
-> Add a **'stop' button** during **wolf turning** for player to emergency stop <br />  
+> Either **increase the collider size** or **add a dot on the tile** as an indictation the collision is there  
+> **Increase the scale of the UI** as it is hard to see 
+> Add a **further indication** to the user **after tile lost**  
+> Add a **'stop' button** during **wolf turning** for player to emergency stop 
 
 From the questions asked and Mr Yoga's comments, keywords were picked up and implemented as a final improvement to the game
-
-
 
 ## Work in progress
 **Game**<br />
