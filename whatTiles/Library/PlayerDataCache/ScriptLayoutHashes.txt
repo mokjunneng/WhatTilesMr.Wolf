@@ -1,6 +1,6 @@
 WindowsStandalone
 SceneListBegin?
-Assets/MenuScene.unity
+Assets/Scenes/MenuScene.unity
 Assets/Scenes/MainScene.unity
 Assets/Scenes/End Scene.unity
 SceneListEnd?
@@ -19,7 +19,6 @@ df374c01140c2d578bf70cbd60073d1d UnityEngine.Timeline.dll:UnityEngine.Timeline.T
 04e91778923131ba97cd6a3b59e18e51 Assembly-CSharp.dll:.playerMovement
 4dce168c8e485cce9818446c13f3870b Assembly-CSharp.dll:.PowerupSpawner
 1467f933b03f996d2c23a7d03b23ad57 Assembly-CSharp.dll:.hexSpawner
-f711595d1ad1f93cc36228f91ce0009a Assembly-CSharp.dll:.countdownTimerSpawn
 02bda732867fc91d4300b74d23731108 Assembly-CSharp.dll:.HexMap
 a35dc9cca2faebc5f5f1aeb9e8e47bbe UnityEngine.UI.dll:UnityEngine.UI.AspectRatioFitter
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.UI.dll:UnityEngine.EventSystems.BaseInput
@@ -124,6 +123,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.Spa
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.XR.WSA.SpatialMappingRenderer
 05524b8f659e7bfe5756d1335fec24ba Assembly-UnityScript.dll:.PostEffectsBase
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Player
+855e33dce7b7500c298a1ac8b5d7436d Assembly-CSharp.dll:.GameOverManager
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.CallbackExecutor
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 0420182b2a90dec191fbb7c072538a04 Assembly-CSharp.dll:.MatchTimer
@@ -162,4 +162,3 @@ f73dee587d23518bce0e0efb85fef8a1 Assembly-CSharp.dll:.WolfSpawner
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Player
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:GooglePlayGames.OurUtils.PlayGamesHelperObject
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.TriggerTile
-fdd5fc4e852a636304e5709fcdcd47ea Assembly-CSharp.dll:.GameOverManager

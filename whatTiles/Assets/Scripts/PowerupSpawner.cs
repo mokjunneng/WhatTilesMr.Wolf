@@ -17,7 +17,7 @@ public class PowerupSpawner : NetworkBehaviour
     private bool cooldown;
 
     private float mapHeight = 7f;
-    private float mapWidth = 5f;
+    private float mapWidth = 15f;
 
     // Use this for initialization
     void Start()

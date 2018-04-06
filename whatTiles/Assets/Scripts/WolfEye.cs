@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 public class WolfEye :NetworkBehaviour {
 
     private float countTimer;
-
+    public float countTimerCopy; // Copy of countTimer for Testing
     //rotation-related variables  
     public float rotationAmount = 180;
 
@@ -156,7 +156,18 @@ public class WolfEye :NetworkBehaviour {
     void resetTimer()
     {
         countTimer = Random.Range(3f, 6f);
+        countTimerCopy = countTimer;
     }
 
+    // Functions for Testing
+    public float getCountTimer()
+    {
+        return countTimerCopy;
+    }
+
+    public void startRotation()
+    {
+        StartCoroutine(rotate(rotationAmount));
+    }
 
 }

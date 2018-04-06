@@ -264,4 +264,10 @@ public class playerMovement : NetworkBehaviour {
         Debug.Log("blue tiles no: " + blueTiles.Count);
 
     }
+
+    // Functions for Testing
+    public float returnSpeed()
+    {
+        return moveSpeed;
+    }
 }

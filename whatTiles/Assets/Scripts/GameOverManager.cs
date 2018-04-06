@@ -8,16 +8,24 @@ using UnityEngine.SceneManagement;
 public class GameOverManager : NetworkBehaviour {
 
     private Animator anim;
+
+    private HexMap map;
+    
     [SyncVar]
-    private float countdownTimer = 20f;
+    private float countdownTimer = 10f;
+    
     public Text stringTimer;
+    public Text redCount;
+    public Text blueCount;
+    public Text result;
+
     [SyncVar]
     private bool startTimer = false;
     [SyncVar]
     private bool restart = false;
 
     [SyncVar]
-    private float restartDelay = 5f;
+    private float restartDelay = 10f;
     [SyncVar]
     private float restartTimer;
 
@@ -30,6 +38,7 @@ public class GameOverManager : NetworkBehaviour {
     public override void OnStartServer()
     {
         startTimer = true;
+        
     }
 
     // Update is called once per frame
@@ -37,10 +46,21 @@ public class GameOverManager : NetworkBehaviour {
 		if (startTimer)
         {
             countdownTimer -= Time.deltaTime;
-            stringTimer.text = countdownTimer.ToString("f2");
+            stringTimer.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(countdownTimer/60), countdownTimer % 60);
+                
             if (countdownTimer <= 0)
             {
                 anim.SetTrigger("GameOver");
+                
+                if (isServer)
+                {
+                    map = GameObject.FindGameObjectWithTag("TileMap").GetComponent<HexMap>();
+                    int redTileCount = map.redTiles.Count;
+                    int blueTileCount = map.blueTiles.Count;
+                    
+                    RpcSetResult(redTileCount, blueTileCount);
+                }
+                
                 startTimer = false;
                 restart = true;
             }
@@ -55,4 +75,31 @@ public class GameOverManager : NetworkBehaviour {
             }
         }
 	}
+
+    [ClientRpc]
+    private void RpcSetResult(int redTileCount, int blueTileCount)
+    {
+        StartCoroutine(showResults(redTileCount, blueTileCount));
+    }
+
+    private IEnumerator showResults(int redTileCount, int blueTileCount)
+    {
+        yield return new WaitForSeconds(1);
+        Debug.Log("setting text");
+        redCount.text = "Red: " + redTileCount;
+        blueCount.text = "Blue: " + blueTileCount;
+        if (redTileCount > blueTileCount)
+        {
+            result.text = "Player 1 Wins!";
+        }
+        else if (redTileCount < blueTileCount)
+        {
+            result.text = "Player 2 Wins!";
+        }
+        else
+        {
+            result.text = "Game Draws";
+        }
+
+    }
 }
