@@ -11,6 +11,7 @@ TagManager:
   - Slider
   - BlueTile
   - RedTile
+  - StopButton
   layers:
   - Default
   - TransparentFX

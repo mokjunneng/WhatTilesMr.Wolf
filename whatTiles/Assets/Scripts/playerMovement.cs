@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class playerMovement : NetworkBehaviour {
 
@@ -38,6 +39,9 @@ public class playerMovement : NetworkBehaviour {
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
     private GameObject map;
 
+    // For stop button
+    private Button stopButton;
+
     // Use this for initialization
     void Start () {
         myTransform = transform;     //sets myTransform to this GameObject.Transform
@@ -45,9 +49,7 @@ public class playerMovement : NetworkBehaviour {
 
         id = netId.Value;  //store player's network id
         print("Player network id: " + id);
-
-       
-
+        
         //WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
 
         //update
@@ -59,8 +61,8 @@ public class playerMovement : NetworkBehaviour {
         //{
         //    wolfSpotting = false;
         //}
-
     }
+
 
     //for power up
     public void setHighSpeed()
@@ -70,6 +72,10 @@ public class playerMovement : NetworkBehaviour {
 
     public override void OnStartLocalPlayer()
     {
+        stopButton = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
+        stopButton.onClick.AddListener(OnClickStop);
+        stopButton.gameObject.SetActive(false);
+
         WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
         if(WolfAI == null)
         {
@@ -83,6 +89,7 @@ public class playerMovement : NetworkBehaviour {
     void Update () {
         if (!isLocalPlayer) { return; }
 
+        checkIfStopped();
         checkIfSpotted();
 
         //movement control: move upon tapping on screen
@@ -143,6 +150,27 @@ public class playerMovement : NetworkBehaviour {
             myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPos, moveSpeed * Time.deltaTime);
         }
 
+    }
+
+    void checkIfStopped()
+    {
+        if (WolfAI.GetComponent<WolfEye>().facingPlayers)
+        {
+            stopButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            stopButton.gameObject.SetActive(false);
+        }
+    }
+
+    void OnClickStop()
+    {
+        // reconfirm that the wolfAI.facingPlayers is true 
+        if (WolfAI.GetComponent<WolfEye>().facingPlayers)
+        {
+            destinationPos = myTransform.position;
+        }
     }
 
     void checkIfSpotted()
