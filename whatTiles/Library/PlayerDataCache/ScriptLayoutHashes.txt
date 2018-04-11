@@ -20,7 +20,7 @@ dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Advertisements.dll:UnityEngine.Advertisements.Editor.Placeholder
 0420182b2a90dec191fbb7c072538a04 Assembly-CSharp.dll:.MatchTimer
 7d24e0e76478e38c7917cb6c30118c47 Assembly-CSharp.dll:MK.Glow.MKGlowFree
-8b99da83b68ba4cb3c455e4637196a83 Assembly-CSharp.dll:.WolfEye
+b76fa92cb654d2d0f8e74881cad3c24c Assembly-CSharp.dll:.WolfEye
 1495e4581e89e6c914616aac5772e486 Assembly-CSharp.dll:.HostGame
 82f11ffa66cc939be87935b7ef46dcf5 Assembly-CSharp.dll:.PowerUp
 f73dee587d23518bce0e0efb85fef8a1 Assembly-CSharp.dll:.WolfSpawner

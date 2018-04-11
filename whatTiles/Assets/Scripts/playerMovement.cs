@@ -72,16 +72,20 @@ public class playerMovement : NetworkBehaviour {
 
     public override void OnStartLocalPlayer()
     {
+        // Initialising the stop button 
         stopButton = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
         stopButton.onClick.AddListener(OnClickStop);
         stopButton.gameObject.SetActive(false);
-
+      
         WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
         if(WolfAI == null)
         {
             Debug.Log("No wolf found.");
         }
         Debug.Log("local player created");
+
+
+        WolfAI.GetComponent<WolfEye>().addPlayerList(netId.Value);
         //wolfSpotting = WolfAI.GetComponent<WolfEye>().facingPlayers;
     }
 

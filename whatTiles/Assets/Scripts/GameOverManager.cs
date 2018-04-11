@@ -86,6 +86,9 @@ public class GameOverManager : NetworkBehaviour {
     {
         yield return new WaitForSeconds(1);
         Debug.Log("setting text");
+
+        GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>().gameObject.SetActive(false);
+
         redCount.text = "Red: " + redTileCount;
         blueCount.text = "Blue: " + blueTileCount;
         if (redTileCount > blueTileCount)

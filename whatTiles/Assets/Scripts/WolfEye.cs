@@ -37,13 +37,17 @@ public class WolfEye :NetworkBehaviour {
     List<GameObject> playerOrderedList = new List<GameObject>();
 
     private uint clientId;
-    
+
+    public List<uint> playerList;
+
+
     void Start()
     {
         countTimer = Random.Range(3f, 6f);
+        playerList = new List<uint>();
 
         //map = GameObject.FindGameObjectWithTag("TileMap");
-        
+
     }
 
     public override void OnStartClient()
@@ -168,6 +172,12 @@ public class WolfEye :NetworkBehaviour {
     public void startRotation()
     {
         StartCoroutine(rotate(rotationAmount));
+    }
+
+    public void addPlayerList(uint playerId)
+    {
+        playerList.Add(playerId);
+        print("ADDING PLAYER " + playerId);
     }
 
 }
