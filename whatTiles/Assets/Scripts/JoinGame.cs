@@ -23,6 +23,9 @@ public class JoinGame : MonoBehaviour
 
     void Start()
     {
+        //stop previous client
+        NetworkManager.singleton.StopClient();
+
         networkManager = NetworkManager.singleton;
         if (networkManager.matchMaker == null)
         {
