@@ -42,27 +42,21 @@ public class playerMovement : NetworkBehaviour {
     // For stop button
     private Button stopButton;
 
+    public int playerIndex;
+
     // Use this for initialization
     void Start () {
         myTransform = transform;     //sets myTransform to this GameObject.Transform
         destinationPos = myTransform.position;    
 
         id = netId.Value;  //store player's network id
-        print("Player network id: " + id);
-        
-        //WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
-
-        //update
-        //if (WolfAI.GetComponent<WolfEye>().facingPlayers && isLocalPlayer)
-        //{
-        //    wolfSpotting = true;
-        //}
-        //else if(!WolfAI.GetComponent<WolfEye>().facingPlayers && isLocalPlayer)
-        //{
-        //    wolfSpotting = false;
-        //}
     }
 
+    [Command]
+    public void CmdAddWolf(uint playerId)
+    {
+        playerIndex = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().addPlayerList(playerId) - 1;
+    }
 
     //for power up
     public void setHighSpeed()
@@ -82,10 +76,21 @@ public class playerMovement : NetworkBehaviour {
         {
             Debug.Log("No wolf found.");
         }
-        Debug.Log("local player created");
+        CmdAddWolf(netId.Value);
+
+        Debug.Log("playerIndex is " + playerIndex);
+
+        if(playerIndex == 0)
+        {
+            Debug.Log("BLUE CUBE");
+            GetComponent<MeshRenderer>().material.color = Color.blue;
+        }else if(playerIndex == 1)
+        {
+            Debug.Log("RED CUBE");
+            GetComponent<MeshRenderer>().material.color = Color.red;
+        }
 
 
-        WolfAI.GetComponent<WolfEye>().addPlayerList(netId.Value);
         //wolfSpotting = WolfAI.GetComponent<WolfEye>().facingPlayers;
     }
 
@@ -200,9 +205,10 @@ public class playerMovement : NetworkBehaviour {
     private void CmdAssignPenalty(uint playerNetId)
     {
         int lostTileCount = 5; //changed to 5 to increase game pace
-        if (playerNetId % 2 == 1)
+        Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
+        if (playerIndex == 1)
         {
-
+            Debug.Log("Cube is Red, Penalty is Blue");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
            
             for (int i = 0; i < lostTileCount; i++)
@@ -220,8 +226,10 @@ public class playerMovement : NetworkBehaviour {
 
             }
         }
-        else if (playerNetId % 2 == 0 )
+        else if (playerIndex == 0)
         {
+
+            Debug.Log("Cube is Blue, Penalty is Red");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().blueTiles;
             
             for (int i = 0; i < lostTileCount; i++)

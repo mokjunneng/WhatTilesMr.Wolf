@@ -39,6 +39,7 @@ public class WolfEye :NetworkBehaviour {
     private uint clientId;
 
     public List<uint> playerList;
+    private int index = 0;
 
 
     void Start()
@@ -97,7 +98,7 @@ public class WolfEye :NetworkBehaviour {
             {
                 foreach (GameObject p in players)
                 {
-                    if (p.GetComponent<playerMovement>().id % 2 == 1)
+                    if (p.GetComponent<playerMovement>().playerIndex == 1)
                     {
                         playerOrderedList.Insert(0, p);
                     }
@@ -174,10 +175,12 @@ public class WolfEye :NetworkBehaviour {
         StartCoroutine(rotate(rotationAmount));
     }
 
-    public void addPlayerList(uint playerId)
+    public int addPlayerList(uint playerId)
     {
         playerList.Add(playerId);
-        print("ADDING PLAYER " + playerId);
+        index += 1; 
+        Debug.Log("ADDING PLAYER " + (index-1) + " to Id " + playerId);
+        return index;
     }
 
 }

@@ -28,12 +28,13 @@ public class TriggerTile : MonoBehaviour {
 
         if (Vector3.Distance(playerPosition, tileCentre) <= 1f)
         {
-            if (playerScript.id % 2 == 1)
+            Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
+            if (playerScript.playerIndex == 1)
             {
                 gameObject.GetComponent<Renderer>().material.color = red;
                 transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, red);
             }
-            else if (playerScript.id % 2 == 0)
+            else if (playerScript.playerIndex == 0)
             {
                 transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, blue);
                 gameObject.GetComponent<Renderer>().material.color = blue;

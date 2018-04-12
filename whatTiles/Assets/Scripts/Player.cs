@@ -15,7 +15,7 @@ public class Player : NetworkBehaviour
     //Set player's color
     public override void OnStartLocalPlayer()
     {
-        GetComponent<MeshRenderer>().material.color = Color.red;
+       
     }
 
 
