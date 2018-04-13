@@ -38,15 +38,14 @@ public class WolfEye :NetworkBehaviour {
 
     private uint clientId;
 
-    public SyncListUInt playerList = new SyncListUInt();
+    public List<uint> playerList;
     private int index = 0;
-    public GameObject[] items;
 
 
     void Start()
     {
         countTimer = Random.Range(3f, 6f);
-        playerList.Callback = SyncListUIntChanged;
+        playerList = new List<uint>();
 
         //map = GameObject.FindGameObjectWithTag("TileMap");
 
@@ -176,10 +175,12 @@ public class WolfEye :NetworkBehaviour {
         StartCoroutine(rotate(rotationAmount));
     }
 
-    public void SyncListUIntChanged(SyncListUInt.Operation op, int index)
+    public int addPlayerList(uint playerId)
     {
-        Debug.Log("ADDING PLAYER " + (index) + " to Id " + playerList[index]);
-        items = GameObject.FindGameObjectsWithTag("Player");
-        items[index].GetComponent<playerMovement>().indexChanged(index);
+        playerList.Add(playerId);
+        index += 1; 
+        Debug.Log("ADDING PLAYER " + (index-1) + " to Id " + playerId);
+        return index;
     }
+
 }

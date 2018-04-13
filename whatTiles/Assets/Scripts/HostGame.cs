@@ -13,11 +13,15 @@ public class HostGame : MonoBehaviour
 
     void Start()
     {
+        //stop previous host
+        NetworkManager.singleton.StopHost();
+
         networkManager = NetworkManager.singleton;
         if (networkManager.matchMaker == null)
         {
             networkManager.StartMatchMaker();
         }
+
     }
 
     public void SetRoomName(string _name)
@@ -33,5 +37,6 @@ public class HostGame : MonoBehaviour
             networkManager.matchMaker.CreateMatch(roomName, roomSize, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
         }
     }
+
 
 }

@@ -13,7 +13,7 @@ public class GameOverManager : NetworkBehaviour
     private HexMap map;
 
     [SyncVar]
-    private float countdownTimer = 30f;
+    private float countdownTimer = 20f;
 
     public Text stringTimer;
     public Text redCount;
@@ -112,6 +112,7 @@ public class GameOverManager : NetworkBehaviour
             if (countdownTimer <= 0)
             {
                 anim.SetTrigger("GameOver");
+                stringTimer.enabled = false;
 
                 if (isServer)
                 {
@@ -132,6 +133,7 @@ public class GameOverManager : NetworkBehaviour
             restartTimer += Time.deltaTime;
             if (restartTimer >= restartDelay)
             {
+                Debug.Log("Go to menu scene");
                 SceneManager.LoadScene(0);
             }
         }
