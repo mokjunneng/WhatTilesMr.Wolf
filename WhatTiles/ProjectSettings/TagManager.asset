@@ -6,6 +6,12 @@ TagManager:
   tags:
   - TileMap
   - Tile
+  - WolfAI
+  - NetworkManager
+  - Slider
+  - BlueTile
+  - RedTile
+  - StopButton
   layers:
   - Default
   - TransparentFX
