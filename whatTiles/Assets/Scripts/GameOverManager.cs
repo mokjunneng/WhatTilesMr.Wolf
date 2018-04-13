@@ -132,7 +132,6 @@ public class GameOverManager : NetworkBehaviour
             restartTimer += Time.deltaTime;
             if (restartTimer >= restartDelay)
             {
-                Debug.Log("Go to menu scene");
                 SceneManager.LoadScene(0);
             }
         }
