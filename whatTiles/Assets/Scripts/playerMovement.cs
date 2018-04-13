@@ -50,18 +50,42 @@ public class playerMovement : NetworkBehaviour {
         destinationPos = myTransform.position;    
 
         id = netId.Value;  //store player's network id
+
+    }
+    [ClientRpc]
+    public void RpcAddList(uint playerId)
+    {
+        CmdAddWolf(playerId);
     }
 
     [Command]
     public void CmdAddWolf(uint playerId)
     {
-        playerIndex = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().addPlayerList(playerId) - 1;
+        GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.Add(playerId);
     }
 
     //for power up
     public void setHighSpeed()
     {
         highSpeed = true;
+    }
+
+    public void indexChanged(int index)
+    {
+        if (!isLocalPlayer) { return; }
+        playerIndex = index;
+        Debug.Log("playerIndex is " + playerIndex);
+
+        if (playerIndex == 0)
+        {
+            Debug.Log("BLUE CUBE");
+            GetComponent<MeshRenderer>().material.color = Color.blue;
+        }
+        else if (playerIndex == 1)
+        {
+            Debug.Log("RED CUBE");
+            GetComponent<MeshRenderer>().material.color = Color.red;
+        }
     }
 
     public override void OnStartLocalPlayer()
@@ -76,21 +100,17 @@ public class playerMovement : NetworkBehaviour {
         {
             Debug.Log("No wolf found.");
         }
-        CmdAddWolf(netId.Value);
-
-        Debug.Log("playerIndex is " + playerIndex);
-
-        if(playerIndex == 0)
+        if (isServer)
         {
-            Debug.Log("BLUE CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.blue;
-        }else if(playerIndex == 1)
-        {
-            Debug.Log("RED CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.red;
+            RpcAddList(netId.Value);
         }
-
-
+        else
+        {
+            CmdAddWolf(netId.Value);
+        }
+        
+        
+        
         //wolfSpotting = WolfAI.GetComponent<WolfEye>().facingPlayers;
     }
 

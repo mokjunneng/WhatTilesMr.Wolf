@@ -13,7 +13,7 @@ public class GameOverManager : NetworkBehaviour
     private HexMap map;
 
     [SyncVar]
-    private float countdownTimer = 5f;
+    private float countdownTimer = 30f;
 
     public Text stringTimer;
     public Text redCount;
