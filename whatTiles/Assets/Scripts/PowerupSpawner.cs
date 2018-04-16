@@ -18,11 +18,17 @@ public class PowerupSpawner : NetworkBehaviour
 
     private float mapHeight = 7f;
     private float mapWidth = 15f;
+    private HexMap map;
 
     // Use this for initialization
     void Start()
     {
 
+    }
+
+    public override void OnStartServer()
+    {
+        map = GameObject.FindGameObjectWithTag("TileMap").GetComponent<HexMap>();
     }
 
     // Update is called once per frame
@@ -53,13 +59,16 @@ public class PowerupSpawner : NetworkBehaviour
         }
     }
 
+    //Spawen power up on top of tiles
     void Spawn()
     {
-
-        Vector3 position = new Vector3(transform.position.x + Random.Range(-mapWidth / 2, mapWidth / 2), 0.75f, transform.position.z + Random.Range(-mapHeight / 2, mapHeight / 2));
-
+        List<GameObject> currentTiles = map.tiles;
+        Vector3 targetPosition = currentTiles[Random.Range(0, currentTiles.Count)].transform.position;
+        targetPosition.y += .57f;
+        targetPosition.z += .17f;  // adjust and modify if needed
+        targetPosition.x -= .15f;  // adjust and modify if needed
         GameObject powerUpPrefab = powerUpPrefabs[Random.Range(0, powerUpPrefabs.Length)];
-        GameObject powerUp = (GameObject)Instantiate(powerUpPrefab, position, new Quaternion());
+        GameObject powerUp = (GameObject)Instantiate(powerUpPrefab, targetPosition, new Quaternion());
         NetworkServer.Spawn(powerUp);
 
     }

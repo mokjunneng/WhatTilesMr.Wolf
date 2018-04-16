@@ -28,18 +28,13 @@ public class HexMap : NetworkBehaviour {
     public List<GameObject> redTiles;
     public List<GameObject> blueTiles;
 
-    // Use this for initialization
-    void Start ()
+    public override void OnStartServer()
     {
-        
-
         Debug.Log("Server Generating Map");
         GenerateMap();
         GenerateMapForClient();
-        
-	}
+    }
 
-    
     private void GenerateMapForClient()
     {
         foreach(GameObject tile in tiles)

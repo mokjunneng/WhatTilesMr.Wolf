@@ -11,7 +11,16 @@ public class UpdateTile : NetworkBehaviour {
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
-    
+    // For SE
+    AudioSource audioSource;
+    public AudioClip tileSE;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
+
     public void UpdateTiles(playerMovement player, Color color)
     {
         players = GameObject.FindGameObjectsWithTag("Player");
@@ -29,7 +38,8 @@ public class UpdateTile : NetworkBehaviour {
         {
             Debug.Log("Updating tiles");
             player.GetComponent<playerMovement>().CmdUpdateTilesList(gameObject, color);
+            audioSource.PlayOneShot(tileSE);
         }
-        
+
     }
 }

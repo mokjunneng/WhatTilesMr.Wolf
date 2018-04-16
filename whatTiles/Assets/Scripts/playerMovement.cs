@@ -9,10 +9,10 @@ public class playerMovement : NetworkBehaviour {
     private Vector3 destinationPos;
     private float destinationDist;
     private Transform myTransform;
-
-    private float moveSpeed;
+    public uint id;
 
     //for changing speed with power-up
+    private float moveSpeed;
     private float moveSpeedLow = 3f;
     private float moveSpeedHigh = 4.5f;
 
@@ -20,20 +20,17 @@ public class playerMovement : NetworkBehaviour {
     private float highSpeedTimer;
     private float highSpeedThreshold = 5f;
 
-    public uint id;
 
     private GameObject WolfAI;
     private NetworkIdentity WolfAiId;
 
-    private bool receivingPenalty;
-
     //variables that need to be synced
     [SyncVar]
     public bool isMoving = false;
-    
     public bool wolfSpotting;
-
     private bool handlingPenalty = false;
+    private bool receivingPenalty;
+
 
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
@@ -65,17 +62,38 @@ public class playerMovement : NetworkBehaviour {
     void Start () {
         myTransform = transform;     //sets myTransform to this GameObject.Transform
         destinationPos = myTransform.position;    
-
         id = netId.Value;  //store player's network id
-
         audioSource = GetComponent<AudioSource>();
+    }
 
+    [ClientRpc]
+    public void RpcAddList(uint playerId)
+    {
+        CmdAddWolf(playerId);
     }
 
     [Command]
     public void CmdAddWolf(uint playerId)
     {
-        playerIndex = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().addPlayerList(playerId) - 1;
+        GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.Add(playerId);
+    }
+
+    public void indexChanged(int index)
+    {
+        if (!isLocalPlayer) { return; }
+        playerIndex = index;
+        Debug.Log("playerIndex is " + playerIndex);
+
+        if (playerIndex == 0)
+        {
+            Debug.Log("BLUE CUBE");
+            GetComponent<MeshRenderer>().material.color = Color.blue;
+        }
+        else if (playerIndex == 1)
+        {
+            Debug.Log("RED CUBE");
+            GetComponent<MeshRenderer>().material.color = Color.red;
+        }
     }
 
     //for power up
@@ -92,26 +110,20 @@ public class playerMovement : NetworkBehaviour {
         stopButton.gameObject.SetActive(false);
 
         WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
-        if(WolfAI == null)
+        if (WolfAI == null)
         {
             Debug.Log("No wolf found.");
         }
-        CmdAddWolf(netId.Value);
-
-        Debug.Log("playerIndex is " + playerIndex);
-
-        if(playerIndex == 0)
+        if (isServer)
         {
-            Debug.Log("BLUE CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.blue;
-        }else if(playerIndex == 1)
-        {
-            Debug.Log("RED CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.red;
+            RpcAddList(netId.Value);
+            //WolfAI.GetComponent<WolfEye>().playerList.Add(netId.Value);
         }
-
+        else
+        {
+            CmdAddWolf(netId.Value);
+        }
         //slider = GameObject.Find("Slider").GetComponent<Slider>();
-        //wolfSpotting = WolfAI.GetComponent<WolfEye>().facingPlayers;
     }
 
     // Update is called once per frame
@@ -236,13 +248,15 @@ public class playerMovement : NetworkBehaviour {
             {
                 handlingPenalty = true;
                 CmdAssignPenalty(id);
+                //play SE
+                audioSource.PlayOneShot(penaltySE);
+
                 if (isLocalPlayer)
                 {
                     //Handheld.Vibrate();
                 }
                 StartCoroutine(penaltyInterval());
             }           
-            //Debug.Log("player with id " + id + " checking whether receive penalty");
         }
     }
 
@@ -251,7 +265,7 @@ public class playerMovement : NetworkBehaviour {
     {
         int lostTileCount = 5; //changed to 5 to increase game pace
         Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
-        if (playerIndex == 1)
+        if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 1)
         {
             Debug.Log("Cube is Red, Penalty is Blue");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
@@ -261,20 +275,15 @@ public class playerMovement : NetworkBehaviour {
                 GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
 
                 //Change tile color
-                //penaltyTile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = blue;
                 RpcPaintTiles(penaltyTile, blue);
 
                 //update tiles list on server
-                //CmdUpdateTileCount(penaltyTile);
                 map.GetComponent<HexMap>().redTiles.Remove(penaltyTile);
                 map.GetComponent<HexMap>().blueTiles.Add(penaltyTile);
 
-                //play SE
-                audioSource.PlayOneShot(penaltySE);
-
             }
         }
-        else if (playerIndex == 0)
+        else if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 0)
         {
 
             Debug.Log("Cube is Blue, Penalty is Red");
@@ -284,10 +293,8 @@ public class playerMovement : NetworkBehaviour {
             {
                 GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
 
-                //penaltyTile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = red;
                 RpcPaintTiles(penaltyTile, red);
 
-                //CmdUpdateTileCount(penaltyTile);
                 map.GetComponent<HexMap>().blueTiles.Remove(penaltyTile);
                 map.GetComponent<HexMap>().redTiles.Add(penaltyTile);
             }
@@ -313,10 +320,6 @@ public class playerMovement : NetworkBehaviour {
     [Command]
     public void CmdUpdateTilesList(GameObject tile, Color color)
     {
-        
-        //Debug.Log(tile.name);
-        //NetworkIdentity tileNetId = tile.GetComponentInParent<NetworkIdentity>();
-        //tileNetId.AssignClientAuthority(connectionToClient);
 
         map = GameObject.FindGameObjectWithTag("TileMap");
 
@@ -372,6 +375,7 @@ public class playerMovement : NetworkBehaviour {
         health += Time.deltaTime;
     }
 
+    //Additional functions for health feature
     [Command]
     void CmdTakeHealth()
     {

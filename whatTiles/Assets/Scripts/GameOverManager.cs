@@ -53,7 +53,6 @@ public class GameOverManager : NetworkBehaviour
     // Use this for initialization
     void Awake()
     {
-
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = lobby;
@@ -82,7 +81,7 @@ public class GameOverManager : NetworkBehaviour
                 CmdGetPlayers();
             }
 
-            if (playersConnected < 1)
+            if (playersConnected < 2)
             {
                 if (!audioSource.isPlaying)
                 {
@@ -127,7 +126,6 @@ public class GameOverManager : NetworkBehaviour
                 }
                 else
                 {
-
                     //audioSource.PlayOneShot(countSE);   
                     loadingText.text = string.Format("Starting in {0} ...", Mathf.CeilToInt(preTimer));
                     playerImg2.enabled = true;
@@ -153,6 +151,7 @@ public class GameOverManager : NetworkBehaviour
             if (countdownTimer <= 0)
             {
                 audioSource.Stop();
+                audioSource.PlayOneShot(endSE);
 
                 anim.SetTrigger("GameOver");
                 stringTimer.enabled = false;
@@ -162,9 +161,6 @@ public class GameOverManager : NetworkBehaviour
                     map = GameObject.FindGameObjectWithTag("TileMap").GetComponent<HexMap>();
                     int redTileCount = map.redTiles.Count;
                     int blueTileCount = map.blueTiles.Count;
-
-                    audioSource.PlayOneShot(endSE);
-
                     RpcSetResult(redTileCount, blueTileCount);
                 }
 
@@ -198,11 +194,11 @@ public class GameOverManager : NetworkBehaviour
         blueCount.text = "Blue: " + blueTileCount;
         if (redTileCount > blueTileCount)
         {
-            result.text = "Player 1 Wins!";
+            result.text = "Player 2 Wins!";
         }
         else if (redTileCount < blueTileCount)
         {
-            result.text = "Player 2 Wins!";
+            result.text = "Player 1 Wins!";
         }
         else
         {
