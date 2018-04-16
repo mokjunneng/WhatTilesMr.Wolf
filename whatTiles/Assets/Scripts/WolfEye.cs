@@ -14,9 +14,11 @@ public class WolfEye :NetworkBehaviour {
     //vibration-related variables
     public float shakeIntensity = 0.3f;
 
+    //SE
+    AudioSource audioSource;
 
     //booleans control
-    
+
     public bool handlingPenalty = false;
     [SyncVar]
     public bool facingPlayers = false; 
@@ -47,6 +49,8 @@ public class WolfEye :NetworkBehaviour {
         countTimer = Random.Range(3f, 6f);
         playerList = new List<uint>();
 
+        audioSource = GetComponent<AudioSource>();
+
         //map = GameObject.FindGameObjectWithTag("TileMap");
 
     }
@@ -74,7 +78,8 @@ public class WolfEye :NetworkBehaviour {
             //get reference to players in game from server
             players = GameObject.FindGameObjectsWithTag("Player");
 
-            countTimer -= Time.deltaTime;
+            if (GameObject.Find("Canvas").GetComponent<GameOverManager>().startTimer)
+                countTimer -= Time.deltaTime;
              
             //get ready to vibrate alert 
             if (countTimer <= 0.6f && countTimer > 0f && facingPlayers == false)
@@ -150,12 +155,17 @@ public class WolfEye :NetworkBehaviour {
     private IEnumerator vibrate(Vector3 originPost)
     {
         float elapsed = 0f;
+        if (!audioSource.isPlaying)
+            audioSource.Play();
+
         while (elapsed < 0.6f)
         {
             transform.position = originPost + Random.insideUnitSphere * shakeIntensity;
             elapsed += Time.deltaTime;
             yield return null;
         }
+
+        audioSource.Stop();
     }
 
     void resetTimer()

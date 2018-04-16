@@ -6,10 +6,14 @@ public class PowerUp : MonoBehaviour {
 
     public GameObject effect;
 
+    public AudioClip powerupSE;
+    AudioSource audioSource;
+
     // Use this for initialization
     void Start () {
-		
-	}
+        audioSource = GameObject.Find("Directional Light").GetComponent<AudioSource>();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -21,6 +25,9 @@ public class PowerUp : MonoBehaviour {
         print("get power up");
         if (other.gameObject.tag == "Player")
         {
+            //SE
+            audioSource.PlayOneShot(powerupSE);
+
             print("trigger fade animation && do something");
             if (effect)
             {

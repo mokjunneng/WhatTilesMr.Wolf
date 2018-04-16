@@ -8,13 +8,17 @@ public class TriggerTile : MonoBehaviour {
 
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);   
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
-    
+
+    // For SE
+    AudioSource audioSource;
+    public AudioClip tileSE;
+
 
     // Use this for initialization
     void Start () {
-       
-       
-	}
+
+        audioSource = GetComponent<AudioSource>();
+    }
 	
     //[ClientCallback]
     private void OnCollisionEnter(Collision other)
@@ -28,16 +32,23 @@ public class TriggerTile : MonoBehaviour {
 
         if (Vector3.Distance(playerPosition, tileCentre) <= 1f)
         {
+
             Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
-            if (playerScript.playerIndex == 1)
+            if (playerScript.playerIndex == 1 && gameObject.GetComponent<Renderer>().material.color == blue)
             {
                 gameObject.GetComponent<Renderer>().material.color = red;
                 transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, red);
+
+                //play SE
+                audioSource.PlayOneShot(tileSE);
             }
-            else if (playerScript.playerIndex == 0)
+            else if (playerScript.playerIndex == 0 && gameObject.GetComponent<Renderer>().material.color == red)
             {
                 transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, blue);
                 gameObject.GetComponent<Renderer>().material.color = blue;
+
+                //play SE
+                audioSource.PlayOneShot(tileSE);
             }
         }
     }

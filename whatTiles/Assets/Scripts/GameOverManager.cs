@@ -13,7 +13,7 @@ public class GameOverManager : NetworkBehaviour
     private HexMap map;
 
     [SyncVar]
-    private float countdownTimer = 20f;
+    private float countdownTimer = 50f;
 
     public Text stringTimer;
     public Text redCount;
@@ -22,7 +22,7 @@ public class GameOverManager : NetworkBehaviour
     public Text loadingText;
 
     [SyncVar]
-    private bool startTimer = false;
+    public bool startTimer = false;
     [SyncVar]
     private bool restart = false;
 
@@ -41,17 +41,34 @@ public class GameOverManager : NetworkBehaviour
     public Image playerImg1;
     public Image playerImg2;
 
+    public Text p1Text;
+    public Text p2Text;
+
+    public AudioClip lobby;
+    public AudioClip main;
+    public AudioClip endSE;
+
+    AudioSource audioSource;
+
     // Use this for initialization
     void Awake()
     {
 
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = lobby;
     }
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = lobby;
+
         playerImg1.enabled = false;
         playerImg2.enabled = false;
+
+        p1Text.enabled = false;
+        p2Text.enabled = false;
     }
 
     // Update is called once per frame
@@ -65,18 +82,25 @@ public class GameOverManager : NetworkBehaviour
                 CmdGetPlayers();
             }
 
-            if (playersConnected < 2)
+            if (playersConnected < 1)
             {
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.Play();
+                }
                 loadingMask.SetActive(true);
-                loadingText.text = "Gathering additional player... " + playersConnected + "/2";
+                loadingText.text = "Waiting for players... " + playersConnected + "/2";
 
                 if (playersConnected == 1)
                 {
                     playerImg1.enabled = true;
+                    p1Text.enabled = true;
                 }
             }
             else
             {
+                audioSource.Stop();
+
                 preTimer -= Time.deltaTime;
 
                 if (preTimer <= -2)
@@ -89,28 +113,47 @@ public class GameOverManager : NetworkBehaviour
 
                 else if (preTimer <= 0)
                 {
+
                     loadingText.text = "Start!";
+
+                    audioSource.Stop();
+                    audioSource.clip = main;
 
                     playerImg1.enabled = false;
                     playerImg2.enabled = false;
+
+                    p1Text.enabled = false;
+                    p2Text.enabled = false;
                 }
                 else
                 {
+
+                    //audioSource.PlayOneShot(countSE);   
                     loadingText.text = string.Format("Starting in {0} ...", Mathf.CeilToInt(preTimer));
                     playerImg2.enabled = true;
                     playerImg1.enabled = true;
+
+                    p1Text.enabled = true;
+                    p2Text.enabled = true;
                 }
             }
         }
 
         else if (startTimer && !restart)
         {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+                anim.SetTrigger("GameRunning");
+            }
 
             countdownTimer -= Time.deltaTime;
             stringTimer.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(countdownTimer / 60), countdownTimer % 60);
 
             if (countdownTimer <= 0)
             {
+                audioSource.Stop();
+
                 anim.SetTrigger("GameOver");
                 stringTimer.enabled = false;
 
@@ -119,6 +162,8 @@ public class GameOverManager : NetworkBehaviour
                     map = GameObject.FindGameObjectWithTag("TileMap").GetComponent<HexMap>();
                     int redTileCount = map.redTiles.Count;
                     int blueTileCount = map.blueTiles.Count;
+
+                    audioSource.PlayOneShot(endSE);
 
                     RpcSetResult(redTileCount, blueTileCount);
                 }

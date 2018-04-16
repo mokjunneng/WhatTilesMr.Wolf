@@ -42,6 +42,23 @@ public class playerMovement : NetworkBehaviour {
     // For stop button
     private Button stopButton;
 
+    // For SE
+    AudioSource audioSource;
+    public AudioClip penaltySE;
+    //public AudioClip freezeSE;
+
+    // For HP (if have time then add so just leave here first)
+    public const float maxHealth = 5;
+    //[SyncVar(hook = "OnChangeHealth")]
+    public float health = maxHealth;
+    //[SerializeField]
+    private Slider slider;
+    private float hpOffset = 1f;
+
+    [SyncVar]
+    public bool dead;
+
+
     public int playerIndex;
 
     // Use this for initialization
@@ -50,6 +67,9 @@ public class playerMovement : NetworkBehaviour {
         destinationPos = myTransform.position;    
 
         id = netId.Value;  //store player's network id
+
+        audioSource = GetComponent<AudioSource>();
+
     }
 
     [Command]
@@ -70,7 +90,7 @@ public class playerMovement : NetworkBehaviour {
         stopButton = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
         stopButton.onClick.AddListener(OnClickStop);
         stopButton.gameObject.SetActive(false);
-      
+
         WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
         if(WolfAI == null)
         {
@@ -90,7 +110,7 @@ public class playerMovement : NetworkBehaviour {
             GetComponent<MeshRenderer>().material.color = Color.red;
         }
 
-
+        //slider = GameObject.Find("Slider").GetComponent<Slider>();
         //wolfSpotting = WolfAI.GetComponent<WolfEye>().facingPlayers;
     }
 
@@ -116,47 +136,71 @@ public class playerMovement : NetworkBehaviour {
             }
         }
 
-        if (destinationDist < .5f)  //prevent shaking behvaior when approaching destination
-        {
-            moveSpeed = 0;
-            isMoving = false;
-        }
-        else
-        {
-            //moveSpeed = 3;
+        //for hp 
+        //if (health > 5 && !dead)
+        //{
+        //    CmdSetMax();
+        //}
+        //else if (health <= 0 && !dead)
+        //{
+        //    print("dead");
+        //    CmdSetZero();
+        //}
 
-            //set speed accordingly
-            if (highSpeed)
+        if (!dead && GameObject.Find("Canvas").GetComponent<GameOverManager>().startTimer)
+        {
+            //for HP
+            //if (!isMoving)
+            //{
+            //    CmdTakeHealth();
+            //}
+            //else
+            //{
+            //    CmdAddHP();
+            //}
+
+            if (destinationDist < .5f)  //prevent shaking behvaior when approaching destination
             {
-                moveSpeed = moveSpeedHigh;
+                moveSpeed = 0;
+                isMoving = false;
             }
             else
             {
-                moveSpeed = moveSpeedLow;
+                //moveSpeed = 3;
+
+                //set speed accordingly
+                if (highSpeed)
+                {
+                    moveSpeed = moveSpeedHigh;
+                }
+                else
+                {
+                    moveSpeed = moveSpeedLow;
+                }
+
+                isMoving = true;
             }
 
-            isMoving = true;
-        }
-
-        if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
+            if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
             {
-                Vector3 targetPoint = ray.GetPoint(hit.distance);
-                destinationPos = ray.GetPoint(hit.distance);
-                Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                myTransform.rotation = targetRotation;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Vector3 targetPoint = ray.GetPoint(hit.distance);
+                    destinationPos = ray.GetPoint(hit.distance);
+                    Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
 
+                    myTransform.rotation = targetRotation;
+
+                }
             }
-        }
 
-        if (destinationDist > .5f)
-        {
-            myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPos, moveSpeed * Time.deltaTime);
+            if (destinationDist > .5f)
+            {
+                myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPos, moveSpeed * Time.deltaTime);
+            }
         }
 
     }
@@ -179,6 +223,7 @@ public class playerMovement : NetworkBehaviour {
         if (WolfAI.GetComponent<WolfEye>().facingPlayers)
         {
             destinationPos = myTransform.position;
+
         }
     }
 
@@ -223,6 +268,9 @@ public class playerMovement : NetworkBehaviour {
                 //CmdUpdateTileCount(penaltyTile);
                 map.GetComponent<HexMap>().redTiles.Remove(penaltyTile);
                 map.GetComponent<HexMap>().blueTiles.Add(penaltyTile);
+
+                //play SE
+                audioSource.PlayOneShot(penaltySE);
 
             }
         }
@@ -309,5 +357,84 @@ public class playerMovement : NetworkBehaviour {
     public float returnSpeed()
     {
         return moveSpeed;
+    }
+
+    public void OnChangeHealth(float health)
+    {
+        slider.value = health;
+    }
+
+    public void addHP()
+    {
+        if (!isServer)
+            return;
+
+        health += Time.deltaTime;
+    }
+
+    [Command]
+    void CmdTakeHealth()
+    {
+        //Apply damage to the GameObject
+        takeDamage(hpOffset);
+    }
+
+    [Command]
+    void CmdAddHP()
+    {
+        addHP();
+    }
+
+    [Command]
+    void CmdSetMax()
+    {
+        if (!isServer)
+            return;
+        health = maxHealth;
+    }
+
+    [Command]
+    void CmdSetZero()
+    {
+        if (!isServer)
+            return;
+        health = 0;
+    }
+
+    public void takeDamage(float hpOffset)
+    {
+        if (!isServer)
+            return;
+
+        health -= Time.deltaTime * hpOffset;
+        if (health <= 0)
+        {
+            // called on the server, will be invoked on the clients
+            RpcRespawn();
+
+        }
+    }
+
+    [ClientRpc]
+    private void RpcRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            // pause object for a while
+            StartCoroutine(penaltyWait());
+
+        }
+    }
+
+    private IEnumerator penaltyWait()
+    {
+        print("penalty time...");
+        dead = true;
+        CmdSetZero();
+        yield return new WaitForSeconds(3f);
+        CmdSetMax();
+        print("exit penalty...");
+        dead = false;
+        yield return new WaitForSeconds(1f);
     }
 }

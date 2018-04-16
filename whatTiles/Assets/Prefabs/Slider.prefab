@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224040462168687718}
   - component: {fileID: 114102525876019928}
+  - component: {fileID: 114499559072966964}
   m_Layer: 5
   m_Name: Slider
   m_TagString: Slider
@@ -178,6 +179,38 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114499559072966964
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1269951274396856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 10
+    i1: 71
+    i2: 224
+    i3: 237
+    i4: 36
+    i5: 19
+    i6: 13
+    i7: 68
+    i8: 11
+    i9: 225
+    i10: 149
+    i11: 181
+    i12: 34
+    i13: 31
+    i14: 233
+    i15: 146
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!222 &222276624610217698
 CanvasRenderer:
   m_ObjectHideFlags: 1
