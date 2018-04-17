@@ -1,5 +1,5 @@
 2017.3.1f1:3.3.0.0
-StandaloneWindows64
+Android
 E:/Unity 2017.3.1/Editor/Data/Managed/UnityEditor.dll
 E:/Unity 2017.3.1/Editor/Data/Managed/UnityEngine/UnityEngine.dll
 E:/Unity 2017.3.1/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll
@@ -48,6 +48,8 @@ E:/Unity 2017.3.1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestTex
 E:/Unity 2017.3.1/Editor/Data/Managed/UnityEngine/UnityEngine.UnityWebRequestWWWModule.dll
 E:/Unity 2017.3.1/Editor/Data/Managed/UnityEngine/UnityEngine.VideoModule.dll
 E:/Unity 2017.3.1/Editor/Data/Managed/UnityEngine/UnityEngine.WindModule.dll
+E:/Unity 2017.3.1/Editor/Data/PlaybackEngines/VuforiaSupport/Managed/Editor/Vuforia.UnityExtensions.Editor.dll
+E:/Unity 2017.3.1/Editor/Data/PlaybackEngines/VuforiaSupport/Managed/Runtime/Vuforia.UnityExtensions.dll
 E:/Unity 2017.3.1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll
 E:/Unity 2017.3.1/Editor/Data/UnityExtensions/Unity/GUISystem/Editor/UnityEditor.UI.dll
 E:/Unity 2017.3.1/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll

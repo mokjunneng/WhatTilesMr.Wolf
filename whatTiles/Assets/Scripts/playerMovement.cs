@@ -32,12 +32,13 @@ public class playerMovement : NetworkBehaviour {
     private bool receivingPenalty;
 
 
-    private Color red = new Color(1F, 0.1911765F, 0.1911765F);
-    private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
+    private Color red = new Color(255f/255f, 227f / 255f, 0, 255f / 255f);//new Color(1F, 0.1911765F, 0.1911765F);
+    private Color blue = new Color(0, 208f / 255f, 113f / 255f, 255f / 255f);//new Color(0.3317474F, 0.6237204F, 0.8676471F);
     private GameObject map;
 
     // For stop button
-    private Button stopButton;
+    private Button stopButtonL;
+    private Button stopButtonR;
 
     // For SE
     AudioSource audioSource;
@@ -87,12 +88,12 @@ public class playerMovement : NetworkBehaviour {
         if (playerIndex == 0)
         {
             Debug.Log("BLUE CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.blue;
+            GetComponent<MeshRenderer>().material.color = Color.green;
         }
         else if (playerIndex == 1)
         {
             Debug.Log("RED CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.red;
+            GetComponent<MeshRenderer>().material.color = new Color(255,42,0,255);
         }
     }
 
@@ -105,9 +106,13 @@ public class playerMovement : NetworkBehaviour {
     public override void OnStartLocalPlayer()
     {
         // Initialising the stop button 
-        stopButton = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
-        stopButton.onClick.AddListener(OnClickStop);
-        stopButton.gameObject.SetActive(false);
+        stopButtonL = GameObject.FindGameObjectsWithTag("StopButton")[0].GetComponent<Button>();
+        stopButtonL.onClick.AddListener(OnClickStop);
+        stopButtonL.gameObject.SetActive(false);
+
+        stopButtonR = GameObject.FindGameObjectsWithTag("StopButton")[0].GetComponent<Button>();
+        stopButtonR.onClick.AddListener(OnClickStop);
+        stopButtonR.gameObject.SetActive(false);
 
         WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
         if (WolfAI == null)
@@ -221,11 +226,13 @@ public class playerMovement : NetworkBehaviour {
     {
         if (WolfAI.GetComponent<WolfEye>().facingPlayers)
         {
-            stopButton.gameObject.SetActive(true);
+            stopButtonR.gameObject.SetActive(true);
+            stopButtonL.gameObject.SetActive(true);
         }
         else
         {
-            stopButton.gameObject.SetActive(false);
+            stopButtonR.gameObject.SetActive(false);
+            stopButtonL.gameObject.SetActive(false);
         }
     }
 
