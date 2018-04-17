@@ -114,6 +114,9 @@ public class playerMovement : NetworkBehaviour {
         stopButtonR.onClick.AddListener(OnClickStop);
         stopButtonR.gameObject.SetActive(false);
 
+        //hide power-up indicator
+        transform.GetComponentInChildren<Image>().enabled = false;
+
         WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
         if (WolfAI == null)
         {
@@ -144,12 +147,20 @@ public class playerMovement : NetworkBehaviour {
         //for power up
         if (highSpeed)
         {
+            //display speed status
+            transform.GetComponentInChildren<Image>().enabled = true;
 
             highSpeedTimer += Time.deltaTime;
             if (highSpeedTimer > highSpeedThreshold)
             {
                 highSpeed = false;
                 highSpeedTimer = 0f;
+
+                //remove speed status
+                transform.GetComponentInChildren<Image>().enabled = false;
+
+                //stop aura
+                //GetComponent<ParticleSystem>().Stop();
             }
         }
 

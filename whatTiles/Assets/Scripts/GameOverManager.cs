@@ -90,7 +90,7 @@ public class GameOverManager : NetworkBehaviour
                 CmdGetPlayers();
             }
 
-            if (playersConnected < 1)
+            if (playersConnected < 2)
             {
                 if (!audioSource.isPlaying)
                 {
