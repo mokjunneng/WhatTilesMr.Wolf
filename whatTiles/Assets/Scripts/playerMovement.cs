@@ -32,8 +32,10 @@ public class playerMovement : NetworkBehaviour {
     private bool receivingPenalty;
 
 
-    private Color red = new Color(255f/255f, 227f / 255f, 0, 255f / 255f);//new Color(1F, 0.1911765F, 0.1911765F);
-    private Color blue = new Color(0, 208f / 255f, 113f / 255f, 255f / 255f);//new Color(0.3317474F, 0.6237204F, 0.8676471F);
+    //private Color yellow = new Color(255f/255f, 227f / 255f, 0, 255f / 255f);//new Color(1F, 0.1911765F, 0.1911765F);
+    //private Color blue = new Color(0, 208f / 255f, 113f / 255f, 255f / 255f);//new Color(0.3317474F, 0.6237204F, 0.8676471F);
+    private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
+    private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
     private GameObject map;
 
     // For stop button
@@ -311,7 +313,7 @@ public class playerMovement : NetworkBehaviour {
             {
                 GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
 
-                RpcPaintTiles(penaltyTile, red);
+                RpcPaintTiles(penaltyTile, yellow);
 
                 map.GetComponent<HexMap>().blueTiles.Remove(penaltyTile);
                 map.GetComponent<HexMap>().redTiles.Add(penaltyTile);
@@ -362,7 +364,7 @@ public class playerMovement : NetworkBehaviour {
         List<GameObject> redTiles = map.GetComponent<HexMap>().redTiles;
         List<GameObject> blueTiles = map.GetComponent<HexMap>().blueTiles;
 
-        if (color == red)
+        if (color == yellow)
         {
 
             if (!redTiles.Contains(tile))

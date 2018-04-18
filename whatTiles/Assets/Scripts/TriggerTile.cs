@@ -6,15 +6,9 @@ using UnityEngine.Networking;
 
 public class TriggerTile : MonoBehaviour {
 
-    private Color red = new Color(255f / 255f, 227f / 255f, 0, 255f / 255f);//new Color(1F, 0.1911765F, 0.1911765F);
-    private Color blue = new Color(0, 208f / 255f, 113f / 255f, 255f / 255f);//new Color(0.3317474F, 0.6237204F, 0.8676471F);
+    private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
+    private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
 
-
-
-    // Use this for initialization
-
-
-    //[ClientCallback]
     private void OnCollisionEnter(Collision other)
     {
         playerMovement playerScript = other.gameObject.GetComponent<playerMovement>();
@@ -31,8 +25,8 @@ public class TriggerTile : MonoBehaviour {
             Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
             if (index == 1)
             {
-                gameObject.GetComponent<Renderer>().material.color = red;
-                transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, red);
+                gameObject.GetComponent<Renderer>().material.color = yellow;
+                transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, yellow);
             }
             else if (index == 0)
             {
