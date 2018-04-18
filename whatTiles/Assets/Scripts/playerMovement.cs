@@ -235,7 +235,7 @@ public class playerMovement : NetworkBehaviour {
 
     void checkIfStopped()
     {
-        if (WolfAI.GetComponent<WolfEye>().facingPlayers)
+        if (WolfAI.GetComponent<WolfEye>().vibrating)
         {
             stopButtonR.gameObject.SetActive(true);
             stopButtonL.gameObject.SetActive(true);
@@ -250,7 +250,7 @@ public class playerMovement : NetworkBehaviour {
     void OnClickStop()
     {
         // reconfirm that the wolfAI.facingPlayers is true 
-        if (WolfAI.GetComponent<WolfEye>().facingPlayers)
+        if (WolfAI.GetComponent<WolfEye>().vibrating)
         {
             destinationPos = myTransform.position;
 
