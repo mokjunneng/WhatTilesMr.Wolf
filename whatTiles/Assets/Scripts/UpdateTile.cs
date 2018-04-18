@@ -28,7 +28,7 @@ public class UpdateTile : NetworkBehaviour {
         {
             if (p.GetComponent<playerMovement>().isLocalPlayer)
             {
-                Debug.Log("found client player");
+                //Debug.Log("found client player");
                 clientPlayer = p;
             }
         }
@@ -37,8 +37,7 @@ public class UpdateTile : NetworkBehaviour {
         if (clientPlayer != null && player.id == clientPlayer.GetComponent<playerMovement>().id)
         {
             Debug.Log("Updating tiles");
-            player.GetComponent<playerMovement>().CmdUpdateTilesList(gameObject, color);
-            audioSource.PlayOneShot(tileSE);
+            player.GetComponent<playerMovement>().CmdUpdateTilesList(gameObject, color, player.id);
         }
 
     }

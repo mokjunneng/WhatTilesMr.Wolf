@@ -6,10 +6,6 @@ using UnityEngine.UI;
 
 public class playerMovement : NetworkBehaviour {
 
-    //GameObjec references
-    private GameObject WolfAI;
-    private GameObject map;
-
     private Vector3 destinationPos;
     private float destinationDist;
     private Transform myTransform;
@@ -24,39 +20,47 @@ public class playerMovement : NetworkBehaviour {
     private float highSpeedTimer;
     private float highSpeedThreshold = 5f;
 
+
+    private GameObject WolfAI;
+    private NetworkIdentity WolfAiId;
+
     //variables that need to be synced
     [SyncVar]
     public bool isMoving = false;
+    public bool wolfSpotting;
     private bool handlingPenalty = false;
+    private bool receivingPenalty;
 
-    //private Color yellow = new Color(255f/255f, 227f / 255f, 0, 255f / 255f);//new Color(1F, 0.1911765F, 0.1911765F);
-    //private Color blue = new Color(0, 208f / 255f, 113f / 255f, 255f / 255f);//new Color(0.3317474F, 0.6237204F, 0.8676471F);
-    //Color schemes for tiles
+
     private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
     private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
+    private GameObject map;
 
-
-    //UI - stop buttons
+    // For stop button
     private Button stopButtonL;
     private Button stopButtonR;
 
-    //Sound Effects
+    // For SE
     AudioSource audioSource;
     public AudioClip penaltySE;
+    public AudioClip tileSE;
+    //public AudioClip freezeSE;
 
-    public int playerIndex;
-
-    //For HP (if have time then add so just leave here first)
+    // For HP (if have time then add so just leave here first)
     public const float maxHealth = 5;
     //[SyncVar(hook = "OnChangeHealth")]
     public float health = maxHealth;
     //[SerializeField]
     private Slider slider;
     private float hpOffset = 1f;
+
     [SyncVar]
     public bool dead;
-    
 
+
+    public int playerIndex;
+
+    // Use this for initialization
     void Start () {
         myTransform = transform;     //sets myTransform to this GameObject.Transform
         destinationPos = myTransform.position;    
@@ -64,9 +68,6 @@ public class playerMovement : NetworkBehaviour {
         audioSource = GetComponent<AudioSource>();
     }
 
-    
-
-    //cache players' index
     [ClientRpc]
     public void RpcAddList(uint playerId)
     {
@@ -83,17 +84,21 @@ public class playerMovement : NetworkBehaviour {
     {
         if (!isLocalPlayer) { return; }
         playerIndex = index;
-        //Debug.Log("playerIndex is " + playerIndex);
+        Debug.Log("playerIndex is " + playerIndex);
 
         if (playerIndex == 0)
         {
-            //Debug.Log("BLUE CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.green;
+            Debug.Log("BLUE CUBE");
+            GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
+
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
         }
         else if (playerIndex == 1)
         {
-            //Debug.Log("RED CUBE");
-            GetComponent<MeshRenderer>().material.color = new Color(255,42,0,255);
+            Debug.Log("RED CUBE");
+            GetComponent<MeshRenderer>().material.color = new Color(1,224f / 255f ,41f /255f,1);
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(1, 224f /255f, 42f /255f, 1);
+
         }
     }
 
@@ -102,7 +107,6 @@ public class playerMovement : NetworkBehaviour {
     {
         highSpeed = true;
     }
-
 
     public override void OnStartLocalPlayer()
     {
@@ -135,13 +139,19 @@ public class playerMovement : NetworkBehaviour {
         //slider = GameObject.Find("Slider").GetComponent<Slider>();
     }
 
-
     // Update is called once per frame
     void Update () {
         if (!isLocalPlayer) { return; }
 
         checkIfStopped();
         checkIfSpotted();
+
+        //hide indicator
+        if (GameObject.Find("Canvas").GetComponent<GameOverManager>().getTimer() < 47)
+        {
+            
+            CmdHideIndicator();
+        }
         
 
         //movement control: move upon tapping on screen
@@ -240,7 +250,6 @@ public class playerMovement : NetworkBehaviour {
 
     }
 
-    //show stop button when wolf starts vibrating
     void checkIfStopped()
     {
         if (WolfAI.GetComponent<WolfEye>().vibrating)
@@ -294,11 +303,12 @@ public class playerMovement : NetworkBehaviour {
     private void CmdAssignPenalty(uint playerNetId)
     {
         int lostTileCount = 5; //changed to 5 to increase game pace
-        //Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
+        Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
         if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 1)
         {
-            //Debug.Log("Cube is Red, Penalty is Blue");
-            RpcPlayCounterAnimation("minusFiveYellow");
+            RpcPlayAnimation("minusFiveYellow");
+
+            Debug.Log("Cube is Red, Penalty is Blue");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
            
             for (int i = 0; i < lostTileCount; i++)
@@ -316,8 +326,9 @@ public class playerMovement : NetworkBehaviour {
         }
         else if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 0)
         {
-            RpcPlayCounterAnimation("minusFiveBlue");
-            //Debug.Log("Cube is Blue, Penalty is Red");
+            RpcPlayAnimation("minusFiveBlue");
+
+            Debug.Log("Cube is Blue, Penalty is Red");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().blueTiles;
             
             for (int i = 0; i < lostTileCount; i++)
@@ -330,8 +341,8 @@ public class playerMovement : NetworkBehaviour {
                 map.GetComponent<HexMap>().redTiles.Add(penaltyTile);
             }
         }
-        //Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
-        //Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
+        Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
+        Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
     }
 
     [ClientRpc]
@@ -367,7 +378,7 @@ public class playerMovement : NetworkBehaviour {
 
 
     [Command]
-    public void CmdUpdateTilesList(GameObject tile, Color color)
+    public void CmdUpdateTilesList(GameObject tile, Color color, uint playerId)
     {
 
         map = GameObject.FindGameObjectWithTag("TileMap");
@@ -380,10 +391,11 @@ public class playerMovement : NetworkBehaviour {
 
             if (!redTiles.Contains(tile))
             {
-                //Debug.Log("updating red ");
+                Debug.Log("updating red ");
                 map.GetComponent<HexMap>().redTiles.Add(tile);
                 map.GetComponent<HexMap>().blueTiles.Remove(tile);
-                RpcPlayCounterAnimation("plusOneYellow");
+                RpcPlaySound(playerId);
+                RpcPlayAnimation("plusOneYellow");
             }
 
         }
@@ -392,10 +404,12 @@ public class playerMovement : NetworkBehaviour {
             if (!blueTiles.Contains(tile))
 
             {
-                //Debug.Log("updating blue");
+                Debug.Log("updating blue");
+
                 map.GetComponent<HexMap>().blueTiles.Add(tile);
                 map.GetComponent<HexMap>().redTiles.Remove(tile);
-                RpcPlayCounterAnimation("plusOneBlue");
+                RpcPlaySound(playerId);
+                RpcPlayAnimation("plusOneBlue");
             }
         }
 
@@ -408,16 +422,28 @@ public class playerMovement : NetworkBehaviour {
     }
 
     [ClientRpc]
+    private void RpcPlaySound(uint playerId)
+    {
+        Debug.Log("playsound");
+        if (playerId == id)
+        {
+            Debug.Log("id confirmed, playing sound");
+            audioSource.PlayOneShot(tileSE);
+        }
+       
+    }
+
+    [ClientRpc]
     private void RpcUpdateCounter(float ratio)
     {
         GameObject.Find("Canvas").GetComponent<GameOverManager>().bar.fillAmount = ratio;
     }
 
     [ClientRpc]
-    private void RpcPlayCounterAnimation(string animationName)
+    private void RpcPlayAnimation(string name)
     {
         Debug.Log("play animation");
-        GameObject.Find("Canvas").GetComponent<GameOverManager>().anim.Play(animationName);
+        GameObject.Find("Canvas").GetComponent<GameOverManager>().anim.Play(name);
     }
 
     [Command]
@@ -532,5 +558,17 @@ public class playerMovement : NetworkBehaviour {
         print("exit penalty...");
         dead = false;
         yield return new WaitForSeconds(1f);
+    }
+
+    [Command]
+    private void CmdHideIndicator()
+    {
+        RpcHideIndicator();
+    }
+
+    [ClientRpc]
+    private void RpcHideIndicator()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
     }
 }

@@ -7,7 +7,7 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: MKDemoMat13View1
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: 0fc06dbae827e7646bd0850ff121daa5, type: 3}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
@@ -43,7 +43,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: d2bfdb919488ef040b6f7e30c6d08ebf, type: 3}
+        m_Texture: {fileID: 10305, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -68,7 +68,7 @@ Material:
     - _GlossyReflections: 1
     - _MKGlowOffSet: 0
     - _MKGlowPower: 1.16
-    - _MKGlowTexStrength: 0.71
+    - _MKGlowTexStrength: 0.63
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -79,7 +79,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.8279919, b: 0.6102941, a: 1}
-    - _EmissionColor: {r: 1, g: 0.73630834, b: 0.2647059, a: 1}
+    - _Color: {r: 0.97794116, g: 0.2157223, b: 0.2157223, a: 1}
+    - _EmissionColor: {r: 1, g: 0.4016227, b: 0.2647059, a: 1}
     - _MKGlowColor: {r: 1, g: 0.062068954, b: 0, a: 1}
     - _MKGlowTexColor: {r: 1, g: 0.2794118, b: 0.2794118, a: 1}

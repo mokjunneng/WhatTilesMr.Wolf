@@ -631,7 +631,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -655,7 +655,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!114 &114076589695844848
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -771,7 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8425296c852266458f83dfe9b1aae2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myTransform: {fileID: 0}
+  myTransform: {fileID: 4358096753085626}
   lerpRate: 15
   SlerpRate: 10
 --- !u!114 &114721241197169178
