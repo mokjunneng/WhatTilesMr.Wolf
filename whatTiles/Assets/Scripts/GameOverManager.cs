@@ -38,6 +38,10 @@ public class GameOverManager : NetworkBehaviour
 
     public GameObject loadingMask;
 
+    // For exit button
+    [SerializeField]
+    private Button exitButton;
+
     public Image playerImg1;
     public Image playerImg2;
 
@@ -47,6 +51,7 @@ public class GameOverManager : NetworkBehaviour
     public AudioClip lobby;
     public AudioClip main;
     public AudioClip endSE;
+
 
     AudioSource audioSource;
 
@@ -68,6 +73,10 @@ public class GameOverManager : NetworkBehaviour
 
         p1Text.enabled = false;
         p2Text.enabled = false;
+
+        exitButton = GameObject.FindGameObjectWithTag("ExitButton").GetComponent<Button>();
+
+
     }
 
     // Update is called once per frame
@@ -133,6 +142,8 @@ public class GameOverManager : NetworkBehaviour
 
                     p1Text.enabled = true;
                     p2Text.enabled = true;
+
+                    exitButton.gameObject.SetActive(false);
                 }
             }
         }
@@ -221,6 +232,11 @@ public class GameOverManager : NetworkBehaviour
     void OnEnable()
     {
         Debug.Log("GameOver: script was enabled");
+    }
+
+    public void OnClickExit()
+    {
+        SceneManager.LoadScene(0);
     }
 
 }

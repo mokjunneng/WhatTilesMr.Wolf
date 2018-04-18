@@ -6,14 +6,14 @@ using UnityEngine.Networking;
 
 public class TriggerTile : MonoBehaviour {
 
-    private Color red = new Color(1F, 0.1911765F, 0.1911765F);   
-    private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
+    private Color red = new Color(255f / 255f, 227f / 255f, 0, 255f / 255f);//new Color(1F, 0.1911765F, 0.1911765F);
+    private Color blue = new Color(0, 208f / 255f, 113f / 255f, 255f / 255f);//new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
-    
+
 
     // Use this for initialization
-   
-	
+
+
     //[ClientCallback]
     private void OnCollisionEnter(Collision other)
     {

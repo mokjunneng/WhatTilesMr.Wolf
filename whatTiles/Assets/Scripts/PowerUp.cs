@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PowerUp : MonoBehaviour {
 
@@ -34,6 +35,9 @@ public class PowerUp : MonoBehaviour {
                 //to add animation
                 Instantiate(effect, transform.position, transform.rotation);
             }
+
+            //display aura
+            //other.GetComponent<ParticleSystem>().Play();
 
             other.GetComponent<playerMovement>().setHighSpeed();
             DestroyObject(this.gameObject);
