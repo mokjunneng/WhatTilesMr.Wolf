@@ -52,6 +52,8 @@ Details of the software testing can be found in the testCases.cs script of our p
 5)  Count for red tiles and blue tiles increase and decrease correctly when a penalty is assigned
 6)  Count for red tiles and blue tiles increase and decrease correctly when players move over tiles
 
+**For more details in the way the test plans were executed, please read the final report found in the github repo**
+
 ## Game Reviews
 During the phyiscal testing, we have asked questions to the players and their comments/answers are as followed: 
 
@@ -129,6 +131,8 @@ Extra Comments made by Mr Yoga after PM4 Meeting
 
 From the questions asked and Mr Yoga's comments, keywords were picked up and implemented as a final improvement to the game
 
+**For more game reviews, please read the final report found in the github repo**
+
 ## Work in progress
 **Game**<br />
 - [x] Sign In (multiplayer) <br />
@@ -140,16 +144,16 @@ From the questions asked and Mr Yoga's comments, keywords were picked up and imp
 - [x] Game Testing <br />
 - [x] PM3 Meeting Review : Vibration alert of wolf <br />
 - [x] PM3 Meeting Review : Vibration alert of penalty for player <br />
-- [ ] Player Model <br />
-- [ ] Lighting <br /> 
+- [x] Player Model <br />
+- [x] Lighting <br /> 
 - [x] Login Scene <br />
 - [x] End Scene <br />
 - [x] Bonus Feature: Spells <br />
-- [ ] PM4 Meeting Review: Reload to Login Scene <br />
-- [ ] PM4 Meeting Review: UI Scale up <br />
-- [ ] PM4 Meeting Review: Collider Balancing <br />
-- [ ] PM4 Meeting Review: Tile lost Indication <br />
-- [ ] PM4 Meeting Review: Stop button during wolf <br /> 
+- [x] PM4 Meeting Review: Reload to Login Scene <br />
+- [x] PM4 Meeting Review: UI Scale up <br />
+- [x] PM4 Meeting Review: Collider Balancing <br />
+- [x] PM4 Meeting Review: Tile lost Indication <br />
+- [x] PM4 Meeting Review: Stop button during wolf <br /> 
 
 
 **Project Report**<br />
@@ -157,4 +161,4 @@ From the questions asked and Mr Yoga's comments, keywords were picked up and imp
 - [x] Project Meeting 2 (PM2) Report <br />
 - [x] Project Meeting 3 (PM3) Report <br />
 - [x] Project Meeting 4 (PM4) Report <br />
-- [ ] Final Report <br />
+- [x] Final Report <br />
