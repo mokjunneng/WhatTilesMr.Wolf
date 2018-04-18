@@ -1035,8 +1035,9 @@ MonoBehaviour:
   shakeIntensity: 0.3
   handlingPenalty: 0
   facingPlayers: 0
+  vibrating: 0
   players: []
-  playerList: 
+  items: []
 --- !u!114 &114890186018359276
 MonoBehaviour:
   m_ObjectHideFlags: 1

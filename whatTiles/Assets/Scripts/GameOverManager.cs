@@ -47,6 +47,8 @@ public class GameOverManager : NetworkBehaviour
     public Text p1Text;
     public Text p2Text;
 
+    public Text startText;
+
     public AudioClip lobby;
     public AudioClip main;
     public AudioClip endSE;
@@ -75,6 +77,8 @@ public class GameOverManager : NetworkBehaviour
         p1Text.enabled = false;
         p2Text.enabled = false;
 
+        startText.enabled = false;
+
         //barCounter.enabled = false;
         //barCounter.GetComponentInChildren<Image>().enabled = false;
         barCounter.SetActive(false);
@@ -92,7 +96,7 @@ public class GameOverManager : NetworkBehaviour
                 CmdGetPlayers();
             }
 
-            if (playersConnected < 2)
+            if (playersConnected < 1)
             {
                 if (!audioSource.isPlaying)
                 {
@@ -117,13 +121,17 @@ public class GameOverManager : NetworkBehaviour
                     loadingMask.SetActive(false);
                     loadingText.text = "";
 
+                    startText.enabled = false;
+
                     startTimer = true;
                 }
 
                 else if (preTimer <= 0)
                 {
 
-                    loadingText.text = "Start!";
+                    loadingText.text = "";
+
+                    startText.enabled = true;
 
                     audioSource.Stop();
                     audioSource.clip = main;
@@ -163,12 +171,15 @@ public class GameOverManager : NetworkBehaviour
 
             if (countdownTimer <= 0)
             {
+
                 audioSource.Stop();
                 audioSource.PlayOneShot(endSE);
 
                 anim.SetTrigger("GameOver");
                 stringTimer.enabled = false;
                 barCounter.SetActive(false);
+
+  
 
                 if (isServer)
                 {
@@ -192,6 +203,11 @@ public class GameOverManager : NetworkBehaviour
                 SceneManager.LoadScene(0);
             }
         }
+    }
+
+    public float getTimer()
+    {
+        return countdownTimer;
     }
 
     [ClientRpc]

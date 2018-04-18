@@ -106,11 +106,11 @@ public class playerMovement : NetworkBehaviour {
     public override void OnStartLocalPlayer()
     {
         // Initialising the stop button 
-        stopButtonL = GameObject.FindGameObjectsWithTag("StopButton")[0].GetComponent<Button>();
+        stopButtonL = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
         stopButtonL.onClick.AddListener(OnClickStop);
         stopButtonL.gameObject.SetActive(false);
 
-        stopButtonR = GameObject.FindGameObjectsWithTag("StopButton")[0].GetComponent<Button>();
+        stopButtonR = GameObject.FindGameObjectWithTag("StopButtonR").GetComponent<Button>();
         stopButtonR.onClick.AddListener(OnClickStop);
         stopButtonR.gameObject.SetActive(false);
 
@@ -140,6 +140,7 @@ public class playerMovement : NetworkBehaviour {
 
         checkIfStopped();
         checkIfSpotted();
+        
 
         //movement control: move upon tapping on screen
         destinationDist = Vector3.Distance(destinationPos, myTransform.position);
@@ -148,7 +149,8 @@ public class playerMovement : NetworkBehaviour {
         if (highSpeed)
         {
             //display speed status
-            transform.GetComponentInChildren<Image>().enabled = true;
+            //transform.GetComponentInChildren<Image>().enabled = true;
+            CmdShowSpeed();
 
             highSpeedTimer += Time.deltaTime;
             if (highSpeedTimer > highSpeedThreshold)
@@ -156,8 +158,11 @@ public class playerMovement : NetworkBehaviour {
                 highSpeed = false;
                 highSpeedTimer = 0f;
 
+                CmdHideSpeed();
+
+                
                 //remove speed status
-                transform.GetComponentInChildren<Image>().enabled = false;
+                //transform.GetComponentInChildren<Image>().enabled = false;
 
                 //stop aura
                 //GetComponent<ParticleSystem>().Stop();
@@ -237,8 +242,12 @@ public class playerMovement : NetworkBehaviour {
     {
         if (WolfAI.GetComponent<WolfEye>().vibrating)
         {
-            stopButtonR.gameObject.SetActive(true);
-            stopButtonL.gameObject.SetActive(true);
+            if (GameObject.Find("Canvas").GetComponent<GameOverManager>().getTimer() > 0)
+            {
+                stopButtonR.gameObject.SetActive(true);
+                stopButtonL.gameObject.SetActive(true);
+            }
+
         }
         else
         {
@@ -397,6 +406,34 @@ public class playerMovement : NetworkBehaviour {
     private void RpcUpdateCounter(float ratio)
     {
         GameObject.Find("Canvas").GetComponent<GameOverManager>().bar.fillAmount = ratio;
+    }
+
+    [Command]
+    private void CmdShowSpeed()
+    {
+        RpcShowSpeed();
+
+    }
+
+    [ClientRpc]
+    private void RpcShowSpeed()
+    {
+        //display speed status
+        transform.GetComponentInChildren<Image>().enabled = true;
+    }
+
+    [Command]
+    private void CmdHideSpeed()
+    {
+        RpcHideSpeed();
+        
+    }
+
+    [ClientRpc]
+    private void RpcHideSpeed()
+    {
+        //display speed status
+        transform.GetComponentInChildren<Image>().enabled = false;
     }
 
     // Functions for Testing
