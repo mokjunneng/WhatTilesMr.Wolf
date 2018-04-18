@@ -83,16 +83,16 @@ public class playerMovement : NetworkBehaviour {
     {
         if (!isLocalPlayer) { return; }
         playerIndex = index;
-        Debug.Log("playerIndex is " + playerIndex);
+        //Debug.Log("playerIndex is " + playerIndex);
 
         if (playerIndex == 0)
         {
-            Debug.Log("BLUE CUBE");
+            //Debug.Log("BLUE CUBE");
             GetComponent<MeshRenderer>().material.color = Color.green;
         }
         else if (playerIndex == 1)
         {
-            Debug.Log("RED CUBE");
+            //Debug.Log("RED CUBE");
             GetComponent<MeshRenderer>().material.color = new Color(255,42,0,255);
         }
     }
@@ -294,10 +294,10 @@ public class playerMovement : NetworkBehaviour {
     private void CmdAssignPenalty(uint playerNetId)
     {
         int lostTileCount = 5; //changed to 5 to increase game pace
-        Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
+        //Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
         if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 1)
         {
-            Debug.Log("Cube is Red, Penalty is Blue");
+            //Debug.Log("Cube is Red, Penalty is Blue");
             RpcPlayCounterAnimation("minusFiveYellow");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
            
@@ -317,7 +317,7 @@ public class playerMovement : NetworkBehaviour {
         else if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 0)
         {
             RpcPlayCounterAnimation("minusFiveBlue");
-            Debug.Log("Cube is Blue, Penalty is Red");
+            //Debug.Log("Cube is Blue, Penalty is Red");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().blueTiles;
             
             for (int i = 0; i < lostTileCount; i++)
@@ -330,8 +330,8 @@ public class playerMovement : NetworkBehaviour {
                 map.GetComponent<HexMap>().redTiles.Add(penaltyTile);
             }
         }
-        Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
-        Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
+        //Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
+        //Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
     }
 
     [ClientRpc]

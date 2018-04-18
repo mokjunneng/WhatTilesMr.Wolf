@@ -16,13 +16,13 @@ public class TriggerTile : MonoBehaviour {
         Vector3 tileCentre = gameObject.GetComponent<Renderer>().bounds.center;
         Vector3 playerPosition = other.gameObject.transform.position;
 
-        print("Distance: " + Vector3.Distance(playerPosition, tileCentre));
+        //print("Distance: " + Vector3.Distance(playerPosition, tileCentre));
 
         if (Vector3.Distance(playerPosition, tileCentre) <= 1f)
         {
             int index = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(playerScript.id);
 
-            Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
+            //Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
             if (index == 1)
             {
                 gameObject.GetComponent<Renderer>().material.color = yellow;
