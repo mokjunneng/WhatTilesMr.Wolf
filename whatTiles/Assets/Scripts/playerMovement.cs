@@ -21,7 +21,7 @@ public class playerMovement : NetworkBehaviour {
     private float highSpeedThreshold = 5f;
 
 
-    private GameObject WolfAI;
+    private WolfEye WolfAI;
     private NetworkIdentity WolfAiId;
 
     //variables that need to be synced
@@ -36,6 +36,7 @@ public class playerMovement : NetworkBehaviour {
     private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
     private GameObject map;
 
+    private GameOverManager gameUiManager;
     // For stop button
     private Button stopButtonL;
     private Button stopButtonR;
@@ -66,6 +67,11 @@ public class playerMovement : NetworkBehaviour {
         destinationPos = myTransform.position;    
         id = netId.Value;  //store player's network id
         audioSource = GetComponent<AudioSource>();
+        if (isServer)
+        {
+            map = GameObject.FindGameObjectWithTag("TileMap");
+            WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
+        }
     }
 
     [ClientRpc]
@@ -122,7 +128,9 @@ public class playerMovement : NetworkBehaviour {
         //hide power-up indicator
         transform.GetComponentInChildren<Image>().enabled = false;
 
-        WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
+        gameUiManager = GameObject.Find("Canvas").GetComponent<GameOverManager>();
+
+        WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
         if (WolfAI == null)
         {
             Debug.Log("No wolf found.");
@@ -130,7 +138,6 @@ public class playerMovement : NetworkBehaviour {
         if (isServer)
         {
             RpcAddList(netId.Value);
-            //WolfAI.GetComponent<WolfEye>().playerList.Add(netId.Value);
         }
         else
         {
@@ -147,12 +154,10 @@ public class playerMovement : NetworkBehaviour {
         checkIfSpotted();
 
         //hide indicator
-        if (GameObject.Find("Canvas").GetComponent<GameOverManager>().getTimer() < 47)
+        if (gameUiManager.getTimer() < 47)
         {
-            
             CmdHideIndicator();
         }
-        
 
         //movement control: move upon tapping on screen
         destinationDist = Vector3.Distance(destinationPos, myTransform.position);
@@ -171,13 +176,6 @@ public class playerMovement : NetworkBehaviour {
                 highSpeedTimer = 0f;
 
                 CmdHideSpeed();
-
-                
-                //remove speed status
-                //transform.GetComponentInChildren<Image>().enabled = false;
-
-                //stop aura
-                //GetComponent<ParticleSystem>().Stop();
             }
         }
 
@@ -192,7 +190,7 @@ public class playerMovement : NetworkBehaviour {
         //    CmdSetZero();
         //}
 
-        if (!dead && GameObject.Find("Canvas").GetComponent<GameOverManager>().startTimer)
+        if (!dead && gameUiManager.startTimer)
         {
             //for HP
             //if (!isMoving)
@@ -252,14 +250,10 @@ public class playerMovement : NetworkBehaviour {
 
     void checkIfStopped()
     {
-        if (WolfAI.GetComponent<WolfEye>().vibrating)
+        if (WolfAI.vibrating && gameUiManager.countdownTimer > 0)
         {
-            if (GameObject.Find("Canvas").GetComponent<GameOverManager>().getTimer() > 0)
-            {
-                stopButtonR.gameObject.SetActive(true);
-                stopButtonL.gameObject.SetActive(true);
-            }
-
+            stopButtonR.gameObject.SetActive(true);
+            stopButtonL.gameObject.SetActive(true);
         }
         else
         {
@@ -271,7 +265,7 @@ public class playerMovement : NetworkBehaviour {
     void OnClickStop()
     {
         // reconfirm that the wolfAI.facingPlayers is true 
-        if (WolfAI.GetComponent<WolfEye>().vibrating)
+        if (WolfAI.vibrating)
         {
             destinationPos = myTransform.position;
 
@@ -281,7 +275,7 @@ public class playerMovement : NetworkBehaviour {
     void checkIfSpotted()
     {
         //spotted moving
-        if (isMoving && WolfAI.GetComponent<WolfEye>().facingPlayers)
+        if (isMoving && WolfAI.facingPlayers)
         {             
             if (!handlingPenalty)
             {
@@ -304,7 +298,7 @@ public class playerMovement : NetworkBehaviour {
     {
         int lostTileCount = 5; //changed to 5 to increase game pace
         Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
-        if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 1)
+        if (WolfAI.playerList.IndexOf(netId.Value) == 1)
         {
             RpcPlayAnimation("minusFiveYellow");
 
@@ -324,7 +318,7 @@ public class playerMovement : NetworkBehaviour {
 
             }
         }
-        else if (GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(netId.Value) == 0)
+        else if (WolfAI.playerList.IndexOf(netId.Value) == 0)
         {
             RpcPlayAnimation("minusFiveBlue");
 
@@ -341,8 +335,8 @@ public class playerMovement : NetworkBehaviour {
                 map.GetComponent<HexMap>().redTiles.Add(penaltyTile);
             }
         }
-        Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
-        Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
+        //Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
+        //Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
     }
 
     [ClientRpc]
@@ -381,7 +375,7 @@ public class playerMovement : NetworkBehaviour {
     public void CmdUpdateTilesList(GameObject tile, Color color, uint playerId)
     {
 
-        map = GameObject.FindGameObjectWithTag("TileMap");
+        //map = GameObject.FindGameObjectWithTag("TileMap");
 
         List<GameObject> redTiles = map.GetComponent<HexMap>().redTiles;
         List<GameObject> blueTiles = map.GetComponent<HexMap>().blueTiles;
@@ -416,8 +410,8 @@ public class playerMovement : NetworkBehaviour {
         float ratio = (float) blueTiles.Count / map.GetComponent<HexMap>().tiles.Count;
         RpcUpdateCounter(ratio);
 
-        Debug.Log("red tiles no: " + redTiles.Count);
-        Debug.Log("blue tiles no: " + blueTiles.Count);
+        //Debug.Log("red tiles no: " + redTiles.Count);
+        //Debug.Log("blue tiles no: " + blueTiles.Count);
 
     }
 

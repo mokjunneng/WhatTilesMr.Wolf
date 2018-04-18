@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-
 public class TriggerTile : MonoBehaviour {
 
     private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
     private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
+    private WolfEye WolfAI;
+
+    private void Start()
+    {
+        WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
+    }
 
     private void OnCollisionEnter(Collision other)
     {
@@ -20,7 +25,7 @@ public class TriggerTile : MonoBehaviour {
 
         if (Vector3.Distance(playerPosition, tileCentre) <= 1f)
         {
-            int index = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.IndexOf(playerScript.id);
+            int index = WolfAI.playerList.IndexOf(playerScript.id);
 
             //Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
             if (index == 1)

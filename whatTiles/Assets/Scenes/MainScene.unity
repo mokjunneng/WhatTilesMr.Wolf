@@ -2835,13 +2835,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  intensity: 4.5
+  intensity: 3.8
   chromaticAberration: 2.12
   axialAberration: 0.5
-  blur: 0.5
-  blurSpread: 2.2
+  blur: 0.2
+  blurSpread: 1
   luminanceDependency: 0.25
-  blurDistance: 2.5
+  blurDistance: 1
   vignetteShader: {fileID: 4800000, guid: bc9fd71200a591d43b347ae7af9f3072, type: 3}
   separableBlurShader: {fileID: 4800000, guid: 1aaa06a3a2e068c49a1fe72fb8951e06, type: 3}
   chromAberrationShader: {fileID: 4800000, guid: bda75fd7d69ce0c46b24f3a059beab8a,
@@ -2853,7 +2853,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1478837341}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f87e4989c5e703e428df4339d59e2c72, type: 3}
   m_Name: 

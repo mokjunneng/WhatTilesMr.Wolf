@@ -37,7 +37,7 @@ public class UpdateTile : NetworkBehaviour {
         if (clientPlayer != null && player.id == clientPlayer.GetComponent<playerMovement>().id)
         {
             Debug.Log("Updating tiles");
-            player.GetComponent<playerMovement>().CmdUpdateTilesList(gameObject, color, player.id);
+            player.CmdUpdateTilesList(gameObject, color, player.id);
         }
 
     }

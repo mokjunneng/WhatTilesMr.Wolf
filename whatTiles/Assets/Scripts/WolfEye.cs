@@ -32,8 +32,7 @@ public class WolfEye :NetworkBehaviour {
 
     private GameObject player;
     private GameObject map;
-    private Color red = new Color(1F, 0.1911765F, 0.1911765F);
-    private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
+    
 
     private bool init = true;
     public GameObject[] players;
@@ -51,12 +50,6 @@ public class WolfEye :NetworkBehaviour {
         countTimer = Random.Range(3f, 6f);
         playerList.Callback = SyncListUIntChanged;
         audioSource = GetComponent<AudioSource>();
-    }
-
-    public override void OnStartClient()
-    {
-        Debug.Log("Wolf says hi");
-        Debug.Log("facingPlayer bool: " + facingPlayers);
     }
 
     void Update()
