@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44806558, g: 0.4980749, b: 0.57552564, a: 1}
+  m_IndirectSpecularColor: {r: 0.44806552, g: 0.4980749, b: 0.57552564, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -562,10 +562,10 @@ RectTransform:
   m_Father: {fileID: 788805677}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.07551899}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000011444, y: -36.96469}
-  m_SizeDelta: {x: 629.6, y: 137.2}
+  m_AnchoredPosition: {x: 199.99998, y: 37.03531}
+  m_SizeDelta: {x: 229.59998, y: -10.800003}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &353937035
 Prefab:
@@ -617,7 +617,7 @@ Prefab:
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -35
+      value: 14.355918
       objectReference: {fileID: 0}
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
@@ -627,22 +627,22 @@ Prefab:
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 150
+      value: 39
       objectReference: {fileID: 0}
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 300
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0.86125004
       objectReference: {fileID: 0}
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0.07551899
       objectReference: {fileID: 0}
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
@@ -652,7 +652,7 @@ Prefab:
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0.92425954
       objectReference: {fileID: 0}
     - target: {fileID: 224280130697029224, guid: 21345907c0a56a347b3e24042a10390f,
         type: 2}
@@ -1986,22 +1986,22 @@ Prefab:
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: -9.422662
       objectReference: {fileID: 0}
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
       propertyPath: m_SizeDelta.x
-      value: 150
+      value: 43
       objectReference: {fileID: 0}
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 300
+      value: -13
       objectReference: {fileID: 0}
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
@@ -2011,17 +2011,17 @@ Prefab:
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0.044000003
       objectReference: {fileID: 0}
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.13375
       objectReference: {fileID: 0}
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0.94148105
       objectReference: {fileID: 0}
     - target: {fileID: 224019266274948168, guid: d5e915919d1478c4fb1669b42dd75c3d,
         type: 2}

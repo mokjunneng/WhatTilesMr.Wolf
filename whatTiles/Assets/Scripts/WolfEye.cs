@@ -22,7 +22,8 @@ public class WolfEye :NetworkBehaviour {
     [SyncVar]
     public bool facingPlayers = false; 
     private bool ordered = false;
-    //private bool vibrating = true;
+    [SyncVar]
+    public bool vibrating = false;
 
     //store the renderers of tiles generated in game
     private List<GameObject> tiles;
@@ -81,6 +82,7 @@ public class WolfEye :NetworkBehaviour {
             //get ready to vibrate alert 
             if (countTimer <= 0.6f && countTimer > 0f && facingPlayers == false)
             {
+                vibrating = true;
                 Vector3 originpos = transform.position;
                 StartCoroutine(vibrate(transform.position));
                 transform.position = originpos;
@@ -132,6 +134,11 @@ public class WolfEye :NetworkBehaviour {
         }
 
         facingPlayers ^= true;
+
+        if(!(facingPlayers && vibrating))
+        {
+            vibrating = false;
+        }
         //RpcSetFacingPlayerBool();
 
         //foreach (GameObject p in players)
@@ -151,6 +158,7 @@ public class WolfEye :NetworkBehaviour {
 
     private IEnumerator vibrate(Vector3 originPost)
     {
+        //vibrating ^= true;
         float elapsed = 0f;
         if (!audioSource.isPlaying)
             audioSource.Play();
