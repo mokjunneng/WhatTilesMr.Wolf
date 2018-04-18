@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class GameOverManager : NetworkBehaviour
 {
 
-    private Animator anim;
+    public Animator anim;
 
     private HexMap map;
 
@@ -204,15 +204,15 @@ public class GameOverManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(1);
         Debug.Log("setting text");
-        redCount.text = "Red: " + redTileCount;
+        redCount.text = "Yellow: " + redTileCount;
         blueCount.text = "Blue: " + blueTileCount;
         if (redTileCount > blueTileCount)
         {
-            result.text = "Player 2 Wins!";
+            result.text = "Yellow Wins!";
         }
         else if (redTileCount < blueTileCount)
         {
-            result.text = "Player 1 Wins!";
+            result.text = "Blue Wins!";
         }
         else
         {
