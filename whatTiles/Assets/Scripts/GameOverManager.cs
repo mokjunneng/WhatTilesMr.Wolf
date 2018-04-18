@@ -39,8 +39,7 @@ public class GameOverManager : NetworkBehaviour
     public GameObject loadingMask;
 
     // For exit button
-    [SerializeField]
-    private Button exitButton;
+    public Button exitButton;
 
     public Image playerImg1;
     public Image playerImg2;
@@ -52,6 +51,8 @@ public class GameOverManager : NetworkBehaviour
     public AudioClip main;
     public AudioClip endSE;
 
+    public Image bar;
+    public GameObject barCounter;
 
     AudioSource audioSource;
 
@@ -74,8 +75,9 @@ public class GameOverManager : NetworkBehaviour
         p1Text.enabled = false;
         p2Text.enabled = false;
 
-        exitButton = GameObject.FindGameObjectWithTag("ExitButton").GetComponent<Button>();
-
+        //barCounter.enabled = false;
+        //barCounter.GetComponentInChildren<Image>().enabled = false;
+        barCounter.SetActive(false);
 
     }
 
@@ -90,7 +92,7 @@ public class GameOverManager : NetworkBehaviour
                 CmdGetPlayers();
             }
 
-            if (playersConnected < 1)
+            if (playersConnected < 2)
             {
                 if (!audioSource.isPlaying)
                 {
@@ -108,7 +110,6 @@ public class GameOverManager : NetworkBehaviour
             else
             {
                 audioSource.Stop();
-
                 preTimer -= Time.deltaTime;
 
                 if (preTimer <= -2)
@@ -135,6 +136,7 @@ public class GameOverManager : NetworkBehaviour
                 }
                 else
                 {
+                    exitButton.gameObject.SetActive(false);
                     //audioSource.PlayOneShot(countSE);   
                     loadingText.text = string.Format("Starting in {0} ...", Mathf.CeilToInt(preTimer));
                     playerImg2.enabled = true;
@@ -142,8 +144,7 @@ public class GameOverManager : NetworkBehaviour
 
                     p1Text.enabled = true;
                     p2Text.enabled = true;
-
-                    exitButton.gameObject.SetActive(false);
+                    
                 }
             }
         }
@@ -154,6 +155,7 @@ public class GameOverManager : NetworkBehaviour
             {
                 audioSource.Play();
                 anim.SetTrigger("GameRunning");
+                barCounter.SetActive(true);
             }
 
             countdownTimer -= Time.deltaTime;
@@ -166,6 +168,7 @@ public class GameOverManager : NetworkBehaviour
 
                 anim.SetTrigger("GameOver");
                 stringTimer.enabled = false;
+                barCounter.SetActive(false);
 
                 if (isServer)
                 {

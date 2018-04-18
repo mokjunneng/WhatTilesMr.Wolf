@@ -385,11 +385,18 @@ public class playerMovement : NetworkBehaviour {
             }
         }
 
-        //tileNetId.RemoveClientAuthority(connectionToClient);
+        float ratio = (float) blueTiles.Count / map.GetComponent<HexMap>().tiles.Count;
+        RpcUpdateCounter(ratio);
 
         Debug.Log("red tiles no: " + redTiles.Count);
         Debug.Log("blue tiles no: " + blueTiles.Count);
 
+    }
+
+    [ClientRpc]
+    private void RpcUpdateCounter(float ratio)
+    {
+        GameObject.Find("Canvas").GetComponent<GameOverManager>().bar.fillAmount = ratio;
     }
 
     // Functions for Testing
