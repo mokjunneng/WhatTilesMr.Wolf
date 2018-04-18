@@ -64,35 +64,7 @@ public class playerMovement : NetworkBehaviour {
         audioSource = GetComponent<AudioSource>();
     }
 
-    public override void OnStartLocalPlayer()
-    {
-        // Initialising the stop button 
-        stopButtonL = GameObject.FindGameObjectsWithTag("StopButton")[0].GetComponent<Button>();
-        stopButtonL.onClick.AddListener(OnClickStop);
-        stopButtonL.gameObject.SetActive(false);
-
-        stopButtonR = GameObject.FindGameObjectsWithTag("StopButton")[0].GetComponent<Button>();
-        stopButtonR.onClick.AddListener(OnClickStop);
-        stopButtonR.gameObject.SetActive(false);
-
-        //hide power-up indicator
-        transform.GetComponentInChildren<Image>().enabled = false;
-
-        WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
-        if (WolfAI == null)
-        {
-            Debug.Log("No wolf found.");
-        }
-        if (isServer)
-        {
-            RpcAddList(netId.Value);
-        }
-        else
-        {
-            CmdAddWolf(netId.Value);
-        }
-        //slider = GameObject.Find("Slider").GetComponent<Slider>();
-    }
+    
 
     //cache players' index
     [ClientRpc]
@@ -132,12 +104,45 @@ public class playerMovement : NetworkBehaviour {
     }
 
 
+    public override void OnStartLocalPlayer()
+    {
+        // Initialising the stop button 
+        stopButtonL = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
+        stopButtonL.onClick.AddListener(OnClickStop);
+        stopButtonL.gameObject.SetActive(false);
+
+        stopButtonR = GameObject.FindGameObjectWithTag("StopButtonR").GetComponent<Button>();
+        stopButtonR.onClick.AddListener(OnClickStop);
+        stopButtonR.gameObject.SetActive(false);
+
+        //hide power-up indicator
+        transform.GetComponentInChildren<Image>().enabled = false;
+
+        WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
+        if (WolfAI == null)
+        {
+            Debug.Log("No wolf found.");
+        }
+        if (isServer)
+        {
+            RpcAddList(netId.Value);
+            //WolfAI.GetComponent<WolfEye>().playerList.Add(netId.Value);
+        }
+        else
+        {
+            CmdAddWolf(netId.Value);
+        }
+        //slider = GameObject.Find("Slider").GetComponent<Slider>();
+    }
+
+
     // Update is called once per frame
     void Update () {
         if (!isLocalPlayer) { return; }
 
         checkIfStopped();
         checkIfSpotted();
+        
 
         //movement control: move upon tapping on screen
         destinationDist = Vector3.Distance(destinationPos, myTransform.position);
@@ -146,7 +151,8 @@ public class playerMovement : NetworkBehaviour {
         if (highSpeed)
         {
             //display speed status
-            transform.GetComponentInChildren<Image>().enabled = true;
+            //transform.GetComponentInChildren<Image>().enabled = true;
+            CmdShowSpeed();
 
             highSpeedTimer += Time.deltaTime;
             if (highSpeedTimer > highSpeedThreshold)
@@ -154,8 +160,11 @@ public class playerMovement : NetworkBehaviour {
                 highSpeed = false;
                 highSpeedTimer = 0f;
 
+                CmdHideSpeed();
+
+                
                 //remove speed status
-                transform.GetComponentInChildren<Image>().enabled = false;
+                //transform.GetComponentInChildren<Image>().enabled = false;
 
                 //stop aura
                 //GetComponent<ParticleSystem>().Stop();
@@ -236,8 +245,12 @@ public class playerMovement : NetworkBehaviour {
     {
         if (WolfAI.GetComponent<WolfEye>().vibrating)
         {
-            stopButtonR.gameObject.SetActive(true);
-            stopButtonL.gameObject.SetActive(true);
+            if (GameObject.Find("Canvas").GetComponent<GameOverManager>().getTimer() > 0)
+            {
+                stopButtonR.gameObject.SetActive(true);
+                stopButtonL.gameObject.SetActive(true);
+            }
+
         }
         else
         {
@@ -405,6 +418,34 @@ public class playerMovement : NetworkBehaviour {
     {
         Debug.Log("play animation");
         GameObject.Find("Canvas").GetComponent<GameOverManager>().anim.Play(animationName);
+    }
+
+    [Command]
+    private void CmdShowSpeed()
+    {
+        RpcShowSpeed();
+
+    }
+
+    [ClientRpc]
+    private void RpcShowSpeed()
+    {
+        //display speed status
+        transform.GetComponentInChildren<Image>().enabled = true;
+    }
+
+    [Command]
+    private void CmdHideSpeed()
+    {
+        RpcHideSpeed();
+        
+    }
+
+    [ClientRpc]
+    private void RpcHideSpeed()
+    {
+        //display speed status
+        transform.GetComponentInChildren<Image>().enabled = false;
     }
 
     // Functions for Testing

@@ -566,6 +566,52 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 319251426}
+--- !u!1001 &560925494
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4358096753085626, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1517512816346974, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 10a52ced99c6dfe469bf43d2c221e9ad, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &571880408
 GameObject:
   m_ObjectHideFlags: 0
@@ -2326,7 +2372,7 @@ MonoBehaviour:
   m_ScriptCRCCheck: 1
   m_MaxDelay: 0.01
   m_LogLevel: 2
-  m_PlayerPrefab: {fileID: 1824234382924872, guid: 5813d2c1e91e370428b711867a68b049,
+  m_PlayerPrefab: {fileID: 1517512816346974, guid: 10a52ced99c6dfe469bf43d2c221e9ad,
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 1
@@ -2336,7 +2382,7 @@ MonoBehaviour:
   - {fileID: 1524862807346472, guid: c6f39b0beea99844f8d04145f4e4fd1d, type: 2}
   - {fileID: 1267537075574956, guid: aaf78a6fcbd2a1342893c1662ea3ef60, type: 2}
   - {fileID: 1552981037439082, guid: f1ca04d1d851aa84faace8b10ba266b6, type: 2}
-  - {fileID: 1054157896381038, guid: 98c2bd60dc0155847934c12f78bc5310, type: 2}
+  - {fileID: 1907609644790500, guid: 6010842fac11efd419d72bca83bf406f, type: 2}
   - {fileID: 1221129000209570, guid: 26d5862e877d554439a30a4df53dfe8e, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
