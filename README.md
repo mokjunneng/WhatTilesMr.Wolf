@@ -29,7 +29,7 @@ __3) Player Movement__
 * Vibration alert when player makes a penalty
 
 ## Test Plan 
-**For more details in the way the test plans were executed, please read the final report found in the github repo**
+**For more details in the way the test plans were executed, please read the final report found in the github repo** <br /> 
 We have developed 2 different test plan, one for physical testing and another for software testing. They are as followed: <br /> 
 
 **Physical Test** <br />
@@ -54,7 +54,7 @@ Details of the software testing can be found in the testCases.cs script of our p
 6)  Count for red tiles and blue tiles increase and decrease correctly when players move over tiles
 
 ## Game Reviews
-**For more game reviews and how each iterations goes, please read the final report found in the github repo**
+**For more game reviews and how each iterations goes, please read the final report found in the github repo** <br /> 
 During the phyiscal testing, we have asked questions to the players and their comments/answers are as followed: 
 
 **After PM3 game construction:** <br /> 
