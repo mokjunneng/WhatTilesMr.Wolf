@@ -1,6 +1,6 @@
 # WhatTilesMr.Wolf
 ## Game description 
-The aim of our game is to occupy the most amount of tiles within the set amount of time. However, there is an AI (wolf) on the map which rotates randomly to detect players’ motion. Player must stop moving when detected by AI or 3 of his/her tiles will be converted to his/her opponent. (The wolf will turn based on a random time in seconds.) Players can occupy a tile by stepping onto opponent’s colored tile and the tile will be converted to the player’s color. The game ends in 1 minutes and the player with the most amount of tiles wins. 
+What Tiles, Mr Wolf? is a territorial acquisition game where players are to convert as many tiles as possible to their own colour. However, there is an AI (wolf) on the map which rotates randomly to detect players’ motion. Player must stop moving when detected by AI or 5 of his/her tiles will be converted to his/her opponent. To make things more challenging, the timing for the wolf is not fixed but rather randomised. Players can occupy a tile by stepping onto opponent’s coloured tile and the tile will be converted to the player’s colour. Power ups will spawn at random and collecting them will increase the player speed. The game ends in 50 seconds and the player with the most number of tiles wins.
 
 ## Tools used 
 - Unity
