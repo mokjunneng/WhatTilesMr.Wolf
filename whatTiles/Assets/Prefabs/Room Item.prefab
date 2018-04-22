@@ -62,8 +62,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 540
-  m_PreferredHeight: 240
+  m_PreferredWidth: 1000
+  m_PreferredHeight: 100
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -181,7 +181,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: c1331dc93350da64790f378665b3d4b2, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
     m_Alignment: 4

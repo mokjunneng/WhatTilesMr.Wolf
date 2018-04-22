@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44806552, g: 0.4980749, b: 0.57552564, a: 1}
+  m_IndirectSpecularColor: {r: 0.44806558, g: 0.4980749, b: 0.57552564, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1910,7 +1910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 0}
-  countdownTimer: 8
+  countdownTimer: 50
   stringTimer: {fileID: 743293928}
   redCount: {fileID: 439392212}
   blueCount: {fileID: 475748172}

@@ -147,7 +147,7 @@ public class GameOverManager : NetworkBehaviour
                 else
                 {
                     exitButton.gameObject.SetActive(false);
-                    //audioSource.PlayOneShot(countSE);   
+  
                     loadingText.text = string.Format("Starting in {0} ...", Mathf.CeilToInt(preTimer));
                     playerImg2.enabled = true;
                     playerImg1.enabled = true;
