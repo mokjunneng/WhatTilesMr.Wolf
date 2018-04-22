@@ -282,7 +282,7 @@ public class playerMovement : NetworkBehaviour {
 
                 if (isLocalPlayer)
                 {
-                    //Handheld.Vibrate();
+                    Handheld.Vibrate();
                 }
                 StartCoroutine(penaltyInterval());
             }           
