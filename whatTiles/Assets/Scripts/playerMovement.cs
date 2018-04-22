@@ -9,9 +9,12 @@ public class playerMovement : NetworkBehaviour {
     private Vector3 destinationPos;
     private float destinationDist;
     private Transform myTransform;
-    public uint id;
 
-    //for changing speed with power-up
+    // network id
+    public uint id;
+    public int playerIndex;
+
+    // for changing speed with power-up
     private float moveSpeed;
     private float moveSpeedLow = 3f;
     private float moveSpeedHigh = 4.5f;
@@ -22,30 +25,27 @@ public class playerMovement : NetworkBehaviour {
 
 
     private WolfEye WolfAI;
-    private NetworkIdentity WolfAiId;
+    private GameObject map;
+    private GameOverManager gameUiManager;
 
-    //variables that need to be synced
+    // variables used for handling penalty
     [SyncVar]
     public bool isMoving = false;
     public bool wolfSpotting;
     private bool handlingPenalty = false;
     private bool receivingPenalty;
 
-
     private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
     private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
-    private GameObject map;
-
-    private GameOverManager gameUiManager;
+    
     // For stop button
     private Button stopButtonL;
     private Button stopButtonR;
 
-    // For SE
+    // For Sound Effects (SE)
     AudioSource audioSource;
     public AudioClip penaltySE;
     public AudioClip tileSE;
-    //public AudioClip freezeSE;
 
     // For HP (if have time then add so just leave here first)
     public const float maxHealth = 5;
@@ -58,60 +58,17 @@ public class playerMovement : NetworkBehaviour {
     [SyncVar]
     public bool dead;
 
-
-    public int playerIndex;
-
-    // Use this for initialization
     void Start () {
         myTransform = transform;     //sets myTransform to this GameObject.Transform
         destinationPos = myTransform.position;    
-        id = netId.Value;  //store player's network id
+        id = netId.Value;  
         audioSource = GetComponent<AudioSource>();
-        if (isServer)
-        {
-            map = GameObject.FindGameObjectWithTag("TileMap");
-            WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
-        }
     }
 
-    [ClientRpc]
-    public void RpcAddList(uint playerId)
+    public override void OnStartServer()
     {
-        CmdAddWolf(playerId);
-    }
-
-    [Command]
-    public void CmdAddWolf(uint playerId)
-    {
-        GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.Add(playerId);
-    }
-
-    public void indexChanged(int index)
-    {
-        if (!isLocalPlayer) { return; }
-        playerIndex = index;
-        Debug.Log("playerIndex is " + playerIndex);
-
-        if (playerIndex == 0)
-        {
-            Debug.Log("BLUE CUBE");
-            GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
-
-            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
-        }
-        else if (playerIndex == 1)
-        {
-            Debug.Log("RED CUBE");
-            GetComponent<MeshRenderer>().material.color = new Color(1,224f / 255f ,41f /255f,1);
-            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(1, 224f /255f, 42f /255f, 1);
-
-        }
-    }
-
-    //for power up
-    public void setHighSpeed()
-    {
-        highSpeed = true;
+        map = GameObject.FindGameObjectWithTag("TileMap");
+        WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
     }
 
     public override void OnStartLocalPlayer()
@@ -146,11 +103,53 @@ public class playerMovement : NetworkBehaviour {
         //slider = GameObject.Find("Slider").GetComponent<Slider>();
     }
 
-    // Update is called once per frame
+
+    // Functions - {RpcAddList, CmdAddWolf, IndexChanged} are used to cache player's identity and set the player object's color correspondingly
+    // eg. Player 1 is Blue, Player 2 is Yellow
+    [ClientRpc]
+    public void RpcAddList(uint playerId)
+    {
+        CmdAddWolf(playerId);
+    }
+
+    [Command]
+    public void CmdAddWolf(uint playerId)
+    {
+        GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.Add(playerId);
+    }
+
+    public void indexChanged(int index)
+    {
+        if (!isLocalPlayer) { return; }
+        playerIndex = index;
+        //Debug.Log("playerIndex is " + playerIndex);
+
+        if (playerIndex == 0)
+        {
+            //Debug.Log("BLUE CUBE");
+            GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
+
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
+        }
+        else if (playerIndex == 1)
+        {
+            //Debug.Log("RED CUBE");
+            GetComponent<MeshRenderer>().material.color = new Color(1,224f / 255f ,41f /255f,1);
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(1, 224f /255f, 42f /255f, 1);
+
+        }
+    }
+
+    //for power up
+    public void setHighSpeed()
+    {
+        highSpeed = true;
+    }
+
     void Update () {
         if (!isLocalPlayer) { return; }
 
-        checkIfStopped();
+        checkIfWolfSpotting();
         checkIfSpotted();
 
         //hide indicator
@@ -209,8 +208,6 @@ public class playerMovement : NetworkBehaviour {
             }
             else
             {
-                //moveSpeed = 3;
-
                 //set speed accordingly
                 if (highSpeed)
                 {
@@ -248,7 +245,8 @@ public class playerMovement : NetworkBehaviour {
 
     }
 
-    void checkIfStopped()
+    //If wolf facing players, show the stop buttons
+    void checkIfWolfSpotting()
     {
         if (WolfAI.vibrating && gameUiManager.countdownTimer > 0)
         {
@@ -264,11 +262,9 @@ public class playerMovement : NetworkBehaviour {
 
     void OnClickStop()
     {
-        // reconfirm that the wolfAI.facingPlayers is true 
         if (WolfAI.vibrating)
         {
             destinationPos = myTransform.position;
-
         }
     }
 
@@ -297,12 +293,12 @@ public class playerMovement : NetworkBehaviour {
     private void CmdAssignPenalty(uint playerNetId)
     {
         int lostTileCount = 5; //changed to 5 to increase game pace
-        Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
+        //Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
         if (WolfAI.playerList.IndexOf(netId.Value) == 1)
         {
-            RpcPlayAnimation("minusFiveYellow");
+            RpcPlayAnimation("minusFiveBlue");
 
-            Debug.Log("Cube is Red, Penalty is Blue");
+            //Debug.Log("Cube is Red, Penalty is Blue");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
            
             for (int i = 0; i < lostTileCount; i++)
@@ -320,7 +316,7 @@ public class playerMovement : NetworkBehaviour {
         }
         else if (WolfAI.playerList.IndexOf(netId.Value) == 0)
         {
-            RpcPlayAnimation("minusFiveBlue");
+            RpcPlayAnimation("minusFiveYellow");
 
             Debug.Log("Cube is Blue, Penalty is Red");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().blueTiles;
@@ -342,11 +338,10 @@ public class playerMovement : NetworkBehaviour {
     [ClientRpc]
     private void RpcPaintTiles(GameObject tile, Color color)
     {
-        //Renderer tileRenderer = tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>();
-        //tileRenderer.material.color = Color.Lerp(tileRenderer.material.color, color, Mathf.PingPong(Time.time, 1));
         StartCoroutine(tileColorFade(tile, color));
     }
 
+    // For color fade visuals
     private IEnumerator tileColorFade(GameObject tile, Color color)
     {
         float timer = 0f;
@@ -363,6 +358,7 @@ public class playerMovement : NetworkBehaviour {
        
     }
 
+    // A buffer time before a new penalty is assigned
     private IEnumerator penaltyInterval()
     {
         yield return new WaitForSeconds(1.5f);
@@ -370,13 +366,9 @@ public class playerMovement : NetworkBehaviour {
     }
 
 
-
     [Command]
     public void CmdUpdateTilesList(GameObject tile, Color color, uint playerId)
     {
-
-        //map = GameObject.FindGameObjectWithTag("TileMap");
-
         List<GameObject> redTiles = map.GetComponent<HexMap>().redTiles;
         List<GameObject> blueTiles = map.GetComponent<HexMap>().blueTiles;
 
@@ -385,7 +377,7 @@ public class playerMovement : NetworkBehaviour {
 
             if (!redTiles.Contains(tile))
             {
-                Debug.Log("updating red ");
+                //Debug.Log("updating red ");
                 map.GetComponent<HexMap>().redTiles.Add(tile);
                 map.GetComponent<HexMap>().blueTiles.Remove(tile);
                 RpcPlaySound(playerId);
@@ -398,8 +390,7 @@ public class playerMovement : NetworkBehaviour {
             if (!blueTiles.Contains(tile))
 
             {
-                Debug.Log("updating blue");
-
+                //Debug.Log("updating blue");
                 map.GetComponent<HexMap>().blueTiles.Add(tile);
                 map.GetComponent<HexMap>().redTiles.Remove(tile);
                 RpcPlaySound(playerId);
@@ -412,7 +403,6 @@ public class playerMovement : NetworkBehaviour {
 
         //Debug.Log("red tiles no: " + redTiles.Count);
         //Debug.Log("blue tiles no: " + blueTiles.Count);
-
     }
 
     [ClientRpc]
@@ -427,6 +417,7 @@ public class playerMovement : NetworkBehaviour {
        
     }
 
+    //update bar counter in game
     [ClientRpc]
     private void RpcUpdateCounter(float ratio)
     {
@@ -437,7 +428,7 @@ public class playerMovement : NetworkBehaviour {
     private void RpcPlayAnimation(string name)
     {
         Debug.Log("play animation");
-        GameObject.Find("Canvas").GetComponent<GameOverManager>().anim.Play(name);
+        GameObject.Find("Canvas").GetComponent<GameOverManager>().anim.SetTrigger(name);
     }
 
     [Command]
@@ -468,6 +459,18 @@ public class playerMovement : NetworkBehaviour {
         transform.GetComponentInChildren<Image>().enabled = false;
     }
 
+    [Command]
+    private void CmdHideIndicator()
+    {
+        RpcHideIndicator();
+    }
+
+    [ClientRpc]
+    private void RpcHideIndicator()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
+    }
+
     // Functions for Testing
     public float returnSpeed()
     {
@@ -487,7 +490,7 @@ public class playerMovement : NetworkBehaviour {
         health += Time.deltaTime;
     }
 
-    //Additional functions for health feature
+    //Additional functions for health feature (not implemented)
     [Command]
     void CmdTakeHealth()
     {
@@ -554,15 +557,5 @@ public class playerMovement : NetworkBehaviour {
         yield return new WaitForSeconds(1f);
     }
 
-    [Command]
-    private void CmdHideIndicator()
-    {
-        RpcHideIndicator();
-    }
-
-    [ClientRpc]
-    private void RpcHideIndicator()
-    {
-        transform.GetChild(0).gameObject.SetActive(false);
-    }
+    
 }

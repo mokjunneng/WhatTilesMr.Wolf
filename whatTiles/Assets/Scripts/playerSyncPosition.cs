@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+
+//script to sync players' movements over the network smoothly
 public class playerSyncPosition : NetworkBehaviour {
 
     [SyncVar]

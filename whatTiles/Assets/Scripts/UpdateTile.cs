@@ -20,7 +20,7 @@ public class UpdateTile : NetworkBehaviour {
         audioSource = GetComponent<AudioSource>();
     }
 
-
+    //update tile lists on server
     public void UpdateTiles(playerMovement player, Color color)
     {
         players = GameObject.FindGameObjectsWithTag("Player");

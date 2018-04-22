@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
+// class for changing of tile color upon contact
 public class TriggerTile : MonoBehaviour {
 
     private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
@@ -20,8 +21,6 @@ public class TriggerTile : MonoBehaviour {
 
         Vector3 tileCentre = gameObject.GetComponent<Renderer>().bounds.center;
         Vector3 playerPosition = other.gameObject.transform.position;
-
-        //print("Distance: " + Vector3.Distance(playerPosition, tileCentre));
 
         if (Vector3.Distance(playerPosition, tileCentre) <= 1f)
         {

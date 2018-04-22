@@ -96,6 +96,7 @@ public class GameOverManager : NetworkBehaviour
                 CmdGetPlayers();
             }
 
+            //Host waiting in 'lobby' for another player to join
             if (playersConnected < 2)
             {
                 if (!audioSource.isPlaying)
@@ -116,6 +117,7 @@ public class GameOverManager : NetworkBehaviour
                 audioSource.Stop();
                 preTimer -= Time.deltaTime;
 
+                //3 seconds timer before game officially starts
                 if (preTimer <= -2)
                 {
                     loadingMask.SetActive(false);
@@ -156,7 +158,7 @@ public class GameOverManager : NetworkBehaviour
                 }
             }
         }
-
+        //game starts
         else if (startTimer && !restart)
         {
             if (!audioSource.isPlaying)
@@ -169,17 +171,17 @@ public class GameOverManager : NetworkBehaviour
             countdownTimer -= Time.deltaTime;
             stringTimer.text = string.Format("{0:00}:{1:00}", Mathf.FloorToInt(countdownTimer / 60), countdownTimer % 60);
 
+            //in game timer ends
             if (countdownTimer <= 0)
             {
 
                 audioSource.Stop();
                 audioSource.PlayOneShot(endSE);
 
+                anim.SetTrigger("EndGame");
                 anim.SetTrigger("GameOver");
                 stringTimer.enabled = false;
                 barCounter.SetActive(false);
-
-  
 
                 if (isServer)
                 {
@@ -194,6 +196,7 @@ public class GameOverManager : NetworkBehaviour
             }
         }
 
+        //go back to menu screen after game ends
         if (restart)
         {
             restartTimer += Time.deltaTime;

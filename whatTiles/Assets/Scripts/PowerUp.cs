@@ -6,20 +6,13 @@ using UnityEngine.UI;
 public class PowerUp : MonoBehaviour {
 
     public GameObject effect;
-
     public AudioClip powerupSE;
     AudioSource audioSource;
 
-    // Use this for initialization
-    void Start () {
+    void Start()
+    {
         audioSource = GameObject.Find("Directional Light").GetComponent<AudioSource>();
-
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     private void OnTriggerEnter(Collider other)
     {
@@ -28,8 +21,7 @@ public class PowerUp : MonoBehaviour {
         {
             //SE
             audioSource.PlayOneShot(powerupSE);
-
-            print("trigger fade animation && do something");
+            //print("trigger fade animation && do something");
             if (effect)
             {
                 //to add animation
@@ -41,8 +33,6 @@ public class PowerUp : MonoBehaviour {
 
             other.GetComponent<playerMovement>().setHighSpeed();
             DestroyObject(this.gameObject);
-
-
         }
     }
 }

@@ -25,25 +25,16 @@ public class WolfEye :NetworkBehaviour {
     [SyncVar]
     public bool vibrating = false;
 
-    //store the renderers of tiles generated in game
-    private List<GameObject> tiles;
-    private List<GameObject> tilesGettingPenalty;
-    //private Renderer[] tilesRenderers;
-
     private GameObject player;
     private GameObject map;
     
-
     private bool init = true;
     public GameObject[] players;
     List<GameObject> playerOrderedList = new List<GameObject>();
 
-    private uint clientId;
-
     public SyncListUInt playerList = new SyncListUInt();
     private int index = 0;
     public GameObject[] items;
-
 
     void Start()
     {
@@ -111,8 +102,7 @@ public class WolfEye :NetworkBehaviour {
     
     
     private IEnumerator rotate(float angle, float duration = 0.3f)
-    {
-        
+    {      
         Quaternion from = transform.rotation;
         Quaternion to = transform.rotation;
         to *= Quaternion.Euler(Vector3.up * angle);
@@ -132,15 +122,9 @@ public class WolfEye :NetworkBehaviour {
         {
             vibrating = false;
         }
-        //RpcSetFacingPlayerBool();
-
-        //foreach (GameObject p in players)
-        //    p.GetComponent<playerMovement>().wolfSpotting ^= true;
 
         transform.rotation = to;
         resetTimer();
-        //Todo reset wolf
-     
     }
 
     [ClientRpc]

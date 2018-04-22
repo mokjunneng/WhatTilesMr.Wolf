@@ -12,7 +12,6 @@ public class SpeedIndicator : MonoBehaviour {
     void Start () {
         parent = transform.parent.parent;
         GetComponent<Image>().enabled = false;
-        
     }
 	
 	// Update is called once per frame
