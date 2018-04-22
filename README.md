@@ -1,6 +1,6 @@
 # WhatTilesMr.Wolf
 ## Game description 
-The aim of our game is to occupy the most amount of tiles within the set amount of time. However, there is an AI (wolf) on the map which rotates randomly to detect players’ motion. Player must stop moving when detected by AI or 3 of his/her tiles will be converted to his/her opponent. (The wolf will turn based on a random time in seconds.) Players can occupy a tile by stepping onto opponent’s colored tile and the tile will be converted to the player’s color. The game ends in 1 minutes and the player with the most amount of tiles wins. 
+What Tiles, Mr Wolf? is a territorial acquisition game where players are to convert as many tiles as possible to their own colour. However, there is an AI (wolf) on the map which rotates randomly to detect players’ motion. Player must stop moving when detected by AI or 5 of his/her tiles will be converted to his/her opponent. To make things more challenging, the timing for the wolf is not fixed but rather randomised. Players can occupy a tile by stepping onto opponent’s coloured tile and the tile will be converted to the player’s colour. Power ups will spawn at random and collecting them will increase the player speed. The game ends in 50 seconds and the player with the most number of tiles wins.
 
 ## Tools used 
 - Unity
@@ -29,6 +29,7 @@ __3) Player Movement__
 * Vibration alert when player makes a penalty
 
 ## Test Plan 
+**For more details in the way the test plans were executed, please read the final report found in the github repo** <br /> 
 We have developed 2 different test plan, one for physical testing and another for software testing. They are as followed: <br /> 
 
 **Physical Test** <br />
@@ -53,6 +54,7 @@ Details of the software testing can be found in the testCases.cs script of our p
 6)  Count for red tiles and blue tiles increase and decrease correctly when players move over tiles
 
 ## Game Reviews
+**For more game reviews and how each iterations goes, please read the final report found in the github repo** <br /> 
 During the phyiscal testing, we have asked questions to the players and their comments/answers are as followed: 
 
 **After PM3 game construction:** <br /> 
@@ -129,6 +131,8 @@ Extra Comments made by Mr Yoga after PM4 Meeting
 
 From the questions asked and Mr Yoga's comments, keywords were picked up and implemented as a final improvement to the game
 
+
+
 ## Work in progress
 **Game**<br />
 - [x] Sign In (multiplayer) <br />
@@ -140,16 +144,16 @@ From the questions asked and Mr Yoga's comments, keywords were picked up and imp
 - [x] Game Testing <br />
 - [x] PM3 Meeting Review : Vibration alert of wolf <br />
 - [x] PM3 Meeting Review : Vibration alert of penalty for player <br />
-- [ ] Player Model <br />
-- [ ] Lighting <br /> 
+- [x] Player Model <br />
+- [x] Lighting <br /> 
 - [x] Login Scene <br />
 - [x] End Scene <br />
 - [x] Bonus Feature: Spells <br />
-- [ ] PM4 Meeting Review: Reload to Login Scene <br />
-- [ ] PM4 Meeting Review: UI Scale up <br />
-- [ ] PM4 Meeting Review: Collider Balancing <br />
-- [ ] PM4 Meeting Review: Tile lost Indication <br />
-- [ ] PM4 Meeting Review: Stop button during wolf <br /> 
+- [x] PM4 Meeting Review: Reload to Login Scene <br />
+- [x] PM4 Meeting Review: UI Scale up <br />
+- [x] PM4 Meeting Review: Collider Balancing <br />
+- [x] PM4 Meeting Review: Tile lost Indication <br />
+- [x] PM4 Meeting Review: Stop button during wolf <br /> 
 
 
 **Project Report**<br />
@@ -157,4 +161,4 @@ From the questions asked and Mr Yoga's comments, keywords were picked up and imp
 - [x] Project Meeting 2 (PM2) Report <br />
 - [x] Project Meeting 3 (PM3) Report <br />
 - [x] Project Meeting 4 (PM4) Report <br />
-- [ ] Final Report <br />
+- [x] Final Report <br />
