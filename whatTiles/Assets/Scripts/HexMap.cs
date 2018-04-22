@@ -5,13 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-//using NUnit.Framework;
 
 //[ExecuteInEditMode]
 public class HexMap : NetworkBehaviour {
-    // Use this for initialization
     public Material[] HexMaterials;
-
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
@@ -23,23 +20,17 @@ public class HexMap : NetworkBehaviour {
     public GameObject HexPrefabRed;
 
     //Store tiles that belongs to player
-
     public List<GameObject> tiles;
     public List<GameObject> redTiles;
     public List<GameObject> blueTiles;
 
-    // Use this for initialization
-    void Start ()
+    public override void OnStartServer()
     {
-        
-
-        Debug.Log("Server Generating Map");
+        //Debug.Log("Server Generating Map");
         GenerateMap();
         GenerateMapForClient();
-        
-	}
+    }
 
-    
     private void GenerateMapForClient()
     {
         foreach(GameObject tile in tiles)
@@ -47,30 +38,40 @@ public class HexMap : NetworkBehaviour {
             NetworkServer.Spawn(tile);
         }
     }
-
-    void Update()
-    {
-    }
    
     private void GenerateMap()
     {
+        int blueCount = 53;
+        int redCount = 52;
+        int firstIndex = 0;
+        int secondIndex = 2;
         for (int column = 0; column < mapWidth; column++)
         {
             for (int row = 0; row < mapHeight; row++)
             {
                 Hex h = new Hex(column * 1.0f, row * 1.0f); //change here
 
-                int color = UnityEngine.Random.Range(0, 2);
+                if (blueCount <= 0)
+                {
+                    firstIndex = 1;
+                }else if (redCount <= 0)
+                {
+                    secondIndex = 1;
+                }
+
+                int color = UnityEngine.Random.Range(firstIndex, secondIndex);
                 GameObject hexGO;
 
                 //0: blue, 1: red
                 if(color == 0)
                 {
+                    blueCount -= 1;
                     hexGO = (GameObject) Instantiate(HexPrefabBlue, h.Position(), Quaternion.identity, this.transform);
                     blueTiles.Add(hexGO);
                 }
                 else
                 {
+                    redCount -= 1;
                     hexGO = (GameObject) Instantiate(HexPrefabRed, h.Position(), Quaternion.identity, this.transform);
                     redTiles.Add(hexGO);
                 }
@@ -79,9 +80,9 @@ public class HexMap : NetworkBehaviour {
 
             }
         }
-        Debug.Log("Map data generated");
-        Debug.Log("Init Red : " + redTiles.Count);
-        Debug.Log("Init Blue : " + blueTiles.Count);
+        //Debug.Log("Map data generated");
+        //Debug.Log("Init Red : " + redTiles.Count);
+        //Debug.Log("Init Blue : " + blueTiles.Count);
     }
 
 }

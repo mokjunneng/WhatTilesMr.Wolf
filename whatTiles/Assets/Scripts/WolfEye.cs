@@ -14,47 +14,33 @@ public class WolfEye :NetworkBehaviour {
     //vibration-related variables
     public float shakeIntensity = 0.3f;
 
+    //SE
+    AudioSource audioSource;
 
     //booleans control
-    
     public bool handlingPenalty = false;
     [SyncVar]
     public bool facingPlayers = false; 
     private bool ordered = false;
-
-    //store the renderers of tiles generated in game
-    private List<GameObject> tiles;
-    private List<GameObject> tilesGettingPenalty;
-    //private Renderer[] tilesRenderers;
+    [SyncVar]
+    public bool vibrating = false;
 
     private GameObject player;
     private GameObject map;
-    private Color red = new Color(1F, 0.1911765F, 0.1911765F);
-    private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
-
+    
     private bool init = true;
     public GameObject[] players;
     List<GameObject> playerOrderedList = new List<GameObject>();
 
-    private uint clientId;
-
-    public List<uint> playerList;
+    public SyncListUInt playerList = new SyncListUInt();
     private int index = 0;
-
+    public GameObject[] items;
 
     void Start()
     {
         countTimer = Random.Range(3f, 6f);
-        playerList = new List<uint>();
-
-        //map = GameObject.FindGameObjectWithTag("TileMap");
-
-    }
-
-    public override void OnStartClient()
-    {
-        Debug.Log("Wolf says hi");
-        Debug.Log("facingPlayer bool: " + facingPlayers);
+        playerList.Callback = SyncListUIntChanged;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -74,11 +60,13 @@ public class WolfEye :NetworkBehaviour {
             //get reference to players in game from server
             players = GameObject.FindGameObjectsWithTag("Player");
 
-            countTimer -= Time.deltaTime;
+            if (GameObject.Find("Canvas").GetComponent<GameOverManager>().startTimer)
+                countTimer -= Time.deltaTime;
              
             //get ready to vibrate alert 
             if (countTimer <= 0.6f && countTimer > 0f && facingPlayers == false)
             {
+                vibrating = true;
                 Vector3 originpos = transform.position;
                 StartCoroutine(vibrate(transform.position));
                 transform.position = originpos;
@@ -114,8 +102,7 @@ public class WolfEye :NetworkBehaviour {
     
     
     private IEnumerator rotate(float angle, float duration = 0.3f)
-    {
-        
+    {      
         Quaternion from = transform.rotation;
         Quaternion to = transform.rotation;
         to *= Quaternion.Euler(Vector3.up * angle);
@@ -130,15 +117,14 @@ public class WolfEye :NetworkBehaviour {
         }
 
         facingPlayers ^= true;
-        //RpcSetFacingPlayerBool();
 
-        //foreach (GameObject p in players)
-        //    p.GetComponent<playerMovement>().wolfSpotting ^= true;
+        if(!(facingPlayers && vibrating))
+        {
+            vibrating = false;
+        }
 
         transform.rotation = to;
         resetTimer();
-        //Todo reset wolf
-     
     }
 
     [ClientRpc]
@@ -149,13 +135,19 @@ public class WolfEye :NetworkBehaviour {
 
     private IEnumerator vibrate(Vector3 originPost)
     {
+        //vibrating ^= true;
         float elapsed = 0f;
+        if (!audioSource.isPlaying)
+            audioSource.Play();
+
         while (elapsed < 0.6f)
         {
             transform.position = originPost + Random.insideUnitSphere * shakeIntensity;
             elapsed += Time.deltaTime;
             yield return null;
         }
+        //vibrating = false;
+        audioSource.Stop();
     }
 
     void resetTimer()
@@ -175,12 +167,11 @@ public class WolfEye :NetworkBehaviour {
         StartCoroutine(rotate(rotationAmount));
     }
 
-    public int addPlayerList(uint playerId)
+    public void SyncListUIntChanged(SyncListUInt.Operation op, int index)
     {
-        playerList.Add(playerId);
-        index += 1; 
-        Debug.Log("ADDING PLAYER " + (index-1) + " to Id " + playerId);
-        return index;
+        Debug.Log("ADDING PLAYER " + (index) + " to Id " + playerList[index]);
+        items = GameObject.FindGameObjectsWithTag("Player");
+        items[index].GetComponent<playerMovement>().indexChanged(index);
     }
-
 }
+

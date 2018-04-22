@@ -45,7 +45,11 @@ public class testCases {
 		GameObject[] redTiles = GameObject.FindGameObjectsWithTag("RedTile");
 		Assert.IsNotNull(redTiles);
 
-		Debug.Log("Test completed. Please see results..");
+        // Test for player gameObejct generated 
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        Assert.IsNotNull(player);
+
+        Debug.Log("Test completed. Please see results..");
 	}
 
 	[UnityTest]

@@ -10,9 +10,12 @@ public class playerMovement : NetworkBehaviour {
     private float destinationDist;
     private Transform myTransform;
 
-    private float moveSpeed;
+    // network id
+    public uint id;
+    public int playerIndex;
 
-    //for changing speed with power-up
+    // for changing speed with power-up
+    private float moveSpeed;
     private float moveSpeedLow = 3f;
     private float moveSpeedHigh = 4.5f;
 
@@ -20,42 +23,121 @@ public class playerMovement : NetworkBehaviour {
     private float highSpeedTimer;
     private float highSpeedThreshold = 5f;
 
-    public uint id;
 
-    private GameObject WolfAI;
-    private NetworkIdentity WolfAiId;
+    private WolfEye WolfAI;
+    private GameObject map;
+    private GameOverManager gameUiManager;
 
-    private bool receivingPenalty;
-
-    //variables that need to be synced
+    // variables used for handling penalty
     [SyncVar]
     public bool isMoving = false;
-    
     public bool wolfSpotting;
-
     private bool handlingPenalty = false;
+    private bool receivingPenalty;
 
-    private Color red = new Color(1F, 0.1911765F, 0.1911765F);
-    private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
-    private GameObject map;
-
+    private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
+    private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
+    
     // For stop button
-    private Button stopButton;
+    private Button stopButtonL;
+    private Button stopButtonR;
 
-    public int playerIndex;
+    // For Sound Effects (SE)
+    AudioSource audioSource;
+    public AudioClip penaltySE;
+    public AudioClip tileSE;
 
-    // Use this for initialization
+    // For HP (if have time then add so just leave here first)
+    public const float maxHealth = 5;
+    //[SyncVar(hook = "OnChangeHealth")]
+    public float health = maxHealth;
+    //[SerializeField]
+    private Slider slider;
+    private float hpOffset = 1f;
+
+    [SyncVar]
+    public bool dead;
+
     void Start () {
         myTransform = transform;     //sets myTransform to this GameObject.Transform
         destinationPos = myTransform.position;    
+        id = netId.Value;  
+        audioSource = GetComponent<AudioSource>();
+    }
 
-        id = netId.Value;  //store player's network id
+    public override void OnStartServer()
+    {
+        map = GameObject.FindGameObjectWithTag("TileMap");
+        WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        // Initialising the stop button 
+        stopButtonL = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
+        stopButtonL.onClick.AddListener(OnClickStop);
+        stopButtonL.gameObject.SetActive(false);
+
+        stopButtonR = GameObject.FindGameObjectWithTag("StopButtonR").GetComponent<Button>();
+        stopButtonR.onClick.AddListener(OnClickStop);
+        stopButtonR.gameObject.SetActive(false);
+
+        //hide power-up indicator
+        transform.GetComponentInChildren<Image>().enabled = false;
+
+        gameUiManager = GameObject.Find("Canvas").GetComponent<GameOverManager>();
+
+        WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
+        if (WolfAI == null)
+        {
+            Debug.Log("No wolf found.");
+        }
+        if (isServer)
+        {
+            RpcAddList(netId.Value);
+        }
+        else
+        {
+            CmdAddWolf(netId.Value);
+        }
+        //slider = GameObject.Find("Slider").GetComponent<Slider>();
+    }
+
+
+    // Functions - {RpcAddList, CmdAddWolf, IndexChanged} are used to cache player's identity and set the player object's color correspondingly
+    // eg. Player 1 is Blue, Player 2 is Yellow
+    [ClientRpc]
+    public void RpcAddList(uint playerId)
+    {
+        CmdAddWolf(playerId);
     }
 
     [Command]
     public void CmdAddWolf(uint playerId)
     {
-        playerIndex = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().addPlayerList(playerId) - 1;
+        GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>().playerList.Add(playerId);
+    }
+
+    public void indexChanged(int index)
+    {
+        if (!isLocalPlayer) { return; }
+        playerIndex = index;
+        //Debug.Log("playerIndex is " + playerIndex);
+
+        if (playerIndex == 0)
+        {
+            //Debug.Log("BLUE CUBE");
+            GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
+
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(0, 214f / 255f, 178f / 255f, 255f / 255f);
+        }
+        else if (playerIndex == 1)
+        {
+            //Debug.Log("RED CUBE");
+            GetComponent<MeshRenderer>().material.color = new Color(1,224f / 255f ,41f /255f,1);
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = new Color(1, 224f /255f, 42f /255f, 1);
+
+        }
     }
 
     //for power up
@@ -64,42 +146,17 @@ public class playerMovement : NetworkBehaviour {
         highSpeed = true;
     }
 
-    public override void OnStartLocalPlayer()
-    {
-        // Initialising the stop button 
-        stopButton = GameObject.FindGameObjectWithTag("StopButton").GetComponent<Button>();
-        stopButton.onClick.AddListener(OnClickStop);
-        stopButton.gameObject.SetActive(false);
-      
-        WolfAI = GameObject.FindGameObjectWithTag("WolfAI");
-        if(WolfAI == null)
-        {
-            Debug.Log("No wolf found.");
-        }
-        CmdAddWolf(netId.Value);
-
-        Debug.Log("playerIndex is " + playerIndex);
-
-        if(playerIndex == 0)
-        {
-            Debug.Log("BLUE CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.blue;
-        }else if(playerIndex == 1)
-        {
-            Debug.Log("RED CUBE");
-            GetComponent<MeshRenderer>().material.color = Color.red;
-        }
-
-
-        //wolfSpotting = WolfAI.GetComponent<WolfEye>().facingPlayers;
-    }
-
-    // Update is called once per frame
     void Update () {
         if (!isLocalPlayer) { return; }
 
-        checkIfStopped();
+        checkIfWolfSpotting();
         checkIfSpotted();
+
+        //hide indicator
+        if (gameUiManager.getTimer() < 47)
+        {
+            CmdHideIndicator();
+        }
 
         //movement control: move upon tapping on screen
         destinationDist = Vector3.Distance(destinationPos, myTransform.position);
@@ -107,76 +164,105 @@ public class playerMovement : NetworkBehaviour {
         //for power up
         if (highSpeed)
         {
+            //display speed status
+            //transform.GetComponentInChildren<Image>().enabled = true;
+            CmdShowSpeed();
 
             highSpeedTimer += Time.deltaTime;
             if (highSpeedTimer > highSpeedThreshold)
             {
                 highSpeed = false;
                 highSpeedTimer = 0f;
+
+                CmdHideSpeed();
             }
         }
 
-        if (destinationDist < .5f)  //prevent shaking behvaior when approaching destination
-        {
-            moveSpeed = 0;
-            isMoving = false;
-        }
-        else
-        {
-            //moveSpeed = 3;
+        //for hp 
+        //if (health > 5 && !dead)
+        //{
+        //    CmdSetMax();
+        //}
+        //else if (health <= 0 && !dead)
+        //{
+        //    print("dead");
+        //    CmdSetZero();
+        //}
 
-            //set speed accordingly
-            if (highSpeed)
+        if (!dead && gameUiManager.startTimer)
+        {
+            //for HP
+            //if (!isMoving)
+            //{
+            //    CmdTakeHealth();
+            //}
+            //else
+            //{
+            //    CmdAddHP();
+            //}
+
+            if (destinationDist < .5f)  //prevent shaking behvaior when approaching destination
             {
-                moveSpeed = moveSpeedHigh;
+                moveSpeed = 0;
+                isMoving = false;
             }
             else
             {
-                moveSpeed = moveSpeedLow;
+                //set speed accordingly
+                if (highSpeed)
+                {
+                    moveSpeed = moveSpeedHigh;
+                }
+                else
+                {
+                    moveSpeed = moveSpeedLow;
+                }
+
+                isMoving = true;
             }
 
-            isMoving = true;
-        }
-
-        if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out hit))
+            if (Input.GetMouseButtonDown(0) && GUIUtility.hotControl == 0)
             {
-                Vector3 targetPoint = ray.GetPoint(hit.distance);
-                destinationPos = ray.GetPoint(hit.distance);
-                Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                myTransform.rotation = targetRotation;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Vector3 targetPoint = ray.GetPoint(hit.distance);
+                    destinationPos = ray.GetPoint(hit.distance);
+                    Quaternion targetRotation = Quaternion.LookRotation(targetPoint - transform.position);
 
+                    myTransform.rotation = targetRotation;
+
+                }
             }
-        }
 
-        if (destinationDist > .5f)
-        {
-            myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPos, moveSpeed * Time.deltaTime);
+            if (destinationDist > .5f)
+            {
+                myTransform.position = Vector3.MoveTowards(myTransform.position, destinationPos, moveSpeed * Time.deltaTime);
+            }
         }
 
     }
 
-    void checkIfStopped()
+    //If wolf facing players, show the stop buttons
+    void checkIfWolfSpotting()
     {
-        if (WolfAI.GetComponent<WolfEye>().facingPlayers)
+        if (WolfAI.vibrating && gameUiManager.countdownTimer > 0)
         {
-            stopButton.gameObject.SetActive(true);
+            stopButtonR.gameObject.SetActive(true);
+            stopButtonL.gameObject.SetActive(true);
         }
         else
         {
-            stopButton.gameObject.SetActive(false);
+            stopButtonR.gameObject.SetActive(false);
+            stopButtonL.gameObject.SetActive(false);
         }
     }
 
     void OnClickStop()
     {
-        // reconfirm that the wolfAI.facingPlayers is true 
-        if (WolfAI.GetComponent<WolfEye>().facingPlayers)
+        if (WolfAI.vibrating)
         {
             destinationPos = myTransform.position;
         }
@@ -185,19 +271,21 @@ public class playerMovement : NetworkBehaviour {
     void checkIfSpotted()
     {
         //spotted moving
-        if (isMoving && WolfAI.GetComponent<WolfEye>().facingPlayers)
+        if (isMoving && WolfAI.facingPlayers)
         {             
             if (!handlingPenalty)
             {
                 handlingPenalty = true;
                 CmdAssignPenalty(id);
+                //play SE
+                audioSource.PlayOneShot(penaltySE);
+
                 if (isLocalPlayer)
                 {
                     //Handheld.Vibrate();
                 }
                 StartCoroutine(penaltyInterval());
             }           
-            //Debug.Log("player with id " + id + " checking whether receive penalty");
         }
     }
 
@@ -205,10 +293,12 @@ public class playerMovement : NetworkBehaviour {
     private void CmdAssignPenalty(uint playerNetId)
     {
         int lostTileCount = 5; //changed to 5 to increase game pace
-        Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
-        if (playerIndex == 1)
+        //Debug.Log("[Inside Penalty] Player Index is " + playerIndex);
+        if (WolfAI.playerList.IndexOf(netId.Value) == 1)
         {
-            Debug.Log("Cube is Red, Penalty is Blue");
+            RpcPlayAnimation("minusFiveBlue");
+
+            //Debug.Log("Cube is Red, Penalty is Blue");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().redTiles;
            
             for (int i = 0; i < lostTileCount; i++)
@@ -216,18 +306,17 @@ public class playerMovement : NetworkBehaviour {
                 GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
 
                 //Change tile color
-                //penaltyTile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = blue;
                 RpcPaintTiles(penaltyTile, blue);
 
                 //update tiles list on server
-                //CmdUpdateTileCount(penaltyTile);
                 map.GetComponent<HexMap>().redTiles.Remove(penaltyTile);
                 map.GetComponent<HexMap>().blueTiles.Add(penaltyTile);
 
             }
         }
-        else if (playerIndex == 0)
+        else if (WolfAI.playerList.IndexOf(netId.Value) == 0)
         {
+            RpcPlayAnimation("minusFiveYellow");
 
             Debug.Log("Cube is Blue, Penalty is Red");
             List<GameObject> tilesGettingPenalty = map.GetComponent<HexMap>().blueTiles;
@@ -236,24 +325,40 @@ public class playerMovement : NetworkBehaviour {
             {
                 GameObject penaltyTile = tilesGettingPenalty[Random.Range(0, tilesGettingPenalty.Count - 1)];
 
-                //penaltyTile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = red;
-                RpcPaintTiles(penaltyTile, red);
+                RpcPaintTiles(penaltyTile, yellow);
 
-                //CmdUpdateTileCount(penaltyTile);
                 map.GetComponent<HexMap>().blueTiles.Remove(penaltyTile);
                 map.GetComponent<HexMap>().redTiles.Add(penaltyTile);
             }
         }
-        Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
-        Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
+        //Debug.Log("Red Tiles Count: " + map.GetComponent<HexMap>().redTiles.Count);
+        //Debug.Log("Blue Tiles Count: " + map.GetComponent<HexMap>().blueTiles.Count);
     }
 
     [ClientRpc]
     private void RpcPaintTiles(GameObject tile, Color color)
     {
-        tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>().material.color = color;
+        StartCoroutine(tileColorFade(tile, color));
     }
 
+    // For color fade visuals
+    private IEnumerator tileColorFade(GameObject tile, Color color)
+    {
+        float timer = 0f;
+        float duration = 1.5f;
+
+        Renderer tileRenderer = tile.transform.Find("HexModel").gameObject.GetComponent<Renderer>();
+
+        while (timer < duration)
+        {
+            tileRenderer.material.color = Color.Lerp(tileRenderer.material.color, color, timer);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+       
+    }
+
+    // A buffer time before a new penalty is assigned
     private IEnumerator penaltyInterval()
     {
         yield return new WaitForSeconds(1.5f);
@@ -261,21 +366,13 @@ public class playerMovement : NetworkBehaviour {
     }
 
 
-
     [Command]
-    public void CmdUpdateTilesList(GameObject tile, Color color)
+    public void CmdUpdateTilesList(GameObject tile, Color color, uint playerId)
     {
-        
-        //Debug.Log(tile.name);
-        //NetworkIdentity tileNetId = tile.GetComponentInParent<NetworkIdentity>();
-        //tileNetId.AssignClientAuthority(connectionToClient);
-
-        map = GameObject.FindGameObjectWithTag("TileMap");
-
         List<GameObject> redTiles = map.GetComponent<HexMap>().redTiles;
         List<GameObject> blueTiles = map.GetComponent<HexMap>().blueTiles;
 
-        if (color == red)
+        if (color == yellow)
         {
 
             if (!redTiles.Contains(tile))
@@ -283,6 +380,8 @@ public class playerMovement : NetworkBehaviour {
                 //Debug.Log("updating red ");
                 map.GetComponent<HexMap>().redTiles.Add(tile);
                 map.GetComponent<HexMap>().blueTiles.Remove(tile);
+                RpcPlaySound(playerId);
+                RpcPlayAnimation("plusOneYellow");
             }
 
         }
@@ -292,17 +391,84 @@ public class playerMovement : NetworkBehaviour {
 
             {
                 //Debug.Log("updating blue");
-
                 map.GetComponent<HexMap>().blueTiles.Add(tile);
                 map.GetComponent<HexMap>().redTiles.Remove(tile);
+                RpcPlaySound(playerId);
+                RpcPlayAnimation("plusOneBlue");
             }
         }
 
-        //tileNetId.RemoveClientAuthority(connectionToClient);
+        float ratio = (float) blueTiles.Count / map.GetComponent<HexMap>().tiles.Count;
+        RpcUpdateCounter(ratio);
 
-        Debug.Log("red tiles no: " + redTiles.Count);
-        Debug.Log("blue tiles no: " + blueTiles.Count);
+        //Debug.Log("red tiles no: " + redTiles.Count);
+        //Debug.Log("blue tiles no: " + blueTiles.Count);
+    }
 
+    [ClientRpc]
+    private void RpcPlaySound(uint playerId)
+    {
+        Debug.Log("playsound");
+        if (playerId == id)
+        {
+            Debug.Log("id confirmed, playing sound");
+            audioSource.PlayOneShot(tileSE);
+        }
+       
+    }
+
+    //update bar counter in game
+    [ClientRpc]
+    private void RpcUpdateCounter(float ratio)
+    {
+        GameObject.Find("Canvas").GetComponent<GameOverManager>().bar.fillAmount = ratio;
+    }
+
+    [ClientRpc]
+    private void RpcPlayAnimation(string name)
+    {
+        Debug.Log("play animation");
+        GameObject.Find("Canvas").GetComponent<GameOverManager>().anim.SetTrigger(name);
+    }
+
+    [Command]
+    private void CmdShowSpeed()
+    {
+        RpcShowSpeed();
+
+    }
+
+    [ClientRpc]
+    private void RpcShowSpeed()
+    {
+        //display speed status
+        transform.GetComponentInChildren<Image>().enabled = true;
+    }
+
+    [Command]
+    private void CmdHideSpeed()
+    {
+        RpcHideSpeed();
+        
+    }
+
+    [ClientRpc]
+    private void RpcHideSpeed()
+    {
+        //display speed status
+        transform.GetComponentInChildren<Image>().enabled = false;
+    }
+
+    [Command]
+    private void CmdHideIndicator()
+    {
+        RpcHideIndicator();
+    }
+
+    [ClientRpc]
+    private void RpcHideIndicator()
+    {
+        transform.GetChild(0).gameObject.SetActive(false);
     }
 
     // Functions for Testing
@@ -310,4 +476,86 @@ public class playerMovement : NetworkBehaviour {
     {
         return moveSpeed;
     }
+
+    public void OnChangeHealth(float health)
+    {
+        slider.value = health;
+    }
+
+    public void addHP()
+    {
+        if (!isServer)
+            return;
+
+        health += Time.deltaTime;
+    }
+
+    //Additional functions for health feature (not implemented)
+    [Command]
+    void CmdTakeHealth()
+    {
+        //Apply damage to the GameObject
+        takeDamage(hpOffset);
+    }
+
+    [Command]
+    void CmdAddHP()
+    {
+        addHP();
+    }
+
+    [Command]
+    void CmdSetMax()
+    {
+        if (!isServer)
+            return;
+        health = maxHealth;
+    }
+
+    [Command]
+    void CmdSetZero()
+    {
+        if (!isServer)
+            return;
+        health = 0;
+    }
+
+    public void takeDamage(float hpOffset)
+    {
+        if (!isServer)
+            return;
+
+        health -= Time.deltaTime * hpOffset;
+        if (health <= 0)
+        {
+            // called on the server, will be invoked on the clients
+            RpcRespawn();
+
+        }
+    }
+
+    [ClientRpc]
+    private void RpcRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            // pause object for a while
+            StartCoroutine(penaltyWait());
+
+        }
+    }
+
+    private IEnumerator penaltyWait()
+    {
+        print("penalty time...");
+        dead = true;
+        CmdSetZero();
+        yield return new WaitForSeconds(3f);
+        CmdSetMax();
+        print("exit penalty...");
+        dead = false;
+        yield return new WaitForSeconds(1f);
+    }
+
+    
 }

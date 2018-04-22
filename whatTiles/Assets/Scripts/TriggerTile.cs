@@ -3,20 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-
+// class for changing of tile color upon contact
 public class TriggerTile : MonoBehaviour {
 
-    private Color red = new Color(1F, 0.1911765F, 0.1911765F);   
-    private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
-    
+    private Color yellow = new Color(255f / 255f, 195f / 255f, 84f / 255f, 255f / 255f);
+    private Color blue = new Color(0, 174f / 255f, 178f / 255f, 255f / 255f);
+    private WolfEye WolfAI;
 
-    // Use this for initialization
-    void Start () {
-       
-       
-	}
-	
-    //[ClientCallback]
+    private void Start()
+    {
+        WolfAI = GameObject.FindGameObjectWithTag("WolfAI").GetComponent<WolfEye>();
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         playerMovement playerScript = other.gameObject.GetComponent<playerMovement>();
@@ -24,17 +22,17 @@ public class TriggerTile : MonoBehaviour {
         Vector3 tileCentre = gameObject.GetComponent<Renderer>().bounds.center;
         Vector3 playerPosition = other.gameObject.transform.position;
 
-        print("Distance: " + Vector3.Distance(playerPosition, tileCentre));
-
         if (Vector3.Distance(playerPosition, tileCentre) <= 1f)
         {
-            Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
-            if (playerScript.playerIndex == 1)
+            int index = WolfAI.playerList.IndexOf(playerScript.id);
+
+            //Debug.Log("[Inside Trigger Tile] Player Index is " + playerScript.playerIndex);
+            if (index == 1)
             {
-                gameObject.GetComponent<Renderer>().material.color = red;
-                transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, red);
+                gameObject.GetComponent<Renderer>().material.color = yellow;
+                transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, yellow);
             }
-            else if (playerScript.playerIndex == 0)
+            else if (index == 0)
             {
                 transform.parent.GetComponent<UpdateTile>().UpdateTiles(playerScript, blue);
                 gameObject.GetComponent<Renderer>().material.color = blue;

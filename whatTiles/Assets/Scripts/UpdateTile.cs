@@ -11,7 +11,16 @@ public class UpdateTile : NetworkBehaviour {
     private Color red = new Color(1F, 0.1911765F, 0.1911765F);
     private Color blue = new Color(0.3317474F, 0.6237204F, 0.8676471F);
 
-    
+    // For SE
+    AudioSource audioSource;
+    public AudioClip tileSE;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
+    //update tile lists on server
     public void UpdateTiles(playerMovement player, Color color)
     {
         players = GameObject.FindGameObjectsWithTag("Player");
@@ -19,7 +28,7 @@ public class UpdateTile : NetworkBehaviour {
         {
             if (p.GetComponent<playerMovement>().isLocalPlayer)
             {
-                Debug.Log("found client player");
+                //Debug.Log("found client player");
                 clientPlayer = p;
             }
         }
@@ -28,8 +37,8 @@ public class UpdateTile : NetworkBehaviour {
         if (clientPlayer != null && player.id == clientPlayer.GetComponent<playerMovement>().id)
         {
             Debug.Log("Updating tiles");
-            player.GetComponent<playerMovement>().CmdUpdateTilesList(gameObject, color);
+            player.CmdUpdateTilesList(gameObject, color, player.id);
         }
-        
+
     }
 }

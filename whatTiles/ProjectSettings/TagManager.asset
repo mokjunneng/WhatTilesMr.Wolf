@@ -12,6 +12,9 @@ TagManager:
   - BlueTile
   - RedTile
   - StopButton
+  - ExitButton
+  - Bar
+  - StopButtonR
   layers:
   - Default
   - TransparentFX
